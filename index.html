@@ -139,8 +139,7 @@
       ctx.fillStyle='#f3f3f1';ctx.font='500 46px MadeTommyMedium, Arial, sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
       const date= dateText.value.trim() || 'Tarih';
       ctx.fillText(`${date} tarihli`,800,dateY);
-      ctx.fillText('köşe yazımdan',800,dateY+58);
-      ctx.fillText('öne çıkanlar',800,dateY+116);
+      ctx.fillText('öne çıkanlar',800,dateY+58);
       if(logo.complete&&logo.naturalWidth){ctx.save();roundRect(900,1044,140,140,20);ctx.clip();ctx.drawImage(logo,900,1044,140,140);ctx.restore()}
       ctx.textAlign='left';
       document.querySelector('#headlineCount').textContent=`${headlineText.value.length}/180`;
