@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10141a"><title>HK CTP Oy Tabloları</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0c1017;color:#f5f6f8;font-family:Arial,Helvetica,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}a{color:inherit;text-decoration:none}
+header{background:#1a2029;border-bottom:1px solid #353d4a;padding:15px 22px;display:flex;align-items:center;gap:20px;justify-content:space-between;flex-wrap:wrap}
+.logo{font-size:20px;font-weight:900}.logo span{color:#ffcc00}
+nav{display:flex;flex-wrap:wrap;gap:8px}nav a{border:1px solid #465061;color:#d4dbe5;border-radius:8px;padding:10px 13px;font-size:12px;font-weight:800}nav a.active{color:#101010;background:#ffca00;border-color:#ffca00}
+main{display:grid;grid-template-columns:365px minmax(360px,1fr);min-height:calc(100vh - 72px)}aside{padding:20px;background:#161d27;border-right:1px solid #303a47}section{padding:22px;min-width:0}
+.k{color:#ffca00;font-size:10px;font-weight:900;letter-spacing:2px}.muted,p{color:#abb8c8;font-size:12px;line-height:1.55}p{margin:8px 0 14px}h1{font-size:24px;margin:7px 0 5px}h2{font-size:19px;margin:6px 0 12px}.districts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:17px 0}
+.districts button{background:#242c39;border:1px solid #455061;color:white;padding:12px 9px;text-align:left;border-radius:9px;font-size:13px;font-weight:800}
+.districts button.active{background:#443819;color:#ffe06b;border-color:#ffcc00}
+.districts small{display:block;color:#aeb7c6;font-size:10px;margin-top:4px}
+.card{background:#202835;border:1px solid #394657;border-radius:12px;padding:15px;margin:13px 0}.card h2{font-size:16px;margin-top:0}
+input[type=file]{display:none}
+input[type=text],input[type=number],textarea{display:block;width:100%;background:#101720;color:#fff;border:1px solid #4d5968;border-radius:8px;padding:10px;outline:none}
+input:focus,textarea:focus{border-color:#ffca00}label{font-size:12px;color:#c3ccd8;display:block;margin:8px 0 6px}
+textarea{min-height:115px;resize:vertical}button.gold,.file-btn{background:#ffca00;color:#151515;font-weight:900;border:0;border-radius:9px;padding:12px 13px;display:inline-block;text-align:center}
+button.dim{background:#323e4d;color:#eff2f5;border:1px solid #505e6e;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:700}
+button.link{color:#ffcf40;background:transparent;border:0;font-size:12px;font-weight:800;padding:7px}
+.info{font-size:12px;color:#ffce58;line-height:1.5}.ok{color:#65deb1}.warning{color:#ffb18d}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.work{display:grid;grid-template-columns:minmax(320px,520px) minmax(320px,1fr);gap:22px;align-items:start}
+.frame{background:#252d39;border:1px solid #465162;padding:9px;border-radius:11px;max-width:540px;margin:auto}
+canvas{display:block;width:100%;height:auto;aspect-ratio:4/5;background:#14161b}
+.subheader{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.rowinfo{font-size:11px;color:#aeb8c4;margin-top:10px}.rows{max-height:760px;overflow:auto;display:grid;gap:7px;margin-top:13px}
+.r{display:grid;grid-template-columns:30px minmax(110px,1fr) 104px 29px;gap:6px;align-items:center;background:#242d39;border:1px solid #435062;border-radius:9px;padding:7px}
+.r .seq{font-size:11px;color:#ffce41;text-align:center;font-weight:900}
+.r input{min-width:0;font-size:12px;padding:8px 7px;height:36px}.r .del{background:transparent;border:0;color:#ff9689;font-size:20px}
+.r .vote{font-weight:900;text-align:right;font-variant-numeric:tabular-nums}
+.small{font-size:11px;color:#aeb7c8}
+.split{display:flex;gap:9px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.empty{color:#b5becb;text-align:center;font-size:12px;padding:15px}
+@media(max-width:1100px){.work{grid-template-columns:1fr}.frame{max-width:520px}}
+@media(max-width:820px){main{display:block}aside{border-right:0;border-bottom:1px solid #394453}section{padding:15px}.work{grid-template-columns:1fr}.r{grid-template-columns:25px minmax(90px,1fr) 94px 28px}header{gap:11px}}
+</style></head>
+<body>
+<header><div class="logo">HK <span>CTP POST BUILDER</span></div><nav><a href="./">ADAY KARTLARI</a><a class="active" href="oy-tablolari.html">OY TABLOLARI</a></nav></header>
+<main>
+<aside>
+<div class="k">YENİ MOD / 01</div><h1>Oy tablosu oluştur</h1><p>6 ilçeden birini seç. Aday isimlerini ve aldıkları oyları gir; tablo otomatik olarak çoktan aza sıralanır.</p>
+<div class="districts" id="districts"></div>
+<div class="card">
+<h2>Aday isimlerini içeri aktar</h2>
+<p>Daha önce aday kartı sitesine yüklediğin ZIP aynı Mac ve tarayıcıda kayıtlıysa isimler otomatik alınır. Yoksa ZIP dosyasını açmadan seçebilirsin.</p>
+<label for="bundle" class="file-btn">↑ Aday paketini seç (ZIP)</label><input type="file" id="bundle" accept=".zip,application/zip">
+<div id="importStatus" class="info" style="margin-top:10px">Aday paketine bakılıyor…</div>
+<button class="dim" style="margin-top:10px;width:100%" id="addNames">Paket isimlerini bu ilçeye aktar</button>
+</div>
+<div class="card">
+<h2>Listeyi toplu yapıştır</h2>
+<p>İsim ve oyu satır satır yapıştır. Örnek: <b>Ad Soyad; 1.900</b>. Sadece isim de yapıştırılabilir.</p>
+<textarea id="bulk" placeholder="Ad Soyad; 1900&#10;Başka Bir Aday; 1779&#10;Üçüncü Aday; 0"></textarea>
+<button class="dim" id="applyBulk" style="width:100%;margin-top:9px">Listeyi tabloya aktar</button>
+</div>
+<div class="card">
+<h2>Yayın bilgileri</h2>
+<label for="source">Kaynak / alt açıklama</label><input id="source" type="text" maxlength="125" placeholder="Kaynak bilgisi">
+<label for="updateTime">Güncelleme saati (isteğe bağlı)</label><input id="updateTime" type="text" maxlength="35" placeholder="Örn. 16:45">
+<div class="small" style="margin-top:9px">Veriler bu tarayıcıda saklanır. Bu sayfa kendiliğinden resmî seçim sonucu çekmez.</div>
+</div>
+</aside>
+<section>
+<div class="toolbar">
+<div><div class="k">YENİ MOD / 02</div><h2 id="headline">CTP Lefkoşa oy tablosu</h2><div id="exportStatus" class="small"></div></div>
+<button id="download" class="gold">↓ 1080×1350 PNG İNDİR</button>
+</div>
+<div class="work">
+<div><div class="frame"><canvas id="canvas" width="1080" height="1350"></canvas></div>
+<p class="rowinfo">Önizlemede oylar büyükten küçüğe sıralanır. Oy girişi eksikse PNG üzerinde TASLAK ibaresi bulunur.</p></div>
+<div>
+<div class="subheader"><h2 style="margin:0">Adaylar ve oylar</h2><div class="split"><button class="dim" id="addRow">+ Satır</button><button class="link" id="reset">Temizle</button></div></div>
+<p>Solda isimleri ve oyları gir. Eşit oy alan adaylar aynı sırayı paylaşır.</p>
+<div class="r" style="background:transparent;border:0;padding:0 7px"><span class="small">#</span><span class="small">ADAY ADI SOYADI</span><span class="small" style="text-align:right">OY SAYISI</span><span></span></div>
+<div class="rows" id="rows"></div>
+<div class="small" id="counter" style="margin-top:13px"></div>
+</div></div>
+</section></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+(function(){"use strict";
+const $=id=>document.getElementById(id);
+const defs={lef:{name:"LEFKOŞA",slots:16},gir:{name:"GİRNE",slots:13},mag:{name:"GAZİMAĞUSA",slots:10},isk:{name:"İSKELE",slots:9},guz:{name:"GÜZELYURT",slots:6},lefke:{name:"LEFKE",slots:3}};
+const keys=Object.keys(defs),canvas=$("canvas"),ctx=canvas.getContext("2d",{alpha:false});
+let area="lef",tables={},candidateNames={},topBarImg=null,topBarReady=false,fontsLoaded=false;
+const norm=s=>String(s||"").toLocaleLowerCase("tr-TR").replace(/ı/g,"i").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"");
+const blank=()=>({name:"",vote:""});
+function save(){try{localStorage.setItem("HK_CTP_VOTE_TABLES_V1",JSON.stringify(tables))}catch(e){$("importStatus").textContent="Tarayıcı belleği dolu olabilir; değişiklikler kaydedilemedi."}}
+function load(){
+try{const data=JSON.parse(localStorage.getItem("HK_CTP_VOTE_TABLES_V1")||"{}");keys.forEach(k=>{
+ const t=data[k];
+ tables[k]=t&&Array.isArray(t.rows)?{rows:t.rows.filter(x=>x&&typeof x==="object").slice(0,40).map(x=>({name:String(x.name||""),vote:String(x.vote===0?0:(x.vote||""))})),source:String(t.source||"CTP aday belirleme kurultayı"),time:String(t.time||"") }:{rows:Array.from({length:defs[k].slots},blank),source:"CTP aday belirleme kurultayı",time:""};
+ })}catch(e){keys.forEach(k=>tables[k]={rows:Array.from({length:defs[k].slots},blank),source:"CTP aday belirleme kurultayı",time:""})}
+}
+function parseVote(raw){const s=String(raw??"").trim();if(!s)return null;const n=s.replace(/[\s.,']/g,"");if(!/^\d+$/.test(n))return null;const value=Number(n);return Number.isSafeInteger(value)?value:null}
+function ranking(){const t=tables[area],x=t.rows.map((r,i)=>({name:r.name.trim(),vote:parseVote(r.vote),idx:i})).filter(r=>r.name);
+ x.sort((a,b)=>(b.vote===null?-1:b.vote)-(a.vote===null?-1:a.vote)||a.idx-b.idx);
+ let last=null,rank=0;x.forEach((r,i)=>{if(r.vote!==last||i===0){rank=i+1;last=r.vote}r.rank=rank});return x}
+function pending(){return tables[area].rows.some(r=>(r.name.trim()&&!String(r.vote).trim())||(!r.name.trim()&&String(r.vote).trim()))||ranking().length===0||ranking().some(r=>r.vote===null)}
+function bindRow(row,i){
+let div=document.createElement("div");div.className="r";
+let s=document.createElement("span");s.className="seq";s.textContent=i+1;
+let n=document.createElement("input");n.type="text";n.placeholder="Ad Soyad";n.value=row.name;n.maxLength=100;n.setAttribute("aria-label",(i+1)+". aday");
+let v=document.createElement("input");v.type="text";v.inputMode="numeric";v.placeholder="Oy";v.value=row.vote;v.maxLength=12;v.className="vote";v.setAttribute("aria-label",(i+1)+". oy sayısı");
+const change=()=>{row.name=n.value;row.vote=v.value;save();draw();status()};
+n.addEventListener("input",change);v.addEventListener("input",change);
+let del=document.createElement("button");del.className="del";del.textContent="×";del.title="Satırı sil";del.onclick=()=>{
+ if(tables[area].rows.length<2){row.name="";row.vote="";render();save();return}
+ tables[area].rows.splice(i,1);save();render()
+};
+div.append(s,n,v,del);return div
+}
+function render(){
+$("headline").textContent="CTP "+defs[area].name+" oy tablosu";
+$("districts").innerHTML="";
+keys.forEach(k=>{const b=document.createElement("button");b.className=(k===area?"active":"");b.textContent=defs[k].name[0]+defs[k].name.slice(1).toLocaleLowerCase("tr-TR");const small=document.createElement("small");small.textContent=defs[k].slots+" başlangıç satırı";b.append(small);b.onclick=()=>{area=k;render()};$("districts").append(b)});
+$("source").value=tables[area].source;$("updateTime").value=tables[area].time;
+const rows=$("rows");rows.innerHTML="";tables[area].rows.forEach((r,i)=>rows.append(bindRow(r,i)));
+draw();status()
+}
+function status(){const t=tables[area],filled=ranking().length,complete=ranking().filter(r=>r.vote!==null).length,missing=pending();
+$("counter").textContent=filled+" aday adı · "+complete+" oy sayısı girildi";
+$("exportStatus").textContent=missing?"Eksik oy veya isim bilgisi var: TASLAK çıktı":"Tüm girilen adayların oyları dolu: PNG oluşturulabilir";
+$("exportStatus").className=missing?"small warning":"small ok";
+}
+function stroke(x,y,w,h,color){ctx.strokeStyle=color;ctx.lineWidth=1;ctx.strokeRect(x,y,w,h)}
+function text(s,x,y,size,color,weight,align,font){
+ ctx.textAlign=align||"left";ctx.textBaseline="middle";ctx.fillStyle=color;ctx.font=(weight||"bold")+" "+size+"px "+(font||"Arial, sans-serif");ctx.fillText(s,x,y)
+}
+function fit(s,w,size,min,font,weight){let n=size;while(n>min){ctx.font=(weight||"bold")+" "+n+"px "+(font||"Arial, sans-serif");if(ctx.measureText(s).width<=w)break;n--}return n}
+function bg(){
+ ctx.fillStyle="#101218";ctx.fillRect(0,0,1080,1350);
+ const grad=ctx.createLinearGradient(0,0,1080,1350);grad.addColorStop(0,"#191c21");grad.addColorStop(.45,"#0d1015");grad.addColorStop(1,"#1b1318");ctx.fillStyle=grad;ctx.fillRect(0,0,1080,1350);
+ const glow=ctx.createRadialGradient(1050,40,20,920,120,640);glow.addColorStop(0,"#621b2099");glow.addColorStop(1,"#10121800");ctx.fillStyle=glow;ctx.fillRect(0,0,1080,700);
+ ctx.fillStyle="#191b21";ctx.fillRect(0,0,1080,67);
+ if(topBarReady&&topBarImg){ctx.drawImage(topBarImg,0,0,topBarImg.naturalWidth,Math.min(topBarImg.naturalHeight,68),0,0,1080,68)}
+ else{const items=[["f","haber kıbrıs"],["▶","haber kıbrıs"],["◎","haberkibrishk"],["𝕏","haber kıbrıs"]];items.forEach((a,i)=>{const x=25+i*275;text(a[0],x,35,27,"#eef1f5","bold");text(a[1],x+40,35,25,"#ffca00","bold")})}
+ ctx.fillStyle="#df2527";ctx.fillRect(72,113,8,38);text("CTP  /  ADAY BELİRLEME KURULTAYI",96,132,23,"#eee9e7","bold");
+ text(defs[area].name,72,229,fit(defs[area].name,925,105,57,"Impact, Arial Black, sans-serif"),"#ffcc00","bold","left","Impact, Arial Black, sans-serif");
+ text("ÖN SEÇİM OY SONUÇLARI",72,303,55,"#f7f5ef","bold","left","Impact, Arial Black, sans-serif");
+ ctx.fillStyle="#e2be27";ctx.fillRect(72,345,936,5);
+}
+function draw(){
+ bg();const list=ranking(),t=tables[area],empty=pending();const n=Math.max(list.length,1);
+ const top=418,bottom=1190,available=bottom-top;
+ let gap=n>20?2:5,rowH=Math.min(64,(available-gap*(n-1))/n);
+ if(rowH<27)rowH=27;const valid=list.length>0;
+ ctx.fillStyle="#8f99a8";text("SIRA",85,381,19,"#c6ccd4","bold");text("ADAY ADI SOYADI",167,381,19,"#c6ccd4","bold");text("ALDIĞI OY",992,381,19,"#c6ccd4","bold","right");
+ if(!valid){text("İlçenin aday ve oy bilgilerini soldan gir.",540,770,26,"#d2d5db","normal","center")}
+ const nameSize=Math.max(22,Math.min(32,rowH*.49)),voteSize=Math.max(23,Math.min(34,rowH*.56));
+ list.forEach((r,i)=>{const y=top+i*(rowH+gap);if(y+rowH>bottom+15)return;
+ ctx.fillStyle=i%2===0?"#292d36":"#1d222b";ctx.fillRect(72,y,936,rowH);
+ ctx.fillStyle=i<3?"#ffcc00":"#4b5261";ctx.fillRect(72,y,71,rowH);
+ text(String(r.rank).padStart(2,"0"),107.5,y+rowH/2,Math.min(31,rowH*.60),i<3?"#151515":"#fff","bold","center","Impact, Arial Black, sans-serif");
+ const nm=r.name.toLocaleUpperCase("tr-TR");text(nm,163,y+rowH/2,fit(nm,655,nameSize,16,"Arial, sans-serif"),"#fff","bold");
+ text(r.vote===null?"—":r.vote.toLocaleString("tr-TR"),990,y+rowH/2,voteSize,r.vote===null?"#858e9b":"#ffcd2b","bold","right");
+ });
+ ctx.fillStyle="#ffcc00";ctx.fillRect(72,1240,6,55);text("KAYNAK",93,1253,14,"#ffcc00","bold");text(t.source||"Kaynak girilmedi",93,1280,fit(t.source||"Kaynak girilmedi",690,20,13), "#d9dce0","normal");
+ if(t.time.trim())text("GÜNCELLEME  "+t.time.trim(),1005,1277,18,"#ffe18b","bold","right");
+ if(empty){ctx.save();ctx.translate(540,824);ctx.rotate(-.16);ctx.globalAlpha=.65;ctx.textAlign="center";ctx.textBaseline="middle";ctx.font="bold 132px Impact, Arial Black, sans-serif";ctx.fillStyle="#ffcb26";ctx.fillText("TASLAK",0,0);ctx.restore()}
+}
+function updateInfo(){tables[area].source=$("source").value;tables[area].time=$("updateTime").value;save();draw()}
+$("source").addEventListener("input",updateInfo);$("updateTime").addEventListener("input",updateInfo);
+$("addRow").onclick=()=>{if(tables[area].rows.length>=28){alert("Tek görselde en fazla 28 satır kullanılabilir.");return}tables[area].rows.push(blank());save();render();$("rows").scrollTop=$("rows").scrollHeight};
+$("reset").onclick=()=>{if(!confirm("Bu ilçenin bütün isimleri ve oy sayıları temizlensin mi?"))return;tables[area].rows=Array.from({length:defs[area].slots},blank);save();render()};
+function parseLine(s){
+ let line=s.trim().replace(/^\s*(?:\d{1,2}\s*[.)\-]\s+)/,"").trim();
+ if(!line)return null;const seg=line.split(/[\t;|]/).map(x=>x.trim()).filter(Boolean);
+ if(seg.length>=2){const a=parseVote(seg[0]),b=parseVote(seg[seg.length-1]);
+ if(a!==null&&b===null)return {name:seg.slice(1).join(" "),vote:String(a)};
+ if(b!==null)return {name:seg.slice(0,-1).join(" "),vote:String(b)}
+ }
+ const leading=line.match(/^([\d.,']+)\s+(.+)$/);if(leading&&parseVote(leading[1])!==null)return{name:leading[2],vote:String(parseVote(leading[1]))};
+ const trailing=line.match(/^(.+?)\s*[:\-=–—]\s*([\d.,']+)\s*$/);if(trailing&&parseVote(trailing[2])!==null)return{name:trailing[1],vote:String(parseVote(trailing[2]))};
+ const trailingSpace=line.match(/^(.+\D)\s+([\d.,']+)$/);if(trailingSpace&&parseVote(trailingSpace[2])!==null)return{name:trailingSpace[1],vote:String(parseVote(trailingSpace[2]))};
+ return{name:line,vote:""}
+}
+$("applyBulk").onclick=()=>{
+const text=$("bulk").value.trim();if(!text)return alert("Önce listeyi yapıştır.");
+let incoming=text.split(/\n/).map(parseLine).filter(Boolean);if(incoming.length>28)return alert("Tek post için en fazla 28 kişi eklenebilir.");if(!incoming.length)return;
+let existing=tables[area].rows.some(r=>r.name.trim()||String(r.vote).trim());if(existing&&!confirm("Mevcut isimler ve oylar bu listeyle değiştirilsin mi?"))return;
+tables[area].rows=incoming;save();render();$("bulk").value="";
+};
+function readDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open("HK_CTP_ASSETS",1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains("files"))r.result.createObjectStore("files")};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
+async function loadAsset(blob){
+ if(typeof JSZip==="undefined")throw Error("ZIP okuyucu yüklenemedi; internete bağlı olduğundan emin ol.");
+ const z=await JSZip.loadAsync(blob),files=Object.keys(z.files),f=p=>z.file(p)||z.file(files.find(x=>x.endsWith("/"+p))||"");
+ const file=f("assets/data.js");if(!file)throw Error("Bu ZIP, HK CTP aday paketi değil.");
+ const raw=await file.async("string"),obj=JSON.parse(raw.slice(raw.indexOf("=")+1).trim().replace(/;\s*$/,""));
+ keys.forEach(k=>candidateNames[k]=(obj.people&&obj.people[k]||[]).map(p=>p.name).filter(Boolean));
+ const path=obj.templates&&(obj.templates.lef||obj.templates.gir);const b=path?f(path):null;
+ if(b){const bytes=await b.async("uint8array");const u=URL.createObjectURL(new Blob([bytes],{type:"image/jpeg"}));const im=new Image();im.onload=()=>{topBarImg=im;topBarReady=true;draw();URL.revokeObjectURL(u)};im.src=u}
+ const count=keys.reduce((n,k)=>n+(candidateNames[k]||[]).length,0);
+ $("importStatus").innerHTML='<span class="ok">✓ '+count+' aday ismi paketten okundu.</span>';
+ let changed=false;keys.forEach(k=>{if(tables[k].rows.every(r=>!r.name.trim()&&!String(r.vote).trim())&&candidateNames[k].length){tables[k].rows=candidateNames[k].slice(0,28).map(name=>({name,vote:""}));changed=true}});
+ if(changed){save();render()}
+}
+async function restore(){
+ try{const db=await readDB();const b=await new Promise((resolve,reject)=>{const r=db.transaction("files","readonly").objectStore("files").get("bundle");r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});db.close();
+ if(!b){$("importStatus").textContent="Kayıtlı aday paketi bulunamadı. İstersen ZIP seç veya isimleri elle gir.";return}
+ await loadAsset(b)
+ }catch(e){$("importStatus").textContent="Kayıtlı paket okunamadı: "+e.message}
+}
+$("bundle").onchange=async e=>{
+ const f=e.target.files&&e.target.files[0];if(!f)return;$("importStatus").textContent="Aday listeleri okunuyor…";
+ try{await loadAsset(f);const db=await readDB();await new Promise((resolve,reject)=>{const tx=db.transaction("files","readwrite");tx.objectStore("files").put(f,"bundle");tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});db.close()}
+ catch(err){$("importStatus").textContent="Paket hatası: "+err.message}
+ finally{e.target.value=""}
+};
+$("addNames").onclick=()=>{const list=candidateNames[area]||[];if(!list.length)return alert("Önce aday ZIP paketini yükle.");const current=tables[area].rows;const oldMap=new Map(current.filter(r=>r.name.trim()).map(r=>[norm(r.name),r.vote]));
+ const haveData=current.some(r=>r.name.trim()||String(r.vote).trim());if(haveData&&!confirm("Paket isimleri eklenecek. Aynı isimlerin girilmiş oyları korunur. Devam?"))return;
+ tables[area].rows=list.slice(0,28).map(name=>({name,vote:oldMap.get(norm(name))||""}));save();render()
+};
+$("download").onclick=()=>{
+ const list=ranking();if(!list.length)return alert("En az bir aday adı gir.");
+ const drafts=pending();if(drafts&&!confirm("Eksik oy bilgisi var. TASLAK filigranıyla PNG indirilsin mi?"))return;
+ draw();canvas.toBlob(blob=>{if(!blob)return alert("PNG oluşturulamadı.");const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="HK_CTP_"+area+"_OY_TABLOSU_1080x1350"+(drafts?"_TASLAK":"")+".png";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)},"image/png");
+};
+load();render();restore()
+})();
+</script></body></html>
