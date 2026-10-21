@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#121722">
+<title>HK CTP Post Builder</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0e121a;color:#f5f6fa;font-family:Arial,Helvetica,sans-serif}
+.top{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:14px 26px;background:#1a202b;border-bottom:1px solid #313949}
+.brand{display:flex;align-items:center;gap:12px}.mark{background:#ffcf00;color:#0d0d0d;font-weight:900;font-size:22px;border-radius:9px;padding:9px}.brand b{display:block;letter-spacing:.5px;font-size:18px}.brand small{display:block;font-size:11px;color:#a6afbf;margin-top:4px;letter-spacing:1.2px}
+.top .right{font-size:11px;color:#bdc4d2;text-align:right}.hero{max-width:860px;margin:7vh auto 0;padding:0 22px}.eyebrow{color:#ffcf00;font-weight:800;letter-spacing:2px;font-size:12px}h1{font-size:clamp(30px,6vw,52px);line-height:1.06;margin:15px 0}.lead{font-size:16px;color:#adb7c7;line-height:1.6;max-width:670px}
+.panel{background:#1b2230;border:1px solid #384252;border-radius:17px;padding:25px;margin:27px 0 12px;box-shadow:0 22px 70px #0003}
+.buttons{display:flex;align-items:center;flex-wrap:wrap;gap:12px}.upload{display:inline-block;cursor:pointer;border:0;background:#ffcf00;padding:14px 22px;color:#141414;border-radius:10px;font-size:15px;font-weight:900}.upload:hover{background:#ffdb47}
+input[type=file]{display:none}.pill{font-size:13px;color:#bdc8d7}.notice{font-size:13px;color:#c0cbd9;margin-top:15px;line-height:1.6}
+.progress{height:6px;background:#3b4353;border-radius:10px;margin:20px 0;overflow:hidden;display:none}.bar{height:100%;width:3%;background:#ffcf00;transition:width .15s}.error{color:#ff9b9b}.ok{color:#71e6b2}
+#app{display:none;width:100%;height:calc(100vh - 75px);min-height:700px;border:0;background:#10141c}
+.loaded .hero{display:none}.loaded #app{display:block}.action{font-size:12px;color:#e6c957;background:none;border:1px solid #454e5d;border-radius:7px;padding:8px 12px;cursor:pointer}
+@media(max-width:640px){.top{padding:12px}.brand b{font-size:14px}.top .right{display:none}.hero{margin:45px auto 0}.panel{padding:18px}.loaded #app{height:calc(100vh - 62px)}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><div class="mark">HK</div><div><b>CTP POST BUILDER</b><small>HABER KIBRIS · ADAY SIRALAMA PANELİ</small></div></div><div class="right" id="mini">Mac · Safari/Chrome · 1080 × 1350 PNG</div><button class="action" id="change" style="display:none">Paket değiştir</button></header>
+<main class="hero" id="intro"><div class="eyebrow">HAZIR ŞABLONLAR · 4 POST</div><h1>Adayları sırala.<br>Postu indir.</h1><p class="lead">Photoshop’ta hazırladığın dört CTP postu, aday fotoğrafları ve isimleriyle birlikte çalışır. Bir defa görsel paketini seç, sonrasında ilçeye göre sıralamayı değiştirip PNG olarak indir.</p>
+<div class="panel"><h2 style="margin-top:0">İlk kurulum · 1 defalık</h2><p class="lead" style="font-size:14px">Daha önce hazırladığımız <b>HK_CTP_Post_Builder.zip</b> dosyasını seç. Mac’te ZIP’i açman gerekmiyor. Site paketi kendi içinde okuyup adayları yükleyecek.</p>
+<div class="buttons"><label for="zip" class="upload">↑ Görsel paketini seç</label><input type="file" accept=".zip,application/zip" id="zip"><span class="pill" id="status">ZIP seçilmedi</span></div>
+<div class="progress" id="prog"><div class="bar" id="bar"></div></div><div class="notice" id="msg">Şablonlar: Lefkoşa 16, Girne 12, Gazimağusa 12, İskele + Güzelyurt + Lefke 10 aday. Sıralama ve PNG çıktısı seçtiğin Mac'in tarayıcısında çalışır.</div></div>
+<p style="font-size:12px;color:#98a4b6">Fotoğraflar sunucuya gönderilmez; yalnızca tarayıcında işlenir. Aynı cihazda Safari verilerini temizlersen paketi tekrar yüklemen gerekir.</p></main>
+<iframe id="app" title="Haber Kıbrıs CTP aday sıralama paneli" allow="clipboard-read; clipboard-write"></iframe>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+(() => {
+'use strict';
+const $=id=>document.getElementById(id);const zipInput=$('zip'),status=$('status'),message=$('msg'),progress=$('prog'),bar=$('bar'),app=$('app');
+let running=false;
+function setStatus(t,bad=false){status.textContent=t;status.className='pill '+(bad?'error':'')}
+function fileByName(zip,name){return zip.file(name)||zip.file(Object.keys(zip.files).find(p=>p.endsWith('/'+name))||'__NOT_FOUND__')}
+function dataFrom(js){const pos=js.indexOf('=');if(pos<0)throw Error('Aday veri dosyası okunamadı.');return JSON.parse(js.slice(pos+1).trim().replace(/;\s*$/,''))}
+function indexedDBOpen(){return new Promise((resolve,reject)=>{let req=indexedDB.open('HK_CTP_POST_BUILDER_V1',1);req.onupgradeneeded=()=>req.result.createObjectStore('files');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+async function savePack(blob){try{let d=await indexedDBOpen();await new Promise((resolve,reject)=>{const tx=d.transaction('files','readwrite');tx.objectStore('files').put(blob,'zip');tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});d.close()}catch(e){console.warn('Safari kalıcı saklama başarısız',e)}}
+async function restorePack(){try{let d=await indexedDBOpen(),b=await new Promise((resolve,reject)=>{let r=d.transaction('files').objectStore('files').get('zip');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});d.close();return b}catch(e){return null}}
+async function build(source,persist){
+if(running)return;running=true;progress.style.display='block';bar.style.width='5%';setStatus('Paket okunuyor…');message.textContent='Dosya tarayıcıda işleniyor; yükleme boyutuna göre birkaç saniye sürebilir.';
+try {
+if(!window.JSZip) throw Error('ZIP okuyucu yüklenemedi. İnternet bağlantını kontrol et ve sayfayı yenile.');
+const zip=await JSZip.loadAsync(source);const keys=['index.html','styles.css','app.js','assets/data.js'];let sourceText={};for(const name of keys){const f=fileByName(zip,name);if(!f)throw Error(name+' bulunamadı. Doğru HK_CTP_Post_Builder.zip dosyasını seç.');sourceText[name]=await f.async('string')}
+const data=dataFrom(sourceText['assets/data.js']);
+let assets=[];for(const rows of Object.values(data.people))for(const p of rows)if(p.src)assets.push(p.src);
+for(const u of Object.values(data.templates))assets.push(u);
+const unique=[...new Set(assets)];let count=0;for(const pathname of unique){const f=fileByName(zip,pathname);if(!f)throw Error('Pakette eksik görsel: '+pathname);const b64=await f.async('base64');const mime=pathname.match(/\.png$/i)?'image/png':'image/jpeg';const uri='data:'+mime+';base64,'+b64;
+for(const rows of Object.values(data.people))for(const p of rows)if(p.src===pathname)p.src=uri;
+for(const k of Object.keys(data.templates))if(data.templates[k]===pathname)data.templates[k]=uri;
+count++;bar.style.width=(10+Math.round(75*count/unique.length))+'%';if(count%10===0)await new Promise(r=>setTimeout(r,0));}
+// Kontenjanların hangi sıraya yerleşeceği kesin sonuçla belirlenmeli; hiçbir aday zorunlu kilitlenmiyor.
+data.fixed={lef:[],gir:[],mag:[],combined:[]};
+let html=sourceText['index.html'];
+html=html.replace(/<link\s+rel="stylesheet"\s+href="styles\.css"\s*\/?\s*>/i, '<style>'+sourceText['styles.css']+'</style>');
+html=html.replace(/<script\s+src="assets\/data\.js"><\/script>\s*<script\s+src="app\.js"><\/script>/i,'<script>window.CTP_DATA='+JSON.stringify(data)+';<\/script><script>'+sourceText['app.js'].replace(/<\/script/gi,'<\\/script')+'<\/script>');
+html=html.replace(/Birinci sıra Lefkoşa\/Girne için teyitli\. Diğer kontenjan sıraları haber kaynaklarına dayalı ön yerleşimdir, panelden değiştirilebilir\./,'Kontenjan ve sıralama alanları serbesttir. Resmi sonuç açıklanınca kesin listeye göre doldurulmalıdır.');
+html=html.replace(/Ayrılmış kontenjan yerleri otomatik atlanır\./,'Kontenjan adayları dahil tüm isimleri açıklanan sıraya göre gir.');
+app.srcdoc=html;bar.style.width='100%';setStatus('Hazır · '+(unique.length-4)+' fotoğraf');
+document.body.classList.add('loaded');$('change').style.display='inline-block';$('mini').style.display='none';if(persist)savePack(source);
+}catch(e){console.error(e);setStatus('Açılamadı',true);message.textContent=e.message;progress.style.display='none';}
+finally{running=false}
+}
+zipInput.onchange=()=>{if(zipInput.files[0])build(zipInput.files[0],true)};
+$('change').onclick=()=>{document.body.classList.remove('loaded');$('change').style.display='none';$('mini').style.display='block';status.textContent='Yeni paket seç';zipInput.value='';};
+restorePack().then(b=>{if(b)build(b,false)});
+})();
+</script>
+</body></html>
