@@ -91,7 +91,7 @@ function fitted(s,w,max=23,min=12){let n=max;while(n>min){ctx.font='bold '+n+'px
 // TRT haber örneğindeki açık, portre-odaklı editoryal düzen.
 function adjustment(id){return Object.assign({zoom:1.40,x:0,y:0},cropById[id]||{})}
 function textLines(value,maxWidth,maxSize=24,minSize=17){
- const words=value.toLocaleUpperCase('tr-TR').split(/\\s+/).filter(Boolean);
+ const words=value.toLocaleUpperCase('tr-TR').split(/\s+/).filter(Boolean);
  let variants=[];
  if(words.length===1)variants=[[words[0]]];
  else for(let split=1;split<words.length;split++)variants.push([words.slice(0,split).join(' '),words.slice(split).join(' ')]);
