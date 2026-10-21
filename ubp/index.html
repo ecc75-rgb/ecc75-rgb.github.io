@@ -20,8 +20,8 @@ h1{margin:7px 0;font-size:24px}h2{font-size:18px;margin:6px 0 11px}h3{font-size:
 .cropPanel{border-color:#c1772c;background:#302c2b}.cropPanel input[type=range]{width:100%;accent-color:#ff9b28}.cropGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.cropLabel{display:flex;justify-content:space-between;margin:8px 0 2px}.cropHint{margin:8px 0 0}.canvasFrame canvas{cursor:crosshair}.noteHighlight{font-size:11px;color:#ffe6b2}
 </style></head>
 <body><header><strong>HK <span>UBP POST BUILDER</span></strong><nav><a class="active" href="./">ADAY KARTLARI</a><a href="oy-tablolari.html">OY TABLOLARI</a></nav><small>HABER KIBRIS · 1080×1350 PNG</small></header>
-<main><aside><div class="k">01 / TASARIM</div><h1>UBP aday sıralama</h1><p>Adayları seç, açıklanan sonuç sırasına yerleştir. TRT referansındaki gibi yuvarlak portreli haber postunu PNG olarak indir.</p><div class="tabs" id="tabs"></div>
-<div class="box"><h3>Fotoğraflar ve Photoshop tasarımı</h3><p>73 aday görseli ve Photoshop tabanlı arka planlar hazır yüklenecek. Gerekirse yeni fotoğrafları veya kendi revize ettiğin arka planı buradan değiştirebilirsin.</p><label class="upload" for="photosUpload">↑ Fotoğrafları değiştir (opsiyonel)</label><input type="file" id="photosUpload" accept="image/*,.zip" multiple>
+<main><aside><div class="k">01 / TASARIM</div><h1>UBP aday sıralama</h1><p>Adayları sırala, postu PNG olarak indir.</p><div class="tabs" id="tabs"></div>
+<div class="box"><h3>Fotoğraflar ve Photoshop tasarımı</h3><p>Fotoğraf veya arka plan değiştirmek için dosya seç.</p><label class="upload" for="photosUpload">↑ Fotoğrafları değiştir (opsiyonel)</label><input type="file" id="photosUpload" accept="image/*,.zip" multiple>
 <label class="upload" style="background:#344458;color:white;margin-top:7px" for="templateUpload">↑ Bu ilçenin PSD arka planını değiştir</label><input type="file" id="templateUpload" accept="image/png,image/jpeg,image/webp">
 <div id="assetStatus" class="status" style="margin-top:9px">UBP fotoğrafları ve orijinal PSD şablonu yükleniyor...</div></div>
 <div class="box"><div class="row"><h3 id="poolTitle">Aday havuzu</h3><span class="status" id="count"></span></div><div id="subrow" style="display:none"><label>Alt ilçe</label><select id="sub" class="form"><option value="isk">İskele</option><option value="guz">Güzelyurt</option><option value="lefke">Lefke</option></select></div>
@@ -30,7 +30,7 @@ h1{margin:7px 0;font-size:24px}h2{font-size:18px;margin:6px 0 11px}h3{font-size:
 </div>
 <div class="box cropPanel">
 <h3>Fotoğraf kadrajı</h3>
-<p>Dairesel portrelerin boyutunu ve konumunu ayarla. Önizlemedeki fotoğrafa dokunarak da aday seçebilirsin.</p>
+<p>Adayın kadrajını ayarla.</p>
 <label for="cropPerson">Düzenlenecek aday</label><select class="form" id="cropPerson"><option value="">Önce bir aday yerleştir</option></select>
 <div class="cropLabel"><label for="cropZoom">Yakınlaştır</label><span id="cropZoomVal" class="small">1.06×</span></div><input type="range" id="cropZoom" min="1" max="2.6" step=".05" value="1.06">
 <div class="cropGrid"><div><div class="cropLabel"><label for="cropX">Sağ / sol</label><span id="cropXVal" class="small">0</span></div><input type="range" id="cropX" min="-45" max="45" step="1" value="0"></div>
@@ -39,8 +39,8 @@ h1{margin:7px 0;font-size:24px}h2{font-size:18px;margin:6px 0 11px}h3{font-size:
 <div class="cropHint noteHighlight">Bu ayarlar PNG çıktısına da aynen uygulanır. Her aday için ayrı kaydedilir.</div>
 </div>
 <div class="box"><h3>Toplu sıralama</h3><p>Resmi sıralamayı alt alta yapıştır. Her isim fotoğrafıyla eşleşir; bulunamayan isimleri bildirir.</p><textarea class="form" id="bulk" placeholder="1. Aday Adı&#10;2. Başka Aday"></textarea><button class="secondary" style="width:100%" id="bulkApply">Sıralamayı yerleştir</button></div></aside>
-<section><div class="workhead"><div><div class="k">02 / ÖNİZLEME</div><h2 id="title">UBP Lefkoşa aday listesi</h2><div class="muted" id="subtitle">Resmi sıra açıklanana kadar görseller taslaktır.</div></div><button class="btn" id="download">PNG İNDİR ↓</button></div>
-<div class="work"><div><div class="canvasFrame"><canvas id="post" width="1080" height="1350"></canvas></div><p id="previewNote">Lefkoşa Photoshop tasarımı ve 73 aday fotoğrafı otomatik yüklenir. Açıklanan kesin listeyle karşılaştırılmadan yayımlamayın.</p></div>
+<section><div class="workhead"><div><div class="k">02 / ÖNİZLEME</div><h2 id="title">UBP Lefkoşa aday listesi</h2><div class="muted" id="subtitle" style="display:none"></div></div><button class="btn" id="download">PNG İNDİR ↓</button></div>
+<div class="work"><div><div class="canvasFrame"><canvas id="post" width="1080" height="1350"></canvas></div><p id="previewNote" style="display:none"></p></div>
 <div><div class="row"><h2>Son aday sıralaması</h2><button class="secondary" id="reset">Temizle</button></div><p>Menüden adayı seç veya satırları sürükle. Önizleme üzerindeki dairesel fotoğrafa tıklayarak kadrajı düzenleyebilirsin.</p><div class="seats" id="seats"></div></div></div></section></main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
@@ -93,7 +93,20 @@ function fitted(s,w,max=23,min=12){let n=max;while(n>min){ctx.font='bold '+n+'px
 // Special presets are applied only until the editor makes a per-person change.
 const DEFAULT_CROP={zoom:1.06,x:0,y:0};
 const CROP_PRESETS={
- 'lef_21':{zoom:1.00,x:0,y:-7} // Olgun Amcaoğlu: preserve full head rather than aggressive zoom
+ 'lef_4':{zoom:1.50,x:0,y:0},
+ 'lef_5':{zoom:1.34,x:6,y:0},
+ 'lef_18':{zoom:1.18,x:0,y:0},
+ 'lef_21':{zoom:1.14,x:0,y:-7},
+ 'gir_0':{zoom:1.33,x:0,y:0}, // Sinem Arıca: close the dark side margins
+ 'gir_3':{zoom:1.44,x:0,y:0}, // Hüsrev Tancer: match other head sizes
+ 'gir_6':{zoom:1.14,x:0,y:0}, // Halit Soytürk: distant source portrait
+ 'gir_12':{zoom:1.23,x:4,y:0},
+ 'gir_16':{zoom:1.32,x:0,y:0},
+ 'mag_2':{zoom:1.28,x:0,y:0},
+ 'mag_3':{zoom:1.21,x:0,y:0},
+ 'isk_2':{zoom:1.18,x:0,y:0},
+ 'guz_1':{zoom:1.17,x:0,y:0},
+ 'guz_3':{zoom:1.19,x:0,y:0}
 };
 function adjustment(id){return Object.assign({},DEFAULT_CROP,CROP_PRESETS[id]||{},cropById[id]||{})}
 function textLines(value,maxWidth,maxSize=24,minSize=17){
@@ -323,8 +336,8 @@ async function preloadBuiltInAssets(){
     tg.clearRect(0,0,226,270);tg.drawImage(atlas,(index%9)*226,Math.floor(index/9)*270,226,270,0,0,226,270);
     photos[p.id]=tile.toDataURL('image/jpeg',.87);count++;
   }
-  status.innerHTML='<span style="color:#80e6a2">✓ '+(count||73)+' UBP aday fotoğrafı ve 4 tasarım hazır.</span> Yeni fotoğraf seçmek isteğe bağlıdır.';
-  $('previewNote').textContent='UBP şablonu ve TRT referansından esinlenen dairesel aday portreleri hazır. Fotoğraf kadrajlarını panelden düzenleyebilirsin.';
+  status.innerHTML='<span style="color:#80e6a2">✓ Görseller yüklendi.</span>';
+  // User-facing preview marketing copy intentionally removed.
   render();
   // Tüm fotoğrafların çizime hazır olmasını bekle.
   await Promise.all(Object.values(photos).map(u=>new Promise(res=>{let x=img(u);if(x)return res();const t=images[u];if(!t)return res();t.addEventListener('load',res,{once:true});t.addEventListener('error',res,{once:true})})));
