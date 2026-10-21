@@ -1,122 +1,131 @@
-<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>HK CTP Post Builder</title><meta name="theme-color" content="#10141a"><style>
-*{box-sizing:border-box}body{margin:0;background:#0d1118;color:#f5f5f7;font-family:Arial,Helvetica,sans-serif}button,select,input,textarea{font:inherit}button{cursor:pointer}header{padding:17px 22px;background:#1b202a;border-bottom:1px solid #3a4049;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}header b{font-size:20px;letter-spacing:.5px}header b span{color:#ffca00}header small{color:#aab5c1}main{display:grid;grid-template-columns:minmax(300px,370px) 1fr;min-height:90vh}aside{padding:20px;background:#171d27;border-right:1px solid #353d4a}section{padding:20px}.k{color:#ffca00;font-size:11px;letter-spacing:2px;font-weight:bold}h2{font-size:19px;margin:9px 0}p{font-size:13px;color:#bac3d0;line-height:1.5}label{display:block;margin:8px 0;color:#cbd2dc;font-size:12px}input[type=file]{display:none}.upload,.go{display:block;background:#ffca00;color:#151515;text-align:center;font-weight:900;border:0;border-radius:10px;padding:13px;cursor:pointer;margin:8px 0}.go{width:100%}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0}.tab{border:1px solid #444d5b;background:#252d3a;color:white;border-radius:8px;padding:12px 6px;text-align:left;font-weight:800}.tab.active{border-color:#f9c600;background:#44391c;color:#ffda56}.tab small{display:block;margin-top:4px;font-size:10px;color:#b8c0cc}.box{border:1px solid #353e4d;border-radius:12px;padding:13px;background:#202734;margin:14px 0}.status{font-size:12px;color:#f6c94a;line-height:1.5}.muted{font-size:12px;color:#aab7c6}.pool{max-height:300px;overflow:auto;display:grid;gap:5px;margin-top:10px}.person{display:flex;gap:8px;align-items:center;border:1px solid #414a59;border-radius:6px;padding:5px;min-width:0}.person.used{opacity:.45}.person img,.seat img{width:36px;height:40px;object-fit:cover;background:#555;flex-shrink:0}.person b{flex:1;font-size:12px;min-width:0}.person button{background:#ffca00;border:0;border-radius:5px;padding:7px 10px;font-weight:bold}.person button:disabled{opacity:.35}.form{display:block;width:100%;background:#111820;color:#f7f8fa;border:1px solid #485264;border-radius:8px;padding:10px;margin:8px 0}textarea{min-height:110px;resize:vertical}.row{display:flex;gap:10px;justify-content:space-between;align-items:center}canvas{width:100%;height:auto;display:block;background:#111;aspect-ratio:4/5}.canvasbox{background:#292f39;border:1px solid #3c4453;padding:8px;border-radius:11px}.work{display:grid;grid-template-columns:minmax(280px,510px) minmax(300px,1fr);gap:20px;align-items:start}.slots{max-height:730px;overflow:auto;display:grid;gap:6px}.seat{display:flex;gap:8px;align-items:center;background:#242d3a;padding:6px;border-radius:7px;border:1px solid #414b5b}.seat.over{border-color:#ffca00}.seat .num{background:#ffca00;color:#111;font-weight:900;padding:9px;border-radius:5px;min-width:37px;text-align:center}.seat select{flex:1;width:100px;min-width:0;background:#121821;color:white;border:1px solid #4b5464;border-radius:6px;padding:7px}.district{font-weight:900;color:#ffca00;padding:10px 0 4px;border-top:1px solid #4b5361;margin-top:8px}.smallbtn{border:1px solid #596579;background:#303b4b;color:white;padding:8px 12px;border-radius:8px}.note{font-size:11px;color:#aab3c0}.row h2{margin:0}.banner{color:#f2ca42;font-size:12px}.danger{color:#ff9c79}
-@media(max-width:900px){main{display:block}aside{border-right:0}.work{grid-template-columns:1fr}.canvasbox{max-width:530px;margin:auto}} 
-</style></head><body><header><b>HK <span>CTP POST BUILDER</span></b><nav style="display:flex;gap:8px;flex-wrap:wrap"><a href="./" style="background:#ffca00;color:#151515;text-decoration:none;font-size:12px;font-weight:900;border-radius:8px;padding:10px 12px">ADAY KARTLARI</a><a href="oy-tablolari.html" style="background:#2a3442;color:#f5f5f7;border:1px solid #546072;text-decoration:none;font-size:12px;font-weight:900;border-radius:8px;padding:10px 12px">OY TABLOLARI</a></nav><small>HABER KIBRIS · 1080 × 1350 PNG</small></header><main><aside><div class="k">01 / ŞABLON</div><h2>Aday sıralama</h2><p>İlçeyi seç. Adayları fotoğraflarıyla yerleştir, sıralamayı değiştir ve PNG indir.</p><div class="tabs" id="tabs"></div><div class="box"><b>Görsel paketini yükle</b><p>İlk seferde <b>HK_CTP_Post_Builder_DUZELTILMIS.zip</b> dosyasını seç. Mac'te ZIP'i açman gerekmiyor. Site dosyayı doğrudan okuyup burada saklar.</p><label for="upload" class="upload">↑ ZIP paketini seç</label><input id="upload" type="file" accept=".zip"><div class="status" id="status">Fotoğraf paketi henüz yüklenmedi.</div></div><div class="box"><h2>Orijinal fontlar</h2><p>Fontları yalnızca bu Mac'te saklarız, GitHub'a yüklemeyiz. İlk seferde TTF / OTF / WOFF / WOFF2 seç; sonraki girişlerde otomatik kullanılır.</p><label for="fontNameInput" class="upload">↑ Aday isimleri fontunu yükle</label><input id="fontNameInput" type="file" accept=".ttf,.otf,.woff,.woff2"><label for="fontNumberInput" class="smallbtn" style="display:block;text-align:center;cursor:pointer;margin-top:9px">↑ Sıra numarası fontu (isteğe bağlı)</label><input id="fontNumberInput" type="file" accept=".ttf,.otf,.woff,.woff2"><div class="status" id="fontStatus" style="margin-top:10px">Orijinal font henüz yüklenmedi.</div></div><div class="box"><div class="row"><h2 id="poolTitle">Aday havuzu</h2><span id="count" class="banner"></span></div><div id="subrow" style="display:none"><label>İlçe</label><select class="form" id="sub"><option value="isk">İskele</option><option value="guz">Güzelyurt</option><option value="lefke">Lefke</option></select></div><input class="form" type="search" id="search" placeholder="İsim ara"><div class="pool" id="pool"></div></div><div class="box"><h2>Toplu sıralama</h2><p>Resmî açıklamadaki adları satır satır yapıştır, tek işlemle sırala. Kontenjanlar için son duyuruyu esas al.</p><textarea class="form" id="bulk" placeholder="1. Ad Soyad&#10;2. Ad Soyad"></textarea><button class="smallbtn" style="width:100%" id="bulkButton">Listeyi yerleştir</button></div></aside><section><div class="row"><div><div class="k">02 / GÖRSEL ÖNİZLEME</div><h2 id="title">CTP Lefkoşa</h2><p>Eski örnek portreler ve isimler kodla temizlenir.</p></div><button class="go" id="download" style="width:auto;margin:0">PNG İNDİR ↓</button></div><div class="work"><div><div class="canvasbox"><canvas width="1080" height="1350" id="post"></canvas></div><p class="note">Yayımlamadan önce aday adlarını, sıra numaralarını ve fotoğrafları kontrol et.</p></div><div><div class="row"><h2>Sıra listesi</h2><button class="smallbtn" id="clear">Temizle</button></div><p>Aday seçebilir veya satırları sürükleyerek yerlerini değiştirebilirsin.</p><div class="slots" id="slots"></div></div></div></section></main>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script>
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HK UBP Post Builder</title><meta name="theme-color" content="#101725"><style>
+:root{font-family:Arial,Helvetica,sans-serif;color:#f2f4f8;background:#0e1420}*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.4;cursor:default}
+header{background:#151d2b;border-bottom:1px solid #334052;display:flex;gap:15px;align-items:center;justify-content:space-between;padding:15px 20px;flex-wrap:wrap}
+header strong{font-size:19px}header strong span{color:#ff922e}header small{color:#b9c3d2;font-size:11px}
+nav{display:flex;gap:8px}nav a{color:#fff;text-decoration:none;border-radius:7px;border:1px solid #546176;padding:10px 11px;font-size:12px;font-weight:bold}nav a.active{background:#fa8328;color:#141c29;border-color:#fa8328}
+main{display:grid;grid-template-columns:350px minmax(360px,1fr);min-height:90vh}aside{padding:18px;background:#18202e;border-right:1px solid #384355}section{padding:22px}
+h1{margin:7px 0;font-size:24px}h2{font-size:18px;margin:6px 0 11px}h3{font-size:15px;margin:0 0 9px}p{font-size:12px;color:#b3bfce;line-height:1.52}.k{color:#fca143;font-size:11px;letter-spacing:2px;font-weight:900}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0}.tabs button{background:#252f40;border:1px solid #49586d;padding:12px 8px;border-radius:8px;color:#fff;text-align:left;font-size:13px;font-weight:800}.tabs button.active{background:#483322;border-color:#ff902f;color:#ffc38f}.tabs small{display:block;font-size:10px;margin-top:5px;color:#b7c0cc}
+.box{background:#222d3d;border:1px solid #3c485a;border-radius:11px;padding:13px;margin-bottom:13px}
+.form{background:#0f1826;color:white;border:1px solid #566478;border-radius:8px;padding:10px;width:100%;margin:5px 0}textarea{min-height:92px;resize:vertical}label{display:block;font-size:12px;color:#c0cad8;margin:7px 0}
+.btn,.upload{background:#ff902e;border:0;color:#15171c;font-weight:900;padding:11px 13px;border-radius:8px;display:inline-block;text-align:center}.btn{cursor:pointer}.upload{cursor:pointer;width:100%;font-size:12px}input[type=file]{display:none}
+.secondary{background:#303c4d;color:#f0f1f4;border:1px solid #526074;border-radius:7px;padding:9px 11px;font-size:12px;font-weight:700}.muted{color:#aeb8c8;font-size:12px}.status{font-size:12px;color:#ffd5a7}
+.pool{display:grid;gap:5px;max-height:295px;overflow:auto;margin-top:10px}.person{display:flex;align-items:center;gap:8px;background:#202938;border:1px solid #3b485a;padding:6px;border-radius:7px}.person img,.seat img{width:37px;height:40px;object-fit:cover;background:#344356;border-radius:3px}.person b{font-size:12px;flex:1;min-width:0}.person button{border:0;border-radius:5px;background:#fba043;padding:6px 10px;font-weight:900}.person.used{opacity:.52}
+.workhead{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap;margin-bottom:18px}.work{display:grid;grid-template-columns:minmax(270px,520px) minmax(300px,1fr);gap:24px;align-items:start}
+.canvasFrame{padding:9px;background:#293343;border-radius:9px;border:1px solid #526074}canvas{width:100%;height:auto;aspect-ratio:4/5;display:block;background:#111821}
+.seats{display:grid;gap:6px;max-height:760px;overflow:auto}.seat{display:flex;gap:7px;align-items:center;background:#273140;border:1px solid #435268;border-radius:7px;padding:6px}.seat.over{border-color:#ff972d}
+.seat .n{background:#ff902e;color:#171717;border-radius:5px;padding:9px;font-weight:900;min-width:36px;text-align:center}.seat select{min-width:0;flex:1;background:#111b2b;color:#fff;border:1px solid #4b5a70;border-radius:6px;padding:8px;font-size:12px}
+.district{padding:9px 0 3px;color:#ffab4d;border-top:1px solid #4f5c70;font-weight:900}.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.small{font-size:11px;color:#b5c0cd}
+@media(max-width:1050px){.work{grid-template-columns:1fr}.canvasFrame{max-width:540px;margin:auto}}@media(max-width:780px){main{display:block}aside{border-right:0;border-bottom:1px solid #3b4759}section{padding:14px}}
+</style></head>
+<body><header><strong>HK <span>UBP POST BUILDER</span></strong><nav><a class="active" href="./">ADAY KARTLARI</a><a href="oy-tablolari.html">OY TABLOLARI</a></nav><small>HABER KIBRIS · 1080×1350 PNG</small></header>
+<main><aside><div class="k">01 / TASARIM</div><h1>UBP aday sıralama</h1><p>Resmi aday adayı havuzu hazır. Adayları seç, sonuç sırasına yerleştir, fotoğraflarını yükle ve postu indir.</p><div class="tabs" id="tabs"></div>
+<div class="box"><h3>Fotoğraflar ve Photoshop tasarımı</h3><p>Aday fotoğraflarını dosya isimlerinde ad-soyad olacak şekilde JPG/PNG/WebP veya ZIP olarak yükle. PSD'yi burada doğrudan açmıyoruz; Photoshop'tan çıkarılan temiz arka plan PNG'sini ayrıca yükleyebilirsin.</p><label class="upload" for="photosUpload">↑ Aday fotoğraflarını yükle</label><input type="file" id="photosUpload" accept="image/*,.zip" multiple>
+<label class="upload" style="background:#344458;color:white;margin-top:7px" for="templateUpload">↑ Bu ilçenin arka plan PNG'si</label><input type="file" id="templateUpload" accept="image/png,image/jpeg,image/webp">
+<div id="assetStatus" class="status" style="margin-top:9px">PSD'ler henüz gelmedi. Şimdilik geçici düzen kullanılıyor.</div></div>
+<div class="box"><div class="row"><h3 id="poolTitle">Aday havuzu</h3><span class="status" id="count"></span></div><div id="subrow" style="display:none"><label>Alt ilçe</label><select id="sub" class="form"><option value="isk">İskele</option><option value="guz">Güzelyurt</option><option value="lefke">Lefke</option></select></div>
+<input class="form" id="search" placeholder="Aday ara" type="search"><div class="pool" id="pool"></div>
+<div class="row" style="margin-top:10px"><input class="form" style="flex:1;min-width:0" id="extra" placeholder="Yeni kontenjan adayı ekle"><button class="secondary" id="addExtra">Ekle</button></div><div class="small">Açıklanmamış kontenjan isimleri otomatik atanmaz. Resmi duyuruyla birlikte buradan eklenir.</div>
+</div>
+<div class="box"><h3>Toplu sıralama</h3><p>Resmi sıralamayı alt alta yapıştır. Her isim fotoğrafıyla eşleşir; bulunamayan isimleri bildirir.</p><textarea class="form" id="bulk" placeholder="1. Aday Adı&#10;2. Başka Aday"></textarea><button class="secondary" style="width:100%" id="bulkApply">Sıralamayı yerleştir</button></div></aside>
+<section><div class="workhead"><div><div class="k">02 / ÖNİZLEME</div><h2 id="title">UBP Lefkoşa aday listesi</h2><div class="muted" id="subtitle">Resmi sıra açıklanana kadar görseller taslaktır.</div></div><button class="btn" id="download">PNG İNDİR ↓</button></div>
+<div class="work"><div><div class="canvasFrame"><canvas id="post" width="1080" height="1350"></canvas></div><p id="previewNote">Gerçek PSD yerleşimi, PSD'leri teslim ettiğinde kalibre edilecek. Eksik aday veya fotoğraf varsa indirilen görsel TASLAK olarak işaretlenir.</p></div>
+<div><div class="row"><h2>Son aday sıralaması</h2><button class="secondary" id="reset">Temizle</button></div><p>Menüden adayı seç veya yerlerini değiştirmek için satırları sürükle. Sıralar, açıklanan kesin listeye göre düzenlenmelidir.</p><div class="seats" id="seats"></div></div></div></section></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id),canvas=$('post'),ctx=canvas.getContext('2d',{alpha:false});
-const districts={lef:['Lefkoşa',16],gir:['Girne',12],mag:['Gazimağusa',12],combined:['İskele / Güzelyurt / Lefke',10]};
-const subnames={isk:'İskele',guz:'Güzelyurt',lefke:'Lefke'};
-let active='lef',sub='isk',data=null,assets={},bg={},images={},chosen={},working=false;
-let customNameFont=false, customNumberFont=false, customNameFile='', customNumberFile='';
-function layout(key){let a=[];if(key==='lef')for(let r=0;r<4;r++)for(let j=0;j<4;j++)a.push({d:'lef',n:a.length+1,x:[73,315,557,799][j],y:[323,570,817,1065][r],w:223,h:232,b:31});
-if(key==='gir')for(let r=0;r<3;r++)for(let j=0;j<4;j++)a.push({d:'gir',n:a.length+1,x:[53,307,551,803][j],y:[376,669,969][r],w:234,h:274,b:32});
-if(key==='mag')for(let r=0;r<3;r++)for(let j=0;j<4;j++)a.push({d:'mag',n:a.length+1,x:[49,303,548,799][j],y:[376,669,969][r],w:234,h:274,b:32});
-if(key==='combined'){[15,227,439,651,864].forEach((x,i)=>a.push({d:'isk',n:i+1,x,y:498,w:205,h:295,b:31}));[15,219,420].forEach((x,i)=>a.push({d:'guz',n:i+1,x,y:947,w:196,h:283,b:27}));[650,852].forEach((x,i)=>a.push({d:'lefke',n:i+1,x,y:947,w:196,h:283,b:27}))}
-return a}const layouts=Object.fromEntries(Object.keys(districts).map(k=>[k,layout(k)]));
-for(let k of Object.keys(layouts)){try{let x=JSON.parse(localStorage.getItem('hk_ctp_order3_'+k));chosen[k]=Array.isArray(x)&&x.length===layouts[k].length?x:Array(layouts[k].length).fill(null)}catch(e){chosen[k]=Array(layouts[k].length).fill(null)}}
-function save(){try{localStorage.setItem('hk_ctp_order3_'+active,JSON.stringify(chosen[active]))}catch(e){}}
-function ids(d){return data?.people?.[d]||[]}
-function all(){return active==='combined'?[...ids('isk'),...ids('guz'),...ids('lefke')]:ids(active)}
-function byId(id){return all().find(p=>p.id===id)}
-function norm(s){return (s||'').toLocaleLowerCase('tr-TR').replace(/ı/g,'i').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'')}
-function getImage(src){if(!src)return null;if(!images[src]){let i=new Image;i.onload=draw;i.onerror=draw;i.src=src;images[src]=i}return images[src].complete&&images[src].naturalWidth?images[src]:null}
-function rect(x,y,w,h,color){ctx.fillStyle=color;ctx.fillRect(x,y,w,h)}
-function cover(im,x,y,w,h){let scale=Math.max(w/im.naturalWidth,h/im.naturalHeight),sw=w/scale,sh=h/scale;ctx.drawImage(im,(im.naturalWidth-sw)/2,Math.max(0,(im.naturalHeight-sh)*.31),sw,sh,x,y,w,h)}
+const defs={lef:['Lefkoşa',16],gir:['Girne',12],mag:['Gazimağusa',12],combined:['İskele / Güzelyurt / Lefke',10]};
+const names={
+lef:'Ahmet Savaşan|Murat Pirgot|Okan Donangil|İsmail Yılmaç|Veli Esendağlı|Özlem Bendaşan|Mehmet Öztürk|Hasan Taçoy|Serap Topal|Şerife Ünverdi|Alişan Şan|Mehmet Aktan|Sadık Gardiyanoğlu|Zorlu Töre|Sami Uzun|Berhan Ongan|Batu Beyit|Faiz Sucuoğlu|Betül Peyravi|Havva Dağsever|Hüseyin Ballı|Olgun Amcaoğlu',
+gir:'Sinem Arıca|Hüseyin Kayım|Adnan Ademoğlu|Hüsrev Tancer|Maşallah Cihangir|Özdemir Berova|Halit Soytürk|Adnan Altan|Murat Karalar|Kutlu Evren|Kaan Resa Saçar|Redif Nurel|Mahmut Toray Hüdaverdi|Vesile Erdoğan|Alev Ecevit|Hasan Küçük|Sami Otçuoğlu|Mehmet Hulusioğlu',
+mag:'Resmiye Canaltay|Oğuzhan Hasipoğlu|Hakan Dinçyürek|Ayşe Demir|Sunat Atun|Lütfü Oflaz|Durali Güçlüsoy|Dursun Oğuz|Sultan Vural|Hüseyin Çavuş|Hanime Kadriye Kontosoğlu|Elif Abıç',
+isk:'Emine Uzun|Nazım Çavuşoğlu|Cenk Osman Şeren|Remziye Seven|Kemal Soybir|İsmail Demirci|Yasemi Öztürk|Emrah Yeşilırmak|Canan Mimar|Letife Öğdü|Ramazan Korkmaz',
+guz:'Menteş Gündüz|İbrahim Ürcan|Ali Pilli|Ziya Öztürkler',
+lefke:'Aytaç Çaluda|Aykut Aksu|Fırtına Karanfil|Adil Özgey|Ediz Tuncel'
+};
+const subNames={isk:'İSKELE',guz:'GÜZELYURT',lefke:'LEFKE'};
+const norm=s=>String(s||'').toLocaleLowerCase('tr-TR').replace(/ı/g,'i').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
+const slug=s=>norm(s), people={},chosen={},layouts={},photos={},templates={},images={};
+let active='lef',sub='isk',busy=false;
+for(const d in names)people[d]=names[d].split('|').map((name,i)=>({id:d+'_'+i,name}));
+function layout(k){let a=[];if(k==='lef')for(let r=0;r<4;r++)for(let c=0;c<4;c++)a.push({d:'lef',n:a.length+1,x:60+c*241,y:341+r*241,w:222,h:224});
+if(k==='gir'||k==='mag')for(let r=0;r<3;r++)for(let c=0;c<4;c++)a.push({d:k,n:a.length+1,x:60+c*241,y:371+r*292,w:222,h:273});
+if(k==='combined'){
+for(let c=0;c<5;c++)a.push({d:'isk',n:c+1,x:29+c*210,y:492,w:197,h:278});
+for(let c=0;c<3;c++)a.push({d:'guz',n:c+1,x:28+c*210,y:944,w:197,h:280});
+for(let c=0;c<2;c++)a.push({d:'lefke',n:c+1,x:652+c*210,y:944,w:197,h:280});
+}return a}
+for(const k in defs){layouts[k]=layout(k);try{const s=JSON.parse(localStorage.getItem('HK_UBP_SEL_'+k)||'null');chosen[k]=Array.isArray(s)&&s.length===layouts[k].length?s:Array(layouts[k].length).fill(null)}catch(e){chosen[k]=Array(layouts[k].length).fill(null)}}
+try{let ext=JSON.parse(localStorage.getItem('HK_UBP_EXTRA')||'{}');for(const k in ext)if(people[k]&&Array.isArray(ext[k])){for(const x of ext[k])if(!people[k].some(p=>p.id===x.id))people[k].push(x)}}catch(e){}
+function save(){try{localStorage.setItem('HK_UBP_SEL_'+active,JSON.stringify(chosen[active]))}catch(e){}}
+function getAll(){return active==='combined'?[...people.isk,...people.guz,...people.lefke]:people[active]}
+function byId(id){return getAll().find(p=>p.id===id)}
+function set(i,id){const seat=layouts[active][i],p=byId(id);if(id&&(!p||!p.id.startsWith(seat.d+'_'))){alert('Aday farklı bir ilçeye eklenemez.');return}
+const a=chosen[active],other=a.indexOf(id),old=a[i];if(id&&other>=0&&other!==i)a[other]=old||null;a[i]=id||null;save();render()}
+function swap(i,j){if(i===j)return;if(layouts[active][i].d!==layouts[active][j].d){alert('Farklı ilçelerin sırası değiştirilemez.');return}
+[chosen[active][i],chosen[active][j]]=[chosen[active][j],chosen[active][i]];save();render()}
+const img=src=>{if(!src)return null;if(!images[src]){let i=new Image();i.onload=draw;i.onerror=draw;i.src=src;images[src]=i}return images[src].complete&&images[src].naturalWidth?images[src]:null};
+function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x,y,w,h)}
+function fill(s,x,y,font,color,align='left'){ctx.textAlign=align;ctx.textBaseline='middle';ctx.font=font;ctx.fillStyle=color;ctx.fillText(s,x,y)}
+function fitted(s,w,max=23,min=12){let n=max;while(n>min){ctx.font='bold '+n+'px Arial';if(ctx.measureText(s).width<=w)break;n--}return n}
+function cover(i,x,y,w,h){const sc=Math.max(w/i.naturalWidth,h/i.naturalHeight),sw=w/sc,sh=h/sc;ctx.drawImage(i,(i.naturalWidth-sw)/2,(i.naturalHeight-sh)*.32,sw,sh,x,y,w,h)}
 function draw(){
-rect(0,0,1080,1350,'#141417');let t=getImage(bg[active]);if(t)ctx.drawImage(t,0,0,1080,1350);
-else{rect(0,0,1080,64,'#292d36');ctx.textAlign='center';ctx.fillStyle='#ffcb00';ctx.font='bold 25px Arial';ctx.fillText('HABER KIBRIS   •   HABER KIBRIS   •   HABER KIBRIS',540,42);ctx.fillStyle='#fff';ctx.font='bold 62px Impact, Arial Narrow, Arial';ctx.fillText('CTP '+districts[active][0].toLocaleUpperCase('tr-TR'),540,198);ctx.fillText('MİLLETVEKİLİ ADAYLARI',540,288)}
-// First wipe baked-in sample photo, badges and names from EVERY card region.
-// Two passes prevent one card's wipe from erasing the neighboring new card.
-// Cover entire original candidate rows BEFORE painting any updated cards.
- // This removes all baked-in sample portraits, names and number tabs,
- // including 1-10 px fragments in Photoshop's card gutters.
- const rows = new Map();
- for (const card of layouts[active]) {
-   const key = String(card.y);
-   const row = rows.get(key);
-   if (row) {
-     row.left = Math.min(row.left, card.x);
-     row.right = Math.max(row.right, card.x + card.w);
-     row.height = Math.max(row.height, card.h);
-   } else rows.set(key, {left:card.x,right:card.x+card.w,top:card.y,height:card.h});
- }
- for (const row of rows.values()) {
-   ctx.save();
-   ctx.fillStyle = '#151417';
-   ctx.fillRect(Math.max(0,row.left-9),Math.max(0,row.top-5),
-     Math.min(1080,row.right+9)-Math.max(0,row.left-9),row.height+10);
-   ctx.restore();
- }
-layouts[active].forEach((c,i)=>{
-let p=byId(chosen[active][i]),im=p?getImage(p.src):null,hp=c.h-c.b;
-rect(c.x,c.y,c.w,c.h,'#292b31');if(im)cover(im,c.x,c.y,c.w,hp);else{rect(c.x,c.y,c.w,hp,'#555a61');ctx.fillStyle='#787d84';ctx.beginPath();ctx.arc(c.x+c.w/2,c.y+hp*.38,Math.min(37,c.w*.18),0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(c.x+c.w/2,c.y+hp*.93,c.w*.35,hp*.31,0,Math.PI,Math.PI*2);ctx.fill()}
-rect(c.x,c.y+hp,c.w,c.b,'#131313');rect(c.x+7,c.y+hp+2,c.w-14,c.b-4,'#ffcb00');
-ctx.fillStyle='#ffcb00';ctx.beginPath();ctx.moveTo(c.x,c.y);ctx.lineTo(c.x+54,c.y);ctx.lineTo(c.x+44,c.y+46);ctx.lineTo(c.x,c.y+49);ctx.closePath();ctx.fill();
-ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#090909';ctx.font='900 37px '+(customNumberFont?'HK_CTP_Number':'Impact,Arial Narrow,Arial');ctx.fillText(c.n,c.x+21,c.y+22);
-let label=p?p.name.toLocaleUpperCase('tr-TR'):'ADAY SEÇ';let size=Math.min(c.b-7,26);ctx.font='900 '+size+'px '+(customNameFont?'HK_CTP_Name':'Impact,Arial Narrow,Arial');while(ctx.measureText(label).width*.76>c.w-20&&size>11){size--;ctx.font='900 '+size+'px '+(customNameFont?'HK_CTP_Name':'Impact,Arial Narrow,Arial')}
-ctx.save();ctx.translate(c.x+c.w/2,c.y+hp+c.b/2+2);ctx.scale(.76,1);ctx.fillText(label,0,0,(c.w-16)/.76);ctx.restore()
-})
+rect(0,0,1080,1350,'#101824');let t=img(templates[active]);if(t)ctx.drawImage(t,0,0,1080,1350);
+else{let g=ctx.createLinearGradient(0,0,950,1350);g.addColorStop(0,'#112343');g.addColorStop(.6,'#0c182b');g.addColorStop(1,'#241e1b');rect(0,0,1080,1350,g);
+rect(0,0,1080,61,'#252a35');fill('HABER KIBRIS   •   HABER KIBRIS   •   HABER KIBRIS',540,32,'bold 22px Arial','#ffcb22','center');
+rect(65,107,144,120,'#f58b24');fill('UBP',137,171,'bold 53px Arial','#fff','center');
+fill('MİLLETVEKİLİ ADAYLARI',250,148,'bold 37px Arial','#fff');fill('24 EKİM 2026 / ADAY SIRALAMASI',250,198,'bold 22px Arial','#fec893');
+fill(active==='combined'?'3 İLÇE':defs[active][0].toLocaleUpperCase('tr-TR'),65,292,'bold 70px Impact,Arial','#ff952d');
+rect(65,318,950,4,'#ff922e');
+if(active==='combined'){fill('İSKELE',34,466,'bold 36px Arial','#ff9d3c');fill('GÜZELYURT',28,907,'bold 36px Arial','#ff9d3c');fill('LEFKE',652,907,'bold 36px Arial','#ff9d3c')}}
+layouts[active].forEach((a,j)=>{
+const p=byId(chosen[active][j]),src=p&&photos[p.id],im=img(src),x=a.x,y=a.y,w=a.w,h=a.h,b=Math.max(34,Math.round(h*.17)),ph=h-b;
+rect(x,y,w,ph,'#32435a');if(im)cover(im,x,y,w,ph);else{fill('FOTOĞRAF YOK',x+w/2,y+ph/2,'bold 16px Arial','#acb9c8','center')}
+rect(x,y+ph,w,b,'#e68b2b');rect(x,y,43,42,'#fa982e');fill(String(a.n),x+21,y+22,'bold 30px Arial','#102039','center');
+const nm=p?p.name.toLocaleUpperCase('tr-TR'):'ADAY SEÇ';fill(nm,x+w/2,y+ph+b/2,'bold '+fitted(nm,w-14,22,11)+'px Arial','#151b27','center')
+});
+const missing=chosen[active].some(id=>!id||!photos[id]);if(missing){ctx.save();ctx.translate(540,720);ctx.rotate(-.15);ctx.globalAlpha=.53;fill('TASLAK',0,0,'bold 152px Impact,Arial','#ffb45a','center');ctx.restore()}
 }
-function setSlot(i,id){let c=layouts[active][i];if(id&&(!byId(id)||!id.startsWith(c.d+'-'))){alert('Bu aday başka bir ilçeye ait.');return}let a=chosen[active],old=a[i],other=id?a.indexOf(id):-1;if(other>=0&&other!==i)a[other]=old||null;a[i]=id||null;save();render()}
-function swap(i,j){if(i===j)return;if(layouts[active][i].d!==layouts[active][j].d){alert('İlçeler arasında taşıma yapılamaz.');return}[chosen[active][i],chosen[active][j]]=[chosen[active][j],chosen[active][i]];save();render()}
-function tabs(){$('tabs').innerHTML='';for(let k of Object.keys(districts)){let b=document.createElement('button');b.className='tab'+(k===active?' active':'');b.innerHTML=districts[k][0]+'<small>'+districts[k][1]+' aday</small>';b.onclick=()=>{active=k;sub='isk';$('search').value='';$('bulk').value='';render()};$('tabs').append(b)}}
-function pool(){let d=active==='combined'?sub:active,q=norm($('search').value),used=new Set(chosen[active]);$('pool').innerHTML='';ids(d).filter(p=>norm(p.name).includes(q)).forEach(p=>{let div=document.createElement('div');div.className='person'+(used.has(p.id)?' used':'');div.draggable=true;div.ondragstart=e=>e.dataTransfer.setData('text/plain',JSON.stringify({type:'person',id:p.id}));let i=document.createElement('img');i.src=p.src||'';let b=document.createElement('b');b.textContent=p.name;let plus=document.createElement('button');plus.textContent='+';plus.disabled=used.has(p.id);plus.onclick=()=>{let k=layouts[active].findIndex((c,j)=>c.d===d&&!chosen[active][j]);if(k<0){alert('Boş aday yeri kalmadı.');return}setSlot(k,p.id)};div.append(i,b,plus);$('pool').append(div)})}
-function slots(){$('slots').innerHTML='';let prev='';layouts[active].forEach((c,i)=>{if(active==='combined'&&c.d!==prev){let x=document.createElement('div');x.className='district';x.textContent=subnames[c.d];$('slots').append(x);prev=c.d}let d=document.createElement('div');d.className='seat';d.draggable=true;d.ondragstart=e=>e.dataTransfer.setData('text/plain',JSON.stringify({type:'seat',i}));d.ondragover=e=>{e.preventDefault();d.classList.add('over')};d.ondragleave=()=>d.classList.remove('over');d.ondrop=e=>{e.preventDefault();d.classList.remove('over');try{let x=JSON.parse(e.dataTransfer.getData('text/plain'));if(x.type==='person')setSlot(i,x.id);else swap(i,x.i)}catch(err){}};let num=document.createElement('b');num.className='num';num.textContent=c.n;let image=document.createElement('img');image.src=byId(chosen[active][i])?.src||'';let sel=document.createElement('select');sel.setAttribute('aria-label',c.n+'. sıra');sel.add(new Option('Aday seç...',''));let allp=all().filter(p=>p.id.startsWith(c.d+'-')&&(!chosen[active].includes(p.id)||p.id===chosen[active][i]));allp.forEach(p=>sel.add(new Option(p.name,p.id)));sel.value=chosen[active][i]||'';sel.onchange=()=>setSlot(i,sel.value);d.append(num,image,sel);$('slots').append(d)})}
-function render(){tabs();$('title').textContent='CTP '+districts[active][0]+' adayları';$('poolTitle').textContent=active==='combined'?subnames[sub]:districts[active][0];$('subrow').style.display=active==='combined'?'block':'none';$('sub').value=sub;$('count').textContent=chosen[active].filter(Boolean).length+'/'+layouts[active].length;pool();slots();draw()}
-$('sub').onchange=()=>{sub=$('sub').value;render()};$('search').oninput=pool;$('clear').onclick=()=>{if(confirm('Bu ilçenin sıralamasını temizlemek istiyor musun?')){chosen[active]=Array(layouts[active].length).fill(null);save();render()}};
-$('bulkButton').onclick=()=>{let d=active==='combined'?sub:active;let names=$('bulk').value.split(/[\n;]/).map(s=>s.replace(/^\s*(\d+[.):\-]\s*|[•\-*]\s*)/,'').trim()).filter(Boolean);if(!names.length)return;let found=[],errors=[];names.forEach(name=>{let matches=ids(d).filter(p=>norm(p.name)===norm(name));if(matches.length!==1||found.includes(matches[0].id))errors.push(name);else found.push(matches[0].id)});if(errors.length){alert('Eşleşmeyen veya yinelenen adlar:\n'+errors.join('\n'));return}let indexes=layouts[active].map((c,i)=>c.d===d?i:-1).filter(i=>i>=0);if(found.length>indexes.length){alert('Bu ilçedeki sıra sayısı aşıldı.');return}indexes.forEach(i=>chosen[active][i]=null);found.forEach((id,i)=>chosen[active][indexes[i]]=id);save();render()};
-$('download').onclick=()=>{let missing=chosen[active].filter(x=>!x).length;if(missing&&!confirm(missing+' boş aday sırası var. Taslak indirilsin mi?'))return;if(!data&&!confirm('Görsel paketi yüklenmedi; yalnızca taslak indirilsin mi?'))return;draw();canvas.toBlob(blob=>{if(!blob)return alert('PNG oluşturulamadı');let u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='HK_CTP_'+active+'_1080x1350'+(missing?'_TASLAK':'')+'.png';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),5000)},'image/png')};
-function getDB(){return new Promise((res,rej)=>{let req=indexedDB.open('HK_CTP_ASSETS',1);req.onupgradeneeded=()=>req.result.createObjectStore('files');req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error)})}
-function showFontStatus(){
-  $('fontStatus').textContent='İsimler: '+(customNameFont?'✓ '+customNameFile:'Varsayılan')+' | Sıra numaraları: '+(customNumberFont?'✓ '+customNumberFile:'Varsayılan')+' · Yalnızca bu tarayıcıda saklanır.';
-}
-async function saveFontToBrowser(kind,blob){
-  let db=await getDB();
-  await new Promise((resolve,reject)=>{
-    let tx=db.transaction('files','readwrite');
-    tx.objectStore('files').put({name:blob.name||kind+'.ttf',blob:blob},'font_'+kind);
-    tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);
-  });db.close();
-}
-async function loadLocalFont(kind,blob,persist){
-  if(!blob) return;
-  const valid=/\.(ttf|otf|woff2?)$/i.test(blob.name||'');
-  if(!valid) throw Error('Lütfen TTF, OTF, WOFF veya WOFF2 dosyası seç.');
-  const family=kind==='name'?'HK_CTP_Name':'HK_CTP_Number';
-  const font=new FontFace(family,await blob.arrayBuffer(),{weight:'900',style:'normal'});
-  await font.load();
-  document.fonts.add(font);
-  if(kind==='name'){customNameFont=true;customNameFile=blob.name||'Yüklendi'}
-  else {customNumberFont=true;customNumberFile=blob.name||'Yüklendi'}
-  showFontStatus();draw();
-  if(persist)await saveFontToBrowser(kind,blob);
-}
-async function restoreLocalFonts(){
-  try{
-    const db=await getDB();
-    const saved=await Promise.all(['name','number'].map(kind=>new Promise((resolve,reject)=>{
-      const r=db.transaction('files','readonly').objectStore('files').get('font_'+kind);
-      r.onsuccess=()=>resolve({kind,result:r.result});r.onerror=()=>reject(r.error)
-    })));
-    db.close();
-    for(const {kind,result} of saved){if(result&&result.blob)await loadLocalFont(kind,result.blob,false)}
-  }catch(e){$('fontStatus').textContent='Font geri yükleme hatası: '+e.message}
-}
-function hookFontUpload(kind,id){
-  $(id).onchange=async e=>{
-    const file=e.target.files&&e.target.files[0];if(!file)return;
-    $('fontStatus').textContent='Font yükleniyor...';
-    try{await loadLocalFont(kind,file,true)}catch(err){
-      $('fontStatus').textContent='Font yüklenemedi: '+err.message;alert('Font yüklenemedi: '+err.message);
-    }finally{e.target.value=''}
-  };
-}
-hookFontUpload('name','fontNameInput');
-hookFontUpload('number','fontNumberInput');
-async function store(blob){try{let d=await getDB();await new Promise((res,rej)=>{let tx=d.transaction('files','readwrite');tx.objectStore('files').put(blob,'bundle');tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});d.close()}catch(err){$('status').textContent='Görseller yüklendi ancak kalıcı saklanamadı: '+err.message}}
-async function restore(){try{let d=await getDB();let val=await new Promise((res,rej)=>{let r=d.transaction('files').objectStore('files').get('bundle');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});d.close();if(val)await importPack(val,false)}catch(e){}}
-async function importPack(blob,persist=true){if(working)return;if(typeof JSZip==='undefined'){alert('ZIP açma kütüphanesi yüklenemedi, sayfayı yenile.');return}working=true;$('status').textContent='Görseller yükleniyor...';try{let z=await JSZip.loadAsync(blob),entries=Object.keys(z.files);function f(p){return z.file(p)||z.file(entries.find(x=>x.endsWith('/'+p))||'')};let file=f('assets/data.js');if(!file)throw Error('Bu dosya HK CTP görsel paketi değil.');let text=await file.async('string');let json=JSON.parse(text.slice(text.indexOf('=')+1).trim().replace(/;\s*$/,'')),n=0;data=json;for(let d of Object.keys(data.people)){for(let p of data.people[d]){let file=f(p.src);if(file){p.src=URL.createObjectURL(new Blob([await file.async('uint8array')],{type:'image/jpeg'}));n++}else p.src='' }}for(let k of Object.keys(districts)){let fpath=json.templates[k],file=f(fpath);if(file)bg[k]=URL.createObjectURL(new Blob([await file.async('uint8array')],{type:'image/jpeg'}))}$('status').innerHTML='<span style="color:#5fe3ad">✓ '+n+' aday fotoğrafı ve '+Object.keys(bg).length+' şablon yüklendi.</span>';render();if(persist)await store(blob)}catch(err){$('status').textContent='Yükleme hatası: '+err.message}finally{working=false}}
-$('upload').onchange=e=>{if(e.target.files[0])importPack(e.target.files[0])};render();showFontStatus();restore();restoreLocalFonts();
+function renderTabs(){$('tabs').innerHTML='';for(const k in defs){let b=document.createElement('button');b.className=k===active?'active':'';b.textContent=defs[k][0];let s=document.createElement('small');s.textContent=defs[k][1]+' aday';b.append(s);b.onclick=()=>{active=k;sub='isk';$('search').value='';$('bulk').value='';render()};$('tabs').append(b)}}
+function renderPool(){const d=active==='combined'?sub:active,used=new Set(chosen[active].filter(Boolean)),q=norm($('search').value);$('pool').innerHTML='';
+for(const p of people[d]){if(q&&!norm(p.name).includes(q))continue;let row=document.createElement('div');row.className='person'+(used.has(p.id)?' used':'');
+row.draggable=true;row.ondragstart=e=>e.dataTransfer.setData('text/plain',JSON.stringify({type:'candidate',id:p.id}));
+let im=document.createElement('img');im.alt='';if(photos[p.id])im.src=photos[p.id];
+let b=document.createElement('b');b.textContent=p.name;
+let add=document.createElement('button');add.textContent='+';add.disabled=used.has(p.id);add.onclick=()=>{let idx=layouts[active].findIndex((a,i)=>a.d===d&&!chosen[active][i]);if(idx<0){alert('Bu ilçenin aday listesi dolu.');return}set(idx,p.id)};
+row.append(im,b,add);$('pool').append(row)}}
+function renderSeats(){$('seats').innerHTML='';let prev='';layouts[active].forEach((a,i)=>{
+if(active==='combined'&&prev!==a.d){let d=document.createElement('div');d.className='district';d.textContent=subNames[a.d];$('seats').append(d);prev=a.d}
+let el=document.createElement('div');el.className='seat';el.draggable=true;el.ondragstart=e=>e.dataTransfer.setData('text/plain',JSON.stringify({type:'seat',index:i}));
+el.ondragover=e=>{e.preventDefault();el.classList.add('over')};el.ondragleave=()=>el.classList.remove('over');el.ondrop=e=>{e.preventDefault();el.classList.remove('over');try{let x=JSON.parse(e.dataTransfer.getData('text/plain'));if(x.type==='seat')swap(x.index,i);else set(i,x.id)}catch(err){}};
+let n=document.createElement('span');n.className='n';n.textContent=a.n;
+let pic=document.createElement('img');const p=byId(chosen[active][i]);if(p&&photos[p.id])pic.src=photos[p.id];
+let s=document.createElement('select'),op=document.createElement('option');op.value='';op.textContent='Aday seç...';s.append(op);
+for(const v of people[a.d])if(!chosen[active].includes(v.id)||chosen[active][i]===v.id){let opt=document.createElement('option');opt.value=v.id;opt.textContent=v.name;s.append(opt)}
+s.value=chosen[active][i]||'';s.onchange=()=>set(i,s.value);el.append(n,pic,s);$('seats').append(el)
+})}
+function render(){renderTabs();$('poolTitle').textContent=active==='combined'?subNames[sub]:defs[active][0];$('subrow').style.display=active==='combined'?'block':'none';$('sub').value=sub;$('title').textContent='UBP '+defs[active][0]+' aday listesi';$('count').textContent=chosen[active].filter(Boolean).length+'/'+layouts[active].length;renderPool();renderSeats();draw()}
+$('sub').onchange=()=>{sub=$('sub').value;render()};$('search').oninput=renderPool;
+$('reset').onclick=()=>{if(!confirm('Bu ilçe sıralaması temizlensin mi?'))return;chosen[active]=Array(layouts[active].length).fill(null);save();render()};
+$('addExtra').onclick=()=>{let d=active==='combined'?sub:active,name=$('extra').value.trim();if(!name)return;if(people[d].some(p=>norm(p.name)===norm(name))){alert('Bu kişi zaten listede.');return}
+const id=d+'_extra_'+Date.now();people[d].push({id,name});try{let ext=JSON.parse(localStorage.getItem('HK_UBP_EXTRA')||'{}');ext[d]??=[];ext[d].push({id,name});localStorage.setItem('HK_UBP_EXTRA',JSON.stringify(ext))}catch(e){}$('extra').value='';render()};
+$('bulkApply').onclick=()=>{let d=active==='combined'?sub:active,lines=$('bulk').value.split(/[\n;]/).map(x=>x.replace(/^\s*(\d+[\s.)\-:]+|[•*-]\s+)/,'').trim()).filter(Boolean),found=[],bad=[];
+if(!lines.length)return;for(const line of lines){let m=people[d].filter(p=>norm(p.name)===norm(line));if(m.length!==1||found.includes(m[0].id))bad.push(line);else found.push(m[0].id)}
+if(bad.length){alert('Eşleşmeyen veya yinelenen adaylar:\n'+bad.join('\n'));return}
+let slots=layouts[active].map((a,i)=>a.d===d?i:-1).filter(i=>i>=0);if(found.length>slots.length){alert('Aday sayısı bu ilçe için fazla.');return}
+slots.forEach(i=>chosen[active][i]=null);found.forEach((v,j)=>chosen[active][slots[j]]=v);save();render()};
+function db(){return new Promise((resolve,reject)=>{const r=indexedDB.open('HK_UBP_ASSETS_V1',1);r.onupgradeneeded=()=>r.result.createObjectStore('files');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
+async function store(key,blob){try{let d=await db();await new Promise((res,rej)=>{let t=d.transaction('files','readwrite');t.objectStore('files').put(blob,key);t.oncomplete=res;t.onerror=()=>rej(t.error)});d.close()}catch(e){$('assetStatus').textContent='Tarayıcıda saklama hatası: '+e.message}}
+async function restore(){try{let d=await db(),keys=await new Promise((res,rej)=>{let q=d.transaction('files').objectStore('files').getAllKeys();q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)});for(const key of keys){let b=await new Promise((res,rej)=>{let q=d.transaction('files').objectStore('files').get(key);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)});if(b&&b instanceof Blob){let u=URL.createObjectURL(b);if(key.startsWith('portrait:'))photos[key.slice(9)]=u;else if(key.startsWith('template:'))templates[key.slice(9)]=u}}d.close();render()}catch(e){console.warn(e)}}
+async function assignImage(filename,blob){const base=filename.replace(/\.[^.]+$/,'').replace(/^\d{1,3}[-_. ]*/,'');const hits=[];for(const d in people)for(const p of people[d])if(norm(base)===norm(p.name)||norm(base)===norm(d+' '+p.name))hits.push(p);
+if(hits.length!==1)return false;let p=hits[0],u=URL.createObjectURL(blob);if(photos[p.id])URL.revokeObjectURL(photos[p.id]);photos[p.id]=u;await store('portrait:'+p.id,blob);return true}
+$('photosUpload').onchange=async e=>{if(busy)return;busy=true;let files=Array.from(e.target.files||[]),yes=0,no=[];$('assetStatus').textContent='Fotoğraflar eşleştiriliyor...';
+try{for(const f of files){if(/\.zip$/i.test(f.name)){if(!window.JSZip)throw Error('ZIP okuyucu yüklenmedi.');let zip=await JSZip.loadAsync(f);for(const name of Object.keys(zip.files)){let file=zip.files[name];if(file.dir||!/\.(png|jpg|jpeg|webp)$/i.test(name))continue;let bytes=await file.async('uint8array'),blob=new Blob([bytes],{type:/\.png$/i.test(name)?'image/png':'image/jpeg'});if(await assignImage(name.split('/').pop(),blob))yes++;else no.push(name)}}else if(f.type.startsWith('image/')){if(await assignImage(f.name,f))yes++;else no.push(f.name)}}
+$('assetStatus').textContent=yes+' fotoğraf eşleşti.'+(no.length?' Eşleşmeyen: '+no.slice(0,5).join(', ')+(no.length>5?' ...':''):'');
+}catch(err){$('assetStatus').textContent='Yükleme hatası: '+err.message}finally{busy=false;e.target.value='';render()}};
+$('templateUpload').onchange=async e=>{const f=e.target.files[0];if(!f)return;let u=URL.createObjectURL(f);if(templates[active])URL.revokeObjectURL(templates[active]);templates[active]=u;await store('template:'+active,f);e.target.value='';render()};
+$('download').onclick=()=>{let missing=chosen[active].filter(id=>!id||!photos[id]).length;if(missing&&!confirm(missing+' eksik sıra veya fotoğraf var. TASLAK indirilsin mi?'))return;draw();canvas.toBlob(b=>{if(!b){alert('PNG oluşturulamadı.');return}let url=URL.createObjectURL(b),a=document.createElement('a');a.href=url;a.download='HK_UBP_'+active+'_1080x1350'+(missing?'_TASLAK':'')+'.png';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000)},'image/png')};
+render();restore();
 })();
 </script></body></html>
