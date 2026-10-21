@@ -322,10 +322,12 @@ async function preloadBuiltInAssets(){
   const cv=document.createElement('canvas');cv.width=1080;cv.height=1350;const g=cv.getContext('2d');
   const positions={lef:0,gir:1,mag:2,combined:3};
   for(const key of Object.keys(positions)){
-    // Rebuild the PSD overlay independently; even a cached custom template receives the correct heading.
-    if(templates[key] && key==='lef')continue;
-    g.clearRect(0,0,1080,1350);
-    g.drawImage(sheet,0,positions[key]*1350,1080,1350,0,0,1080,1350);
+    if(!templates[key]){
+      g.clearRect(0,0,1080,1350);
+      g.drawImage(sheet,0,positions[key]*1350,1080,1350,0,0,1080,1350);
+      templates[key]=cv.toDataURL('image/jpeg',.94);
+    }
+    // Titles must match the PSD even when a template was cached on this Mac.
     if(Object.prototype.hasOwnProperty.call(originalHeaderOrder,key)){
       const hdr=document.createElement('canvas');hdr.width=1080;hdr.height=440;
       const hg=hdr.getContext('2d');
@@ -337,7 +339,6 @@ async function preloadBuiltInAssets(){
       hg.globalCompositeOperation='source-over';
       psdTitleOverlays[key]=hdr;
     }
-    templates[key]=cv.toDataURL('image/jpeg',.94);
   }
   const atlas=await load('./assets/atlas.jpg');
   const offsets={lef:0,gir:22,mag:40,isk:52,guz:63,lefke:67};
