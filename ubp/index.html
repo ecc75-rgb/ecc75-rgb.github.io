@@ -74,13 +74,13 @@ function cover(i,x,y,w,h){const sc=Math.max(w/i.naturalWidth,h/i.naturalHeight),
 function draw(){
 rect(0,0,1080,1350,'#f3f0e9');
 const t=img(templates[active]);if(t)ctx.drawImage(t,0,0,1080,1350);
-else{rect(0,0,1080,1350,'#f6f3ed');rect(0,0,1080,65,'#272930');fill('HABER KIBRIS',540,34,'900 27px Arial','#ffce18','center');fill('UBP',95,203,'900 85px 'Tungsten Bold','Tungsten',Impact,Arial','#e87410');fill(defs[active][0].toLocaleUpperCase('tr-TR')+' MİLLETVEKİLİ ADAYLARI',335,209,'900 47px 'Tungsten Bold','Tungsten',Impact,Arial','#111');}
+else{rect(0,0,1080,1350,'#f6f3ed');rect(0,0,1080,65,'#272930');fill('HABER KIBRIS',540,34,'900 27px Arial','#ffce18','center');fill('UBP',95,203,'900 85px "Tungsten Bold",Tungsten,Impact,Arial','#e87410');fill(defs[active][0].toLocaleUpperCase('tr-TR')+' MİLLETVEKİLİ ADAYLARI',335,209,'900 47px "Tungsten Bold",Tungsten,Impact,Arial','#111');}
 if(active==='combined'){
- fill('İSKELE',30,457,'900 49px 'Tungsten Bold','Tungsten',Impact,Arial','#111');
+ fill('İSKELE',30,457,'900 49px "Tungsten Bold",Tungsten,Impact,Arial','#111');
  rect(220,461,830,4,'#ffcd11');
- fill('GÜZELYURT',30,904,'900 46px 'Tungsten Bold','Tungsten',Impact,Arial','#111');
+ fill('GÜZELYURT',30,904,'900 46px "Tungsten Bold",Tungsten,Impact,Arial','#111');
  rect(294,908,322,4,'#ffcd11');
- fill('LEFKE',652,904,'900 46px 'Tungsten Bold','Tungsten',Impact,Arial','#111');
+ fill('LEFKE',652,904,'900 46px "Tungsten Bold",Tungsten,Impact,Arial','#111');
  rect(808,908,241,4,'#ffcd11');
 }
 layouts[active].forEach((a,j)=>{
@@ -90,10 +90,10 @@ layouts[active].forEach((a,j)=>{
  else{rect(x,y,w,ph,'#d3d5d7');fill('FOTOĞRAF',x+w/2,y+ph/2-5,'bold 17px Arial','#62666b','center');fill('BEKLENİYOR',x+w/2,y+ph/2+15,'bold 17px Arial','#62666b','center');}
  rect(x,y+ph,w,b,'#ffcd14');
  rect(x,y,48,46,'#ffcd14');
- fill(String(a.n),x+24,y+23,'900 30px 'Tungsten Bold','Tungsten',Impact,Arial','#121212','center');
+ fill(String(a.n),x+24,y+23,'900 30px "Tungsten Bold",Tungsten,Impact,Arial','#121212','center');
  const name=p?p.name.toLocaleUpperCase('tr-TR'):'ADAY SEÇ';
- let fs=27;ctx.font='900 '+fs+'px 'Tungsten Bold','Tungsten',Impact,Arial';while(ctx.measureText(name).width>w-10&&fs>13){fs--;ctx.font='900 '+fs+'px 'Tungsten Bold','Tungsten',Impact,Arial'}
- fill(name,x+w/2,y+ph+b/2+1,'900 '+fs+'px 'Tungsten Bold','Tungsten',Impact,Arial','#121212','center');
+ let fs=27;ctx.font='900 '+fs+'px "Tungsten Bold",Tungsten,Impact,Arial';while(ctx.measureText(name).width>w-10&&fs>13){fs--;ctx.font='900 '+fs+'px "Tungsten Bold",Tungsten,Impact,Arial'}
+ fill(name,x+w/2,y+ph+b/2+1,'900 '+fs+'px "Tungsten Bold",Tungsten,Impact,Arial','#121212','center');
 });
 }
 function renderTabs(){$('tabs').innerHTML='';for(const k in defs){let b=document.createElement('button');b.className=k===active?'active':'';b.textContent=defs[k][0];let s=document.createElement('small');s.textContent=defs[k][1]+' aday';b.append(s);b.onclick=()=>{active=k;sub='isk';$('search').value='';$('bulk').value='';render()};$('tabs').append(b)}}
