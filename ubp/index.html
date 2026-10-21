@@ -1,28 +1,28 @@
 <!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HK UBP Post Builder</title><meta name="theme-color" content="#101725"><style>
 :root{font-family:Arial,Helvetica,sans-serif;color:#f2f4f8;background:#0e1420}*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.4;cursor:default}
 header{background:#151d2b;border-bottom:1px solid #334052;display:flex;gap:15px;align-items:center;justify-content:space-between;padding:15px 20px;flex-wrap:wrap}
-header strong{font-size:19px}header strong span{color:#ff922e}header small{color:#b9c3d2;font-size:11px}
-nav{display:flex;gap:8px}nav a{color:#fff;text-decoration:none;border-radius:7px;border:1px solid #546176;padding:10px 11px;font-size:12px;font-weight:bold}nav a.active{background:#fa8328;color:#141c29;border-color:#fa8328}
+header strong{font-size:19px}header strong span{color:#FFC200}header small{color:#b9c3d2;font-size:11px}
+nav{display:flex;gap:8px}nav a{color:#fff;text-decoration:none;border-radius:7px;border:1px solid #546176;padding:10px 11px;font-size:12px;font-weight:bold}nav a.active{background:#FFC200;color:#141c29;border-color:#FFC200}
 main{display:grid;grid-template-columns:350px minmax(360px,1fr);min-height:90vh}aside{padding:18px;background:#18202e;border-right:1px solid #384355}section{padding:22px}
-h1{margin:7px 0;font-size:24px}h2{font-size:18px;margin:6px 0 11px}h3{font-size:15px;margin:0 0 9px}p{font-size:12px;color:#b3bfce;line-height:1.52}.k{color:#fca143;font-size:11px;letter-spacing:2px;font-weight:900}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0}.tabs button{background:#252f40;border:1px solid #49586d;padding:12px 8px;border-radius:8px;color:#fff;text-align:left;font-size:13px;font-weight:800}.tabs button.active{background:#483322;border-color:#ff902f;color:#ffc38f}.tabs small{display:block;font-size:10px;margin-top:5px;color:#b7c0cc}
+h1{margin:7px 0;font-size:24px}h2{font-size:18px;margin:6px 0 11px}h3{font-size:15px;margin:0 0 9px}p{font-size:12px;color:#b3bfce;line-height:1.52}.k{color:#FFC200;font-size:11px;letter-spacing:2px;font-weight:900}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0}.tabs button{background:#252f40;border:1px solid #49586d;padding:12px 8px;border-radius:8px;color:#fff;text-align:left;font-size:13px;font-weight:800}.tabs button.active{background:#483322;border-color:#ff902f;color:#ffdc70}.tabs small{display:block;font-size:10px;margin-top:5px;color:#b7c0cc}
 .box{background:#222d3d;border:1px solid #3c485a;border-radius:11px;padding:13px;margin-bottom:13px}
 .form{background:#0f1826;color:white;border:1px solid #566478;border-radius:8px;padding:10px;width:100%;margin:5px 0}textarea{min-height:92px;resize:vertical}label{display:block;font-size:12px;color:#c0cad8;margin:7px 0}
-.btn,.upload{background:#ff902e;border:0;color:#15171c;font-weight:900;padding:11px 13px;border-radius:8px;display:inline-block;text-align:center}.btn{cursor:pointer}.upload{cursor:pointer;width:100%;font-size:12px}input[type=file]{display:none}
-.secondary{background:#303c4d;color:#f0f1f4;border:1px solid #526074;border-radius:7px;padding:9px 11px;font-size:12px;font-weight:700}.muted{color:#aeb8c8;font-size:12px}.status{font-size:12px;color:#ffd5a7}
-.pool{display:grid;gap:5px;max-height:295px;overflow:auto;margin-top:10px}.person{display:flex;align-items:center;gap:8px;background:#202938;border:1px solid #3b485a;padding:6px;border-radius:7px}.person img,.seat img{width:37px;height:40px;object-fit:cover;background:#344356;border-radius:3px}.person b{font-size:12px;flex:1;min-width:0}.person button{border:0;border-radius:5px;background:#fba043;padding:6px 10px;font-weight:900}.person.used{opacity:.52}
+.btn,.upload{background:#FFC200;border:0;color:#15171c;font-weight:900;padding:11px 13px;border-radius:8px;display:inline-block;text-align:center}.btn{cursor:pointer}.upload{cursor:pointer;width:100%;font-size:12px}input[type=file]{display:none}
+.secondary{background:#303c4d;color:#f0f1f4;border:1px solid #526074;border-radius:7px;padding:9px 11px;font-size:12px;font-weight:700}.muted{color:#aeb8c8;font-size:12px}.status{font-size:12px;color:#ffe7a0}
+.pool{display:grid;gap:5px;max-height:295px;overflow:auto;margin-top:10px}.person{display:flex;align-items:center;gap:8px;background:#202938;border:1px solid #3b485a;padding:6px;border-radius:7px}.person img,.seat img{width:37px;height:40px;object-fit:cover;background:#344356;border-radius:3px}.person b{font-size:12px;flex:1;min-width:0}.person button{border:0;border-radius:5px;background:#FFC200;padding:6px 10px;font-weight:900}.person.used{opacity:.52}
 .workhead{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap;margin-bottom:18px}.work{display:grid;grid-template-columns:minmax(270px,520px) minmax(300px,1fr);gap:24px;align-items:start}
 .canvasFrame{padding:9px;background:#293343;border-radius:9px;border:1px solid #526074}canvas{width:100%;height:auto;aspect-ratio:4/5;display:block;background:#111821}
-.seats{display:grid;gap:6px;max-height:760px;overflow:auto}.seat{display:flex;gap:7px;align-items:center;background:#273140;border:1px solid #435268;border-radius:7px;padding:6px}.seat.over{border-color:#ff972d}
-.seat .n{background:#ff902e;color:#171717;border-radius:5px;padding:9px;font-weight:900;min-width:36px;text-align:center}.seat select{min-width:0;flex:1;background:#111b2b;color:#fff;border:1px solid #4b5a70;border-radius:6px;padding:8px;font-size:12px}
-.district{padding:9px 0 3px;color:#ffab4d;border-top:1px solid #4f5c70;font-weight:900}.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.small{font-size:11px;color:#b5c0cd}
+.seats{display:grid;gap:6px;max-height:760px;overflow:auto}.seat{display:flex;gap:7px;align-items:center;background:#273140;border:1px solid #435268;border-radius:7px;padding:6px}.seat.over{border-color:#FFC200}
+.seat .n{background:#FFC200;color:#171717;border-radius:5px;padding:9px;font-weight:900;min-width:36px;text-align:center}.seat select{min-width:0;flex:1;background:#111b2b;color:#fff;border:1px solid #4b5a70;border-radius:6px;padding:8px;font-size:12px}
+.district{padding:9px 0 3px;color:#FFC200;border-top:1px solid #4f5c70;font-weight:900}.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.small{font-size:11px;color:#b5c0cd}
 @media(max-width:1050px){.work{grid-template-columns:1fr}.canvasFrame{max-width:540px;margin:auto}}@media(max-width:780px){main{display:block}aside{border-right:0;border-bottom:1px solid #3b4759}section{padding:14px}}
 </style></head>
 <body><header><strong>HK <span>UBP POST BUILDER</span></strong><nav><a class="active" href="./">ADAY KARTLARI</a><a href="oy-tablolari.html">OY TABLOLARI</a></nav><small>HABER KIBRIS · 1080×1350 PNG</small></header>
 <main><aside><div class="k">01 / TASARIM</div><h1>UBP aday sıralama</h1><p>Resmi aday adayı havuzu hazır. Adayları seç, sonuç sırasına yerleştir, fotoğraflarını yükle ve postu indir.</p><div class="tabs" id="tabs"></div>
-<div class="box"><h3>Fotoğraflar ve Photoshop tasarımı</h3><p>Aday fotoğraflarını dosya isimlerinde ad-soyad olacak şekilde JPG/PNG/WebP veya ZIP olarak yükle. PSD'yi burada doğrudan açmıyoruz; Photoshop'tan çıkarılan temiz arka plan PNG'sini ayrıca yükleyebilirsin.</p><label class="upload" for="photosUpload">↑ Aday fotoğraflarını yükle</label><input type="file" id="photosUpload" accept="image/*,.zip" multiple>
+<div class="box"><h3>Fotoğraflar ve Photoshop tasarımı</h3><p>Gönderdiğin <b>ubp.zip</b> dosyasını seç. Sistem 6 ilçenin fotoğraflarını, sıra numaralarını ve PDF portrelerini eşleştirir. Bu yükleme Mac tarayıcında bir kez yapılır; sonraki girişlerde hatırlanır. Şablon arka plan PNG'sini ayrıca ekleyebilirsin.</p><label class="upload" for="photosUpload">↑ ubp.zip / Aday görsellerini yükle</label><input type="file" id="photosUpload" accept="image/*,.zip" multiple>
 <label class="upload" style="background:#344458;color:white;margin-top:7px" for="templateUpload">↑ Bu ilçenin arka plan PNG'si</label><input type="file" id="templateUpload" accept="image/png,image/jpeg,image/webp">
-<div id="assetStatus" class="status" style="margin-top:9px">PSD'ler henüz gelmedi. Şimdilik geçici düzen kullanılıyor.</div></div>
+<div id="assetStatus" class="status" style="margin-top:9px">Fotoğraflar henüz yüklenmedi. Mac'indeki ubp.zip dosyasını bir kez seç.</div></div>
 <div class="box"><div class="row"><h3 id="poolTitle">Aday havuzu</h3><span class="status" id="count"></span></div><div id="subrow" style="display:none"><label>Alt ilçe</label><select id="sub" class="form"><option value="isk">İskele</option><option value="guz">Güzelyurt</option><option value="lefke">Lefke</option></select></div>
 <input class="form" id="search" placeholder="Aday ara" type="search"><div class="pool" id="pool"></div>
 <div class="row" style="margin-top:10px"><input class="form" style="flex:1;min-width:0" id="extra" placeholder="Yeni kontenjan adayı ekle"><button class="secondary" id="addExtra">Ekle</button></div><div class="small">Açıklanmamış kontenjan isimleri otomatik atanmaz. Resmi duyuruyla birlikte buradan eklenir.</div>
@@ -31,7 +31,7 @@ h1{margin:7px 0;font-size:24px}h2{font-size:18px;margin:6px 0 11px}h3{font-size:
 <section><div class="workhead"><div><div class="k">02 / ÖNİZLEME</div><h2 id="title">UBP Lefkoşa aday listesi</h2><div class="muted" id="subtitle">Resmi sıra açıklanana kadar görseller taslaktır.</div></div><button class="btn" id="download">PNG İNDİR ↓</button></div>
 <div class="work"><div><div class="canvasFrame"><canvas id="post" width="1080" height="1350"></canvas></div><p id="previewNote">Gerçek PSD yerleşimi, PSD'leri teslim ettiğinde kalibre edilecek. Eksik aday veya fotoğraf varsa indirilen görsel TASLAK olarak işaretlenir.</p></div>
 <div><div class="row"><h2>Son aday sıralaması</h2><button class="secondary" id="reset">Temizle</button></div><p>Menüden adayı seç veya yerlerini değiştirmek için satırları sürükle. Sıralar, açıklanan kesin listeye göre düzenlenmelidir.</p><div class="seats" id="seats"></div></div></div></section></main>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id),canvas=$('post'),ctx=canvas.getContext('2d',{alpha:false});
@@ -49,6 +49,7 @@ const norm=s=>String(s||'').toLocaleLowerCase('tr-TR').replace(/ı/g,'i').normal
 const slug=s=>norm(s), people={},chosen={},layouts={},photos={},templates={},images={};
 let active='lef',sub='isk',busy=false;
 for(const d in names)people[d]=names[d].split('|').map((name,i)=>({id:d+'_'+i,name}));
+people.gir.push({id:'gir_kontenjan_unal',name:'Ünal Üstel'});
 function layout(k){let a=[];if(k==='lef')for(let r=0;r<4;r++)for(let c=0;c<4;c++)a.push({d:'lef',n:a.length+1,x:60+c*241,y:341+r*241,w:222,h:224});
 if(k==='gir'||k==='mag')for(let r=0;r<3;r++)for(let c=0;c<4;c++)a.push({d:k,n:a.length+1,x:60+c*241,y:371+r*292,w:222,h:273});
 if(k==='combined'){
@@ -73,19 +74,19 @@ function cover(i,x,y,w,h){const sc=Math.max(w/i.naturalWidth,h/i.naturalHeight),
 function draw(){
 rect(0,0,1080,1350,'#101824');let t=img(templates[active]);if(t)ctx.drawImage(t,0,0,1080,1350);
 else{let g=ctx.createLinearGradient(0,0,950,1350);g.addColorStop(0,'#112343');g.addColorStop(.6,'#0c182b');g.addColorStop(1,'#241e1b');rect(0,0,1080,1350,g);
-rect(0,0,1080,61,'#252a35');fill('HABER KIBRIS   •   HABER KIBRIS   •   HABER KIBRIS',540,32,'bold 22px Arial','#ffcb22','center');
-rect(65,107,144,120,'#f58b24');fill('UBP',137,171,'bold 53px Arial','#fff','center');
-fill('MİLLETVEKİLİ ADAYLARI',250,148,'bold 37px Arial','#fff');fill('24 EKİM 2026 / ADAY SIRALAMASI',250,198,'bold 22px Arial','#fec893');
-fill(active==='combined'?'3 İLÇE':defs[active][0].toLocaleUpperCase('tr-TR'),65,292,'bold 70px Impact,Arial','#ff952d');
-rect(65,318,950,4,'#ff922e');
-if(active==='combined'){fill('İSKELE',34,466,'bold 36px Arial','#ff9d3c');fill('GÜZELYURT',28,907,'bold 36px Arial','#ff9d3c');fill('LEFKE',652,907,'bold 36px Arial','#ff9d3c')}}
+rect(0,0,1080,61,'#252a35');fill('HABER KIBRIS   •   HABER KIBRIS   •   HABER KIBRIS',540,32,'bold 22px Arial','#FFC200','center');
+rect(65,107,144,120,'#FFC200');fill('UBP',137,171,'bold 53px Arial','#fff','center');
+fill('MİLLETVEKİLİ ADAYLARI',250,148,'bold 37px Arial','#fff');fill('ADAY LİSTESİ / SIRALAMA ÖNİZLEMESİ',250,198,'bold 22px Arial','#ffe295');
+fill(active==='combined'?'3 İLÇE':defs[active][0].toLocaleUpperCase('tr-TR'),65,292,'bold 70px Impact,Arial','#FFC200');
+rect(65,318,950,4,'#FFC200');
+if(active==='combined'){fill('İSKELE',34,466,'bold 36px Arial','#FFC200');fill('GÜZELYURT',28,907,'bold 36px Arial','#FFC200');fill('LEFKE',652,907,'bold 36px Arial','#FFC200')}}
 layouts[active].forEach((a,j)=>{
 const p=byId(chosen[active][j]),src=p&&photos[p.id],im=img(src),x=a.x,y=a.y,w=a.w,h=a.h,b=Math.max(34,Math.round(h*.17)),ph=h-b;
 rect(x,y,w,ph,'#32435a');if(im)cover(im,x,y,w,ph);else{fill('FOTOĞRAF YOK',x+w/2,y+ph/2,'bold 16px Arial','#acb9c8','center')}
-rect(x,y+ph,w,b,'#e68b2b');rect(x,y,43,42,'#fa982e');fill(String(a.n),x+21,y+22,'bold 30px Arial','#102039','center');
+rect(x,y+ph,w,b,'#FFC200');rect(x,y,43,42,'#FFC200');fill(String(a.n),x+21,y+22,'bold 30px Arial','#102039','center');
 const nm=p?p.name.toLocaleUpperCase('tr-TR'):'ADAY SEÇ';fill(nm,x+w/2,y+ph+b/2,'bold '+fitted(nm,w-14,22,11)+'px Arial','#151b27','center')
 });
-const missing=chosen[active].some(id=>!id||!photos[id]);if(missing){ctx.save();ctx.translate(540,720);ctx.rotate(-.15);ctx.globalAlpha=.53;fill('TASLAK',0,0,'bold 152px Impact,Arial','#ffb45a','center');ctx.restore()}
+const missing=chosen[active].some(id=>!id||!photos[id]);if(missing){ctx.save();ctx.translate(540,720);ctx.rotate(-.15);ctx.globalAlpha=.53;fill('TASLAK',0,0,'bold 152px Impact,Arial','#FFC200','center');ctx.restore()}
 }
 function renderTabs(){$('tabs').innerHTML='';for(const k in defs){let b=document.createElement('button');b.className=k===active?'active':'';b.textContent=defs[k][0];let s=document.createElement('small');s.textContent=defs[k][1]+' aday';b.append(s);b.onclick=()=>{active=k;sub='isk';$('search').value='';$('bulk').value='';render()};$('tabs').append(b)}}
 function renderPool(){const d=active==='combined'?sub:active,used=new Set(chosen[active].filter(Boolean)),q=norm($('search').value);$('pool').innerHTML='';
@@ -118,12 +119,77 @@ slots.forEach(i=>chosen[active][i]=null);found.forEach((v,j)=>chosen[active][slo
 function db(){return new Promise((resolve,reject)=>{const r=indexedDB.open('HK_UBP_ASSETS_V1',1);r.onupgradeneeded=()=>r.result.createObjectStore('files');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
 async function store(key,blob){try{let d=await db();await new Promise((res,rej)=>{let t=d.transaction('files','readwrite');t.objectStore('files').put(blob,key);t.oncomplete=res;t.onerror=()=>rej(t.error)});d.close()}catch(e){$('assetStatus').textContent='Tarayıcıda saklama hatası: '+e.message}}
 async function restore(){try{let d=await db(),keys=await new Promise((res,rej)=>{let q=d.transaction('files').objectStore('files').getAllKeys();q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)});for(const key of keys){let b=await new Promise((res,rej)=>{let q=d.transaction('files').objectStore('files').get(key);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)});if(b&&b instanceof Blob){let u=URL.createObjectURL(b);if(key.startsWith('portrait:'))photos[key.slice(9)]=u;else if(key.startsWith('template:'))templates[key.slice(9)]=u}}d.close();render()}catch(e){console.warn(e)}}
-async function assignImage(filename,blob){const base=filename.replace(/\.[^.]+$/,'').replace(/^\d{1,3}[-_. ]*/,'');const hits=[];for(const d in people)for(const p of people[d])if(norm(base)===norm(p.name)||norm(base)===norm(d+' '+p.name))hits.push(p);
-if(hits.length!==1)return false;let p=hits[0],u=URL.createObjectURL(blob);if(photos[p.id])URL.revokeObjectURL(photos[p.id]);photos[p.id]=u;await store('portrait:'+p.id,blob);return true}
-$('photosUpload').onchange=async e=>{if(busy)return;busy=true;let files=Array.from(e.target.files||[]),yes=0,no=[];$('assetStatus').textContent='Fotoğraflar eşleştiriliyor...';
-try{for(const f of files){if(/\.zip$/i.test(f.name)){if(!window.JSZip)throw Error('ZIP okuyucu yüklenmedi.');let zip=await JSZip.loadAsync(f);for(const name of Object.keys(zip.files)){let file=zip.files[name];if(file.dir||!/\.(png|jpg|jpeg|webp)$/i.test(name))continue;let bytes=await file.async('uint8array'),blob=new Blob([bytes],{type:/\.png$/i.test(name)?'image/png':'image/jpeg'});if(await assignImage(name.split('/').pop(),blob))yes++;else no.push(name)}}else if(f.type.startsWith('image/')){if(await assignImage(f.name,f))yes++;else no.push(f.name)}}
-$('assetStatus').textContent=yes+' fotoğraf eşleşti.'+(no.length?' Eşleşmeyen: '+no.slice(0,5).join(', ')+(no.length>5?' ...':''):'');
-}catch(err){$('assetStatus').textContent='Yükleme hatası: '+err.message}finally{busy=false;e.target.value='';render()}};
+
+function fromPath(path) {
+ const folder=norm(path.split('/')[0]);
+ if(folder.includes('lefkosa'))return 'lef';
+ if(folder.includes('girne'))return 'gir';
+ if(folder.includes('gazimagusa')||folder.includes('gazimagu'))return 'mag';
+ if(folder.includes('iskele'))return 'isk';
+ if(folder.includes('guzelyurt'))return 'guz';
+ if(folder.includes('lefke'))return 'lefke';
+ return null;
+}
+function identifyAsset(filename){
+ const folder=fromPath(filename),leaf=filename.split('/').pop(),base=norm(leaf.replace(/\.[^.]+$/,''));
+ if(!folder && !base)return null;
+ if(folder==='gir' && base.includes('unalustel'))return people.gir.find(p=>p.id==='gir_kontenjan_unal');
+ if(folder==='lef' && base.includes('ahmetsavas'))return people.lef[0];
+ if(folder==='lef' && base.includes('veliesendag'))return people.lef[4];
+ const digit=leaf.match(/SIRA\s*NO\s*(\d+)/i);
+ if(folder && digit && +digit[1]>=1 && +digit[1]<=names[folder].split('|').length) return people[folder][+digit[1]-1];
+ let pool=folder?people[folder]:Object.values(people).flat();
+ let matches=pool.filter(p=>base.includes(norm(p.name))&&norm(p.name).length>=6);
+ return matches.length===1?matches[0]:null;
+}
+async function assignImage(filename,blob){
+ const p=identifyAsset(filename);
+ if(!p)return false;
+ const u=URL.createObjectURL(blob);
+ if(photos[p.id])URL.revokeObjectURL(photos[p.id]);
+ photos[p.id]=u;
+ await store('portrait:'+p.id,blob);
+ return true;
+}
+async function convertPDF(bytes){
+ if(!window.pdfjsLib)throw Error('PDF dönüştürücü yüklenemedi, PDF adaylarını ayrı JPG olarak yükle.');
+ pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ const task=pdfjsLib.getDocument({data:bytes}),pdf=await task.promise;
+ try{
+  const page=await pdf.getPage(1),view=page.getViewport({scale:1.4}),cv=document.createElement('canvas');
+  cv.width=Math.round(view.width);cv.height=Math.round(view.height);
+  await page.render({canvasContext:cv.getContext('2d'),viewport:view}).promise;
+  return await new Promise((resolve,reject)=>cv.toBlob(blob=>blob?resolve(blob):reject(Error('PDF görsele dönüştürülemedi')),'image/jpeg',.88));
+ } finally { await pdf.destroy(); }
+}
+$('photosUpload').onchange=async e=>{
+ if(busy)return;busy=true;const input=Array.from(e.target.files||[]);let yes=0,no=[],failedPdf=0;
+ $('assetStatus').textContent='Görseller eşleştiriliyor... Bu işlem ilk seferde biraz sürebilir.';
+ try{
+  for(const f of input){
+   if(/\.zip$/i.test(f.name)){
+    if(!window.JSZip)throw Error('ZIP okuyucu yüklenemedi.');
+    const zip=await JSZip.loadAsync(f);
+    for(const name of Object.keys(zip.files)){
+     const entry=zip.files[name];
+     if(entry.dir||name.startsWith('__MACOSX/')||name.includes('/._')||name.endsWith('.DS_Store')||!/\.(png|jpe?g|webp|pdf)$/i.test(name))continue;
+     if(!identifyAsset(name)){no.push(name);continue}
+     try{
+      const bytes=await entry.async('uint8array');
+      const isPdf=/\.pdf$/i.test(name);
+      const blob=isPdf?await convertPDF(bytes):new Blob([bytes],{type:/\.png$/i.test(name)?'image/png':'image/jpeg'});
+      if(await assignImage(name,blob))yes++;else no.push(name);
+     }catch(err){no.push(name);if(/\.pdf$/i.test(name))failedPdf++;console.warn(name,err)}
+    }
+   }else if(/\.(png|jpe?g|webp|pdf)$/i.test(f.name)){
+    const blob=/\.pdf$/i.test(f.name)?await convertPDF(new Uint8Array(await f.arrayBuffer())):f;
+    if(await assignImage(f.name,blob))yes++;else no.push(f.name);
+   }
+  }
+  $('assetStatus').textContent=yes+' fotoğraf eşleşti. '+(no.length?no.length+' eşleşmeyen/dönüştürülemeyen dosya: '+no.slice(0,3).map(s=>s.split('/').pop()).join(', ')+(no.length>3?' ...':'')+'. ':'')+(failedPdf?'PDF görsellerinde dönüştürme hatası olabilir.':'');
+ }catch(err){$('assetStatus').textContent='Yükleme hatası: '+err.message;console.error(err)}
+ finally{busy=false;e.target.value='';render()}
+};
 $('templateUpload').onchange=async e=>{const f=e.target.files[0];if(!f)return;let u=URL.createObjectURL(f);if(templates[active])URL.revokeObjectURL(templates[active]);templates[active]=u;await store('template:'+active,f);e.target.value='';render()};
 $('download').onclick=()=>{let missing=chosen[active].filter(id=>!id||!photos[id]).length;if(missing&&!confirm(missing+' eksik sıra veya fotoğraf var. TASLAK indirilsin mi?'))return;draw();canvas.toBlob(b=>{if(!b){alert('PNG oluşturulamadı.');return}let url=URL.createObjectURL(b),a=document.createElement('a');a.href=url;a.download='HK_UBP_'+active+'_1080x1350'+(missing?'_TASLAK':'')+'.png';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000)},'image/png')};
 render();restore();
