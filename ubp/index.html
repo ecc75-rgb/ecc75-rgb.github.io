@@ -20,16 +20,16 @@ h1{margin:7px 0;font-size:24px}h2{font-size:18px;margin:6px 0 11px}h3{font-size:
 </style></head>
 <body><header><strong>HK <span>UBP POST BUILDER</span></strong><nav><a class="active" href="./">ADAY KARTLARI</a><a href="oy-tablolari.html">OY TABLOLARI</a></nav><small>HABER KIBRIS · 1080×1350 PNG</small></header>
 <main><aside><div class="k">01 / TASARIM</div><h1>UBP aday sıralama</h1><p>Resmi aday adayı havuzu hazır. Adayları seç, sonuç sırasına yerleştir, fotoğraflarını yükle ve postu indir.</p><div class="tabs" id="tabs"></div>
-<div class="box"><h3>Fotoğraflar ve Photoshop tasarımı</h3><p>Gönderdiğin <b>ubp.zip</b> dosyasını seç. Sistem 6 ilçenin fotoğraflarını, sıra numaralarını ve PDF portrelerini eşleştirir. Bu yükleme Mac tarayıcında bir kez yapılır; sonraki girişlerde hatırlanır. Şablon arka plan PNG'sini ayrıca ekleyebilirsin.</p><label class="upload" for="photosUpload">↑ ubp.zip / Aday görsellerini yükle</label><input type="file" id="photosUpload" accept="image/*,.zip" multiple>
-<label class="upload" style="background:#344458;color:white;margin-top:7px" for="templateUpload">↑ Bu ilçenin arka plan PNG'si</label><input type="file" id="templateUpload" accept="image/png,image/jpeg,image/webp">
-<div id="assetStatus" class="status" style="margin-top:9px">Fotoğraflar henüz yüklenmedi. Mac'indeki ubp.zip dosyasını bir kez seç.</div></div>
+<div class="box"><h3>Fotoğraflar ve Photoshop tasarımı</h3><p>73 aday görseli ve Photoshop tabanlı arka planlar hazır yüklenecek. Gerekirse yeni fotoğrafları veya kendi revize ettiğin arka planı buradan değiştirebilirsin.</p><label class="upload" for="photosUpload">↑ Fotoğrafları değiştir (opsiyonel)</label><input type="file" id="photosUpload" accept="image/*,.zip" multiple>
+<label class="upload" style="background:#344458;color:white;margin-top:7px" for="templateUpload">↑ Bu ilçenin PSD arka planını değiştir</label><input type="file" id="templateUpload" accept="image/png,image/jpeg,image/webp">
+<div id="assetStatus" class="status" style="margin-top:9px">UBP fotoğrafları ve orijinal PSD şablonu yükleniyor...</div></div>
 <div class="box"><div class="row"><h3 id="poolTitle">Aday havuzu</h3><span class="status" id="count"></span></div><div id="subrow" style="display:none"><label>Alt ilçe</label><select id="sub" class="form"><option value="isk">İskele</option><option value="guz">Güzelyurt</option><option value="lefke">Lefke</option></select></div>
 <input class="form" id="search" placeholder="Aday ara" type="search"><div class="pool" id="pool"></div>
 <div class="row" style="margin-top:10px"><input class="form" style="flex:1;min-width:0" id="extra" placeholder="Yeni kontenjan adayı ekle"><button class="secondary" id="addExtra">Ekle</button></div><div class="small">Açıklanmamış kontenjan isimleri otomatik atanmaz. Resmi duyuruyla birlikte buradan eklenir.</div>
 </div>
 <div class="box"><h3>Toplu sıralama</h3><p>Resmi sıralamayı alt alta yapıştır. Her isim fotoğrafıyla eşleşir; bulunamayan isimleri bildirir.</p><textarea class="form" id="bulk" placeholder="1. Aday Adı&#10;2. Başka Aday"></textarea><button class="secondary" style="width:100%" id="bulkApply">Sıralamayı yerleştir</button></div></aside>
 <section><div class="workhead"><div><div class="k">02 / ÖNİZLEME</div><h2 id="title">UBP Lefkoşa aday listesi</h2><div class="muted" id="subtitle">Resmi sıra açıklanana kadar görseller taslaktır.</div></div><button class="btn" id="download">PNG İNDİR ↓</button></div>
-<div class="work"><div><div class="canvasFrame"><canvas id="post" width="1080" height="1350"></canvas></div><p id="previewNote">Gerçek PSD yerleşimi, PSD'leri teslim ettiğinde kalibre edilecek. Eksik aday veya fotoğraf varsa indirilen görsel TASLAK olarak işaretlenir.</p></div>
+<div class="work"><div><div class="canvasFrame"><canvas id="post" width="1080" height="1350"></canvas></div><p id="previewNote">Lefkoşa Photoshop tasarımı ve 73 aday fotoğrafı otomatik yüklenir. Açıklanan kesin listeyle karşılaştırılmadan yayımlamayın.</p></div>
 <div><div class="row"><h2>Son aday sıralaması</h2><button class="secondary" id="reset">Temizle</button></div><p>Menüden adayı seç veya yerlerini değiştirmek için satırları sürükle. Sıralar, açıklanan kesin listeye göre düzenlenmelidir.</p><div class="seats" id="seats"></div></div></div></section></main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
@@ -50,8 +50,8 @@ const slug=s=>norm(s), people={},chosen={},layouts={},photos={},templates={},ima
 let active='lef',sub='isk',busy=false;
 for(const d in names)people[d]=names[d].split('|').map((name,i)=>({id:d+'_'+i,name}));
 people.gir.push({id:'gir_kontenjan_unal',name:'Ünal Üstel'});
-function layout(k){let a=[];if(k==='lef')for(let r=0;r<4;r++)for(let c=0;c<4;c++)a.push({d:'lef',n:a.length+1,x:60+c*241,y:341+r*241,w:222,h:224});
-if(k==='gir'||k==='mag')for(let r=0;r<3;r++)for(let c=0;c<4;c++)a.push({d:k,n:a.length+1,x:60+c*241,y:371+r*292,w:222,h:273});
+function layout(k){let a=[];if(k==='lef')for(let r=0;r<4;r++)for(let c=0;c<4;c++)a.push({d:'lef',n:a.length+1,x:56+c*244,y:366+r*244,w:225,h:227});
+if(k==='gir'||k==='mag')for(let r=0;r<3;r++)for(let c=0;c<4;c++)a.push({d:k,n:a.length+1,x:56+c*244,y:390+r*308,w:225,h:287});
 if(k==='combined'){
 for(let c=0;c<5;c++)a.push({d:'isk',n:c+1,x:29+c*210,y:492,w:197,h:278});
 for(let c=0;c<3;c++)a.push({d:'guz',n:c+1,x:28+c*210,y:944,w:197,h:280});
@@ -72,21 +72,29 @@ function fill(s,x,y,font,color,align='left'){ctx.textAlign=align;ctx.textBaselin
 function fitted(s,w,max=23,min=12){let n=max;while(n>min){ctx.font='bold '+n+'px Arial';if(ctx.measureText(s).width<=w)break;n--}return n}
 function cover(i,x,y,w,h){const sc=Math.max(w/i.naturalWidth,h/i.naturalHeight),sw=w/sc,sh=h/sc;ctx.drawImage(i,(i.naturalWidth-sw)/2,(i.naturalHeight-sh)*.32,sw,sh,x,y,w,h)}
 function draw(){
-rect(0,0,1080,1350,'#101824');let t=img(templates[active]);if(t)ctx.drawImage(t,0,0,1080,1350);
-else{let g=ctx.createLinearGradient(0,0,950,1350);g.addColorStop(0,'#112343');g.addColorStop(.6,'#0c182b');g.addColorStop(1,'#241e1b');rect(0,0,1080,1350,g);
-rect(0,0,1080,61,'#252a35');fill('HABER KIBRIS   •   HABER KIBRIS   •   HABER KIBRIS',540,32,'bold 22px Arial','#FFC200','center');
-rect(65,107,144,120,'#FFC200');fill('UBP',137,171,'bold 53px Arial','#fff','center');
-fill('MİLLETVEKİLİ ADAYLARI',250,148,'bold 37px Arial','#fff');fill('ADAY LİSTESİ / SIRALAMA ÖNİZLEMESİ',250,198,'bold 22px Arial','#ffe295');
-fill(active==='combined'?'3 İLÇE':defs[active][0].toLocaleUpperCase('tr-TR'),65,292,'bold 70px Impact,Arial','#FFC200');
-rect(65,318,950,4,'#FFC200');
-if(active==='combined'){fill('İSKELE',34,466,'bold 36px Arial','#FFC200');fill('GÜZELYURT',28,907,'bold 36px Arial','#FFC200');fill('LEFKE',652,907,'bold 36px Arial','#FFC200')}}
+rect(0,0,1080,1350,'#f3f0e9');
+const t=img(templates[active]);if(t)ctx.drawImage(t,0,0,1080,1350);
+else{rect(0,0,1080,1350,'#f6f3ed');rect(0,0,1080,65,'#272930');fill('HABER KIBRIS',540,34,'900 27px Arial','#ffce18','center');fill('UBP',95,203,'900 85px Impact,Arial','#e87410');fill(defs[active][0].toLocaleUpperCase('tr-TR')+' MİLLETVEKİLİ ADAYLARI',335,209,'900 47px Impact,Arial','#111');}
+if(active==='combined'){
+ fill('İSKELE',30,457,'900 49px Impact,Arial','#111');
+ rect(220,461,830,4,'#ffcd11');
+ fill('GÜZELYURT',30,904,'900 46px Impact,Arial','#111');
+ rect(294,908,322,4,'#ffcd11');
+ fill('LEFKE',652,904,'900 46px Impact,Arial','#111');
+ rect(808,908,241,4,'#ffcd11');
+}
 layouts[active].forEach((a,j)=>{
-const p=byId(chosen[active][j]),src=p&&photos[p.id],im=img(src),x=a.x,y=a.y,w=a.w,h=a.h,b=Math.max(34,Math.round(h*.17)),ph=h-b;
-rect(x,y,w,ph,'#32435a');if(im)cover(im,x,y,w,ph);else{fill('FOTOĞRAF YOK',x+w/2,y+ph/2,'bold 16px Arial','#acb9c8','center')}
-rect(x,y+ph,w,b,'#FFC200');rect(x,y,43,42,'#FFC200');fill(String(a.n),x+21,y+22,'bold 30px Arial','#102039','center');
-const nm=p?p.name.toLocaleUpperCase('tr-TR'):'ADAY SEÇ';fill(nm,x+w/2,y+ph+b/2,'bold '+fitted(nm,w-14,22,11)+'px Arial','#151b27','center')
+ const p=byId(chosen[active][j]),src=p&&photos[p.id],im=img(src),x=a.x,y=a.y,w=a.w,h=a.h,b=Math.max(35,Math.round(h*.16)),ph=h-b;
+ rect(x-2,y-2,w+4,h+4,'#191a1c');rect(x,y,w,ph,'#d7d9db');
+ if(im)cover(im,x,y,w,ph);
+ else{rect(x,y,w,ph,'#d3d5d7');fill('FOTOĞRAF',x+w/2,y+ph/2-5,'bold 17px Arial','#62666b','center');fill('BEKLENİYOR',x+w/2,y+ph/2+15,'bold 17px Arial','#62666b','center');}
+ rect(x,y+ph,w,b,'#ffcd14');
+ rect(x,y,48,46,'#ffcd14');
+ fill(String(a.n),x+24,y+23,'900 30px Impact,Arial','#121212','center');
+ const name=p?p.name.toLocaleUpperCase('tr-TR'):'ADAY SEÇ';
+ let fs=27;ctx.font='900 '+fs+'px Impact,Arial';while(ctx.measureText(name).width>w-10&&fs>13){fs--;ctx.font='900 '+fs+'px Impact,Arial'}
+ fill(name,x+w/2,y+ph+b/2+1,'900 '+fs+'px Impact,Arial','#121212','center');
 });
-const missing=chosen[active].some(id=>!id||!photos[id]);if(missing){ctx.save();ctx.translate(540,720);ctx.rotate(-.15);ctx.globalAlpha=.53;fill('TASLAK',0,0,'bold 152px Impact,Arial','#FFC200','center');ctx.restore()}
 }
 function renderTabs(){$('tabs').innerHTML='';for(const k in defs){let b=document.createElement('button');b.className=k===active?'active':'';b.textContent=defs[k][0];let s=document.createElement('small');s.textContent=defs[k][1]+' aday';b.append(s);b.onclick=()=>{active=k;sub='isk';$('search').value='';$('bulk').value='';render()};$('tabs').append(b)}}
 function renderPool(){const d=active==='combined'?sub:active,used=new Set(chosen[active].filter(Boolean)),q=norm($('search').value);$('pool').innerHTML='';
@@ -192,6 +200,48 @@ $('photosUpload').onchange=async e=>{
 };
 $('templateUpload').onchange=async e=>{const f=e.target.files[0];if(!f)return;let u=URL.createObjectURL(f);if(templates[active])URL.revokeObjectURL(templates[active]);templates[active]=u;await store('template:'+active,f);e.target.value='';render()};
 $('download').onclick=()=>{let missing=chosen[active].filter(id=>!id||!photos[id]).length;if(missing&&!confirm(missing+' eksik sıra veya fotoğraf var. TASLAK indirilsin mi?'))return;draw();canvas.toBlob(b=>{if(!b){alert('PNG oluşturulamadı.');return}let url=URL.createObjectURL(b),a=document.createElement('a');a.href=url;a.download='HK_UBP_'+active+'_1080x1350'+(missing?'_TASLAK':'')+'.png';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000)},'image/png')};
-render();restore();
+
+async function preloadBuiltInAssets(){
+ const status=$('assetStatus');
+ const load=url=>new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(new Error(url+' indirilemedi'));i.src=url+'?v=3'});
+ try{
+  const original=await load('./assets/lef.jpg');
+  const cv=document.createElement('canvas');cv.width=1080;cv.height=1350;const g=cv.getContext('2d');
+  for(const key of ['lef','gir','mag','combined']){
+   if(templates[key])continue;g.clearRect(0,0,1080,1350);g.drawImage(original,0,0,1080,1350);
+   if(key!=='lef'){
+    // Tek PSD dosyasını kullan: sadece ilçe başlığı yeni içerikle çizilir.
+    g.drawImage(original,323,385,757,263,323,94,757,250);
+    g.fillStyle='#ffd114';g.fillRect(451,139,611,76);
+    g.fillStyle='#101010';g.textBaseline='middle';g.textAlign='left';g.font='900 85px Impact,"Arial Narrow",Arial,sans-serif';
+    const heads={gir:['UBP GİRNE MİLLETVEKİLİ','ADAYLARINI AÇIKLADI'],mag:['UBP GAZİMAĞUSA MİLLETVEKİLİ','ADAYLARINI AÇIKLADI'],combined:['UBP İSKELE, GÜZELYURT','VE LEFKE ADAYLARINI AÇIKLADI']};
+    g.fillText(heads[key][0],338,181,708);g.fillText(heads[key][1],338,268,708);
+   }
+   templates[key]=cv.toDataURL('image/jpeg',.90);
+  }
+  const atlas=await load('./assets/atlas.jpg');
+  const offsets={lef:0,gir:22,mag:40,isk:52,guz:63,lefke:67};
+  const tile=document.createElement('canvas');tile.width=226;tile.height=270;const tg=tile.getContext('2d');
+  let count=0;
+  for(const district of Object.keys(people))for(const p of people[district]){
+    if(photos[p.id])continue;
+    let index;
+    if(p.id==='gir_kontenjan_unal')index=72;
+    else{const n=/^([a-z]+)_(\d+)$/.exec(p.id);if(!n||offsets[n[1]]===undefined)continue;index=offsets[n[1]]+Number(n[2]);}
+    if(index<0||index>72)continue;
+    tg.clearRect(0,0,226,270);tg.drawImage(atlas,(index%9)*226,Math.floor(index/9)*270,226,270,0,0,226,270);
+    photos[p.id]=tile.toDataURL('image/jpeg',.87);count++;
+  }
+  status.innerHTML='<span style="color:#80e6a2">✓ '+(count||73)+' UBP aday fotoğrafı ve 4 tasarım hazır.</span> Yeni fotoğraf seçmek isteğe bağlıdır.';
+  $('previewNote').textContent='Orijinal UBP Photoshop tasarımı esas alındı. Girne, Gazimağusa ve birleşik ilçelerin başlıkları aynı şablondan uyarlanır.';
+  render();
+  // Tüm fotoğrafların çizime hazır olmasını bekle.
+  await Promise.all(Object.values(photos).map(u=>new Promise(res=>{let x=img(u);if(x)return res();const t=images[u];if(!t)return res();t.addEventListener('load',res,{once:true});t.addEventListener('error',res,{once:true})})));
+  render();
+ }catch(e){
+  status.textContent='Hazır görseller yüklenemedi: '+e.message+'. Yedek olarak ubp.zip dosyasını seçebilirsin.';console.warn(e);render();
+ }
+}
+render();restore().then(preloadBuiltInAssets);
 })();
 </script></body></html>
