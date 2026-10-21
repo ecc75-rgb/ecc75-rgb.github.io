@@ -315,13 +315,28 @@ async function preloadBuiltInAssets(){
  try{
   // Four PSD-based design backgrounds stored in one lossless-size-efficient WebP strip.
   const sheet=await load('./assets/backgrounds.webp');
+  const originalPsdHeaders=await load('./assets/psd_headers_v5.webp');
+  // These header slices are flattened directly from the user's original PSD files.
+  const originalHeaderOrder={gir:0,mag:1,combined:2};
   const cv=document.createElement('canvas');cv.width=1080;cv.height=1350;const g=cv.getContext('2d');
   const positions={lef:0,gir:1,mag:2,combined:3};
   for(const key of Object.keys(positions)){
     if(templates[key])continue;
     g.clearRect(0,0,1080,1350);
     g.drawImage(sheet,0,positions[key]*1350,1080,1350,0,0,1080,1350);
-    templates[key]=cv.toDataURL('image/jpeg',.93);
+    if(Object.prototype.hasOwnProperty.call(originalHeaderOrder,key)){
+      const hdr=document.createElement('canvas');hdr.width=1080;hdr.height=440;
+      const hg=hdr.getContext('2d');
+      hg.drawImage(originalPsdHeaders,0,originalHeaderOrder[key]*440,1080,440,0,0,1080,440);
+      // Fade the last 35 px so the original PSD typography joins the existing background cleanly.
+      hg.globalCompositeOperation='destination-in';
+      const fade=hg.createLinearGradient(0,405,0,440);
+      fade.addColorStop(0,'rgba(0,0,0,1)');fade.addColorStop(1,'rgba(0,0,0,0)');
+      hg.fillStyle=fade;hg.fillRect(0,0,1080,440);
+      hg.globalCompositeOperation='source-over';
+      g.drawImage(hdr,0,0);
+    }
+    templates[key]=cv.toDataURL('image/jpeg',.94);
   }
   const atlas=await load('./assets/atlas.jpg');
   const offsets={lef:0,gir:22,mag:40,isk:52,guz:63,lefke:67};
