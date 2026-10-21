@@ -17,9 +17,10 @@ h1{margin:7px 0;font-size:24px}h2{font-size:18px;margin:6px 0 11px}h3{font-size:
 .seat .n{background:#FFC200;color:#171717;border-radius:5px;padding:9px;font-weight:900;min-width:36px;text-align:center}.seat select{min-width:0;flex:1;background:#111b2b;color:#fff;border:1px solid #4b5a70;border-radius:6px;padding:8px;font-size:12px}
 .district{padding:9px 0 3px;color:#FFC200;border-top:1px solid #4f5c70;font-weight:900}.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.small{font-size:11px;color:#b5c0cd}
 @media(max-width:1050px){.work{grid-template-columns:1fr}.canvasFrame{max-width:540px;margin:auto}}@media(max-width:780px){main{display:block}aside{border-right:0;border-bottom:1px solid #3b4759}section{padding:14px}}
+.cropPanel{border-color:#c1772c;background:#302c2b}.cropPanel input[type=range]{width:100%;accent-color:#ff9b28}.cropGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.cropLabel{display:flex;justify-content:space-between;margin:8px 0 2px}.cropHint{margin:8px 0 0}.canvasFrame canvas{cursor:crosshair}.noteHighlight{font-size:11px;color:#ffe6b2}
 </style></head>
 <body><header><strong>HK <span>UBP POST BUILDER</span></strong><nav><a class="active" href="./">ADAY KARTLARI</a><a href="oy-tablolari.html">OY TABLOLARI</a></nav><small>HABER KIBRIS · 1080×1350 PNG</small></header>
-<main><aside><div class="k">01 / TASARIM</div><h1>UBP aday sıralama</h1><p>Resmi aday adayı havuzu hazır. Adayları seç, sonuç sırasına yerleştir, fotoğraflarını yükle ve postu indir.</p><div class="tabs" id="tabs"></div>
+<main><aside><div class="k">01 / TASARIM</div><h1>UBP aday sıralama</h1><p>Adayları seç, açıklanan sonuç sırasına yerleştir. TRT referansındaki gibi yuvarlak portreli haber postunu PNG olarak indir.</p><div class="tabs" id="tabs"></div>
 <div class="box"><h3>Fotoğraflar ve Photoshop tasarımı</h3><p>73 aday görseli ve Photoshop tabanlı arka planlar hazır yüklenecek. Gerekirse yeni fotoğrafları veya kendi revize ettiğin arka planı buradan değiştirebilirsin.</p><label class="upload" for="photosUpload">↑ Fotoğrafları değiştir (opsiyonel)</label><input type="file" id="photosUpload" accept="image/*,.zip" multiple>
 <label class="upload" style="background:#344458;color:white;margin-top:7px" for="templateUpload">↑ Bu ilçenin PSD arka planını değiştir</label><input type="file" id="templateUpload" accept="image/png,image/jpeg,image/webp">
 <div id="assetStatus" class="status" style="margin-top:9px">UBP fotoğrafları ve orijinal PSD şablonu yükleniyor...</div></div>
@@ -27,10 +28,20 @@ h1{margin:7px 0;font-size:24px}h2{font-size:18px;margin:6px 0 11px}h3{font-size:
 <input class="form" id="search" placeholder="Aday ara" type="search"><div class="pool" id="pool"></div>
 <div class="row" style="margin-top:10px"><input class="form" style="flex:1;min-width:0" id="extra" placeholder="Yeni kontenjan adayı ekle"><button class="secondary" id="addExtra">Ekle</button></div><div class="small">Açıklanmamış kontenjan isimleri otomatik atanmaz. Resmi duyuruyla birlikte buradan eklenir.</div>
 </div>
+<div class="box cropPanel">
+<h3>Fotoğraf kadrajı</h3>
+<p>Dairesel portrelerin boyutunu ve konumunu ayarla. Önizlemedeki fotoğrafa dokunarak da aday seçebilirsin.</p>
+<label for="cropPerson">Düzenlenecek aday</label><select class="form" id="cropPerson"><option value="">Önce bir aday yerleştir</option></select>
+<div class="cropLabel"><label for="cropZoom">Yakınlaştır</label><span id="cropZoomVal" class="small">1.40×</span></div><input type="range" id="cropZoom" min="1" max="2.6" step=".05" value="1.4">
+<div class="cropGrid"><div><div class="cropLabel"><label for="cropX">Sağ / sol</label><span id="cropXVal" class="small">0</span></div><input type="range" id="cropX" min="-45" max="45" step="1" value="0"></div>
+<div><div class="cropLabel"><label for="cropY">Yukarı / aşağı</label><span id="cropYVal" class="small">0</span></div><input type="range" id="cropY" min="-45" max="45" step="1" value="0"></div></div>
+<button type="button" class="secondary" style="width:100%;margin-top:12px" id="cropReset">Seçili adayın kadrajını sıfırla</button>
+<div class="cropHint noteHighlight">Bu ayarlar PNG çıktısına da aynen uygulanır. Her aday için ayrı kaydedilir.</div>
+</div>
 <div class="box"><h3>Toplu sıralama</h3><p>Resmi sıralamayı alt alta yapıştır. Her isim fotoğrafıyla eşleşir; bulunamayan isimleri bildirir.</p><textarea class="form" id="bulk" placeholder="1. Aday Adı&#10;2. Başka Aday"></textarea><button class="secondary" style="width:100%" id="bulkApply">Sıralamayı yerleştir</button></div></aside>
 <section><div class="workhead"><div><div class="k">02 / ÖNİZLEME</div><h2 id="title">UBP Lefkoşa aday listesi</h2><div class="muted" id="subtitle">Resmi sıra açıklanana kadar görseller taslaktır.</div></div><button class="btn" id="download">PNG İNDİR ↓</button></div>
 <div class="work"><div><div class="canvasFrame"><canvas id="post" width="1080" height="1350"></canvas></div><p id="previewNote">Lefkoşa Photoshop tasarımı ve 73 aday fotoğrafı otomatik yüklenir. Açıklanan kesin listeyle karşılaştırılmadan yayımlamayın.</p></div>
-<div><div class="row"><h2>Son aday sıralaması</h2><button class="secondary" id="reset">Temizle</button></div><p>Menüden adayı seç veya yerlerini değiştirmek için satırları sürükle. Sıralar, açıklanan kesin listeye göre düzenlenmelidir.</p><div class="seats" id="seats"></div></div></div></section></main>
+<div><div class="row"><h2>Son aday sıralaması</h2><button class="secondary" id="reset">Temizle</button></div><p>Menüden adayı seç veya satırları sürükle. Önizleme üzerindeki dairesel fotoğrafa tıklayarak kadrajı düzenleyebilirsin.</p><div class="seats" id="seats"></div></div></div></section></main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
 (()=>{'use strict';
@@ -47,16 +58,23 @@ lefke:'Aytaç Çaluda|Aykut Aksu|Fırtına Karanfil|Adil Özgey|Ediz Tuncel'
 const subNames={isk:'İSKELE',guz:'GÜZELYURT',lefke:'LEFKE'};
 const norm=s=>String(s||'').toLocaleLowerCase('tr-TR').replace(/ı/g,'i').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
 const slug=s=>norm(s), people={},chosen={},layouts={},photos={},templates={},images={};
-let active='lef',sub='isk',busy=false;
+let active='lef',sub='isk',busy=false,cropSelected=null,cropById={};
+try{cropById=JSON.parse(localStorage.getItem('HK_UBP_CROP_V2')||'{}')||{}}catch(e){cropById={}}
 for(const d in names)people[d]=names[d].split('|').map((name,i)=>({id:d+'_'+i,name}));
 people.gir.push({id:'gir_kontenjan_unal',name:'Ünal Üstel'});
-function layout(k){let a=[];if(k==='lef')for(let r=0;r<4;r++)for(let c=0;c<4;c++)a.push({d:'lef',n:a.length+1,x:56+c*244,y:366+r*244,w:225,h:227});
-if(k==='gir'||k==='mag')for(let r=0;r<3;r++)for(let c=0;c<4;c++)a.push({d:k,n:a.length+1,x:56+c*244,y:390+r*308,w:225,h:287});
-if(k==='combined'){
-for(let c=0;c<5;c++)a.push({d:'isk',n:c+1,x:29+c*210,y:492,w:197,h:278});
-for(let c=0;c<3;c++)a.push({d:'guz',n:c+1,x:28+c*210,y:944,w:197,h:280});
-for(let c=0;c<2;c++)a.push({d:'lefke',n:c+1,x:652+c*210,y:944,w:197,h:280});
-}return a}
+function layout(k){
+ let a=[];
+ if(k==='lef')for(let row=0;row<4;row++)for(let col=0;col<4;col++)
+   a.push({d:'lef',n:a.length+1,cx:[136,405,674,943][col],cy:[438,676,914,1152][row],r:70});
+ if(k==='gir'||k==='mag')for(let row=0;row<3;row++)for(let col=0;col<4;col++)
+   a.push({d:k,n:a.length+1,cx:[136,405,674,943][col],cy:[470,772,1074][row],r:91});
+ if(k==='combined'){
+   for(let col=0;col<5;col++)a.push({d:'isk',n:col+1,cx:[107,323,539,755,971][col],cy:589,r:72});
+   for(let col=0;col<3;col++)a.push({d:'guz',n:col+1,cx:[116,331,546][col],cy:1074,r:81});
+   for(let col=0;col<2;col++)a.push({d:'lefke',n:col+1,cx:[760,969][col],cy:1074,r:81});
+ }
+ return a;
+}
 for(const k in defs){layouts[k]=layout(k);try{const s=JSON.parse(localStorage.getItem('HK_UBP_SEL_'+k)||'null');chosen[k]=Array.isArray(s)&&s.length===layouts[k].length?s:Array(layouts[k].length).fill(null)}catch(e){chosen[k]=Array(layouts[k].length).fill(null)}}
 try{let ext=JSON.parse(localStorage.getItem('HK_UBP_EXTRA')||'{}');for(const k in ext)if(people[k]&&Array.isArray(ext[k])){for(const x of ext[k])if(!people[k].some(p=>p.id===x.id))people[k].push(x)}}catch(e){}
 function save(){try{localStorage.setItem('HK_UBP_SEL_'+active,JSON.stringify(chosen[active]))}catch(e){}}
@@ -70,31 +88,102 @@ const img=src=>{if(!src)return null;if(!images[src]){let i=new Image();i.onload=
 function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x,y,w,h)}
 function fill(s,x,y,font,color,align='left'){ctx.textAlign=align;ctx.textBaseline='middle';ctx.font=font;ctx.fillStyle=color;ctx.fillText(s,x,y)}
 function fitted(s,w,max=23,min=12){let n=max;while(n>min){ctx.font='bold '+n+'px Arial';if(ctx.measureText(s).width<=w)break;n--}return n}
-function cover(i,x,y,w,h){const sc=Math.max(w/i.naturalWidth,h/i.naturalHeight),sw=w/sc,sh=h/sc;ctx.drawImage(i,(i.naturalWidth-sw)/2,(i.naturalHeight-sh)*.32,sw,sh,x,y,w,h)}
-function draw(){
-rect(0,0,1080,1350,'#f3f0e9');
-const t=img(templates[active]);if(t)ctx.drawImage(t,0,0,1080,1350);
-else{rect(0,0,1080,1350,'#f6f3ed');rect(0,0,1080,65,'#272930');fill('HABER KIBRIS',540,34,'900 27px Arial','#ffce18','center');fill('UBP',95,203,'900 85px "Tungsten Bold",Tungsten,Impact,Arial','#e87410');fill(defs[active][0].toLocaleUpperCase('tr-TR')+' MİLLETVEKİLİ ADAYLARI',335,209,'900 47px "Tungsten Bold",Tungsten,Impact,Arial','#111');}
-if(active==='combined'){
- fill('İSKELE',30,457,'900 49px "Tungsten Bold",Tungsten,Impact,Arial','#111');
- rect(220,461,830,4,'#ffcd11');
- fill('GÜZELYURT',30,904,'900 46px "Tungsten Bold",Tungsten,Impact,Arial','#111');
- rect(294,908,322,4,'#ffcd11');
- fill('LEFKE',652,904,'900 46px "Tungsten Bold",Tungsten,Impact,Arial','#111');
- rect(808,908,241,4,'#ffcd11');
+// TRT haber örneğindeki açık, portre-odaklı editoryal düzen.
+function adjustment(id){return Object.assign({zoom:1.40,x:0,y:0},cropById[id]||{})}
+function textLines(value,maxWidth,maxSize=24,minSize=17){
+ const words=value.toLocaleUpperCase('tr-TR').split(/\\s+/).filter(Boolean);
+ let variants=[];
+ if(words.length===1)variants=[[words[0]]];
+ else for(let split=1;split<words.length;split++)variants.push([words.slice(0,split).join(' '),words.slice(split).join(' ')]);
+ let best=null;
+ for(let fs=maxSize;fs>=minSize;fs--){
+   ctx.font='900 '+fs+'px Arial, Helvetica, sans-serif';
+   for(let lines of variants){
+     let sizes=lines.map(t=>ctx.measureText(t).width);
+     if(Math.max(...sizes)<=maxWidth){
+       const score=fs*100 - Math.abs(sizes[0]-(sizes[1]||0))*.02;
+       if(!best||score>best.score)best={fs,lines,score};
+     }
+   }
+   if(best&&best.fs===fs)break;
+ }
+ if(!best){const words2=words.length===1?[words[0]]:[words.slice(0,Math.ceil(words.length/2)).join(' '),words.slice(Math.ceil(words.length/2)).join(' ')];best={fs:minSize,lines:words2}}
+ return best;
 }
-layouts[active].forEach((a,j)=>{
- const p=byId(chosen[active][j]),src=p&&photos[p.id],im=img(src),x=a.x,y=a.y,w=a.w,h=a.h,b=Math.max(35,Math.round(h*.16)),ph=h-b;
- rect(x-2,y-2,w+4,h+4,'#191a1c');rect(x,y,w,ph,'#d7d9db');
- if(im)cover(im,x,y,w,ph);
- else{rect(x,y,w,ph,'#d3d5d7');fill('FOTOĞRAF',x+w/2,y+ph/2-5,'bold 17px Arial','#62666b','center');fill('BEKLENİYOR',x+w/2,y+ph/2+15,'bold 17px Arial','#62666b','center');}
- rect(x,y+ph,w,b,'#ffcd14');
- rect(x,y,48,46,'#ffcd14');
- fill(String(a.n),x+24,y+23,'900 30px "Tungsten Bold",Tungsten,Impact,Arial','#121212','center');
- const name=p?p.name.toLocaleUpperCase('tr-TR'):'ADAY SEÇ';
- let fs=27;ctx.font='900 '+fs+'px "Tungsten Bold",Tungsten,Impact,Arial';while(ctx.measureText(name).width>w-10&&fs>13){fs--;ctx.font='900 '+fs+'px "Tungsten Bold",Tungsten,Impact,Arial'}
- fill(name,x+w/2,y+ph+b/2+1,'900 '+fs+'px "Tungsten Bold",Tungsten,Impact,Arial','#121212','center');
-});
+function drawPortrait(p,a){
+ const x=a.cx,y=a.cy,r=a.r,inner=r-5,src=p&&photos[p.id],im=img(src);
+ ctx.save();ctx.beginPath();ctx.arc(x,y,inner,0,Math.PI*2);ctx.clip();
+ rect(x-r,y-r,2*r,2*r,'#e5e7e8');
+ if(im){
+   const v=adjustment(p.id), iw=im.naturalWidth, ih=im.naturalHeight;
+   const scale=Math.max(2*inner/iw,2*inner/ih)*Math.max(1,v.zoom);
+   const sw=2*inner/scale,sh=2*inner/scale;
+   const px=Math.min(iw-sw/2,Math.max(sw/2,iw*(.5+v.x/100)));
+   const py=Math.min(ih-sh/2,Math.max(sh/2,ih*(.32+v.y/100)));
+   ctx.drawImage(im,px-sw/2,py-sh/2,sw,sh,x-inner,y-inner,2*inner,2*inner);
+ }else{
+   ctx.fillStyle='#b7bdc4';ctx.beginPath();ctx.arc(x,y-22,24,0,Math.PI*2);ctx.fill();
+   ctx.beginPath();ctx.ellipse(x,y+83,65,79,0,0,Math.PI*2);ctx.fill();
+ }
+ ctx.restore();
+ ctx.lineWidth=3;ctx.strokeStyle='#313841';ctx.beginPath();ctx.arc(x,y,r+1,0,Math.PI*2);ctx.stroke();
+ ctx.lineWidth=3;ctx.strokeStyle='#ffffff';ctx.beginPath();ctx.arc(x,y,r-3,0,Math.PI*2);ctx.stroke();
+ const tagW=a.n>9?57:51,tagY=y+r+8;
+ ctx.fillStyle='#e77515';ctx.beginPath();ctx.roundRect(x-tagW/2,tagY,tagW,25,3);ctx.fill();
+ fill(String(a.n),x,tagY+13,'900 19px Arial,Helvetica,sans-serif','#ffffff','center');
+ const txt=p?p.name:'ADAY SEÇ';
+ const width=(a.d==='isk'?198:(a.d==='lef'||a.d==='gir'||a.d==='mag'?244:198));
+ const opt=textLines(txt,width,a.r<75?23:25,a.r<75?17:18);
+ const gap=opt.fs+3,top=y+r+60;
+ opt.lines.forEach((line,i)=>fill(line,x,top+i*gap,'900 '+opt.fs+'px Arial,Helvetica,sans-serif','#171b20','center'));
+ if(!im&&p){fill('FOTOĞRAF YOK',x,y+10,'bold 13px Arial','#62696f','center')}
+}
+function draw(){
+ rect(0,0,1080,1350,'#f3f0e9');
+ const t=img(templates[active]);
+ if(t)ctx.drawImage(t,0,0,1080,1350);
+ else{
+   rect(0,0,1080,1350,'#f5f3ed');rect(0,0,1080,65,'#272930');
+   fill('HABER KIBRIS',540,34,'900 27px Arial','#ffce18','center');
+   fill('UBP',95,205,'900 85px Impact,Arial','#e87410');
+   fill(defs[active][0].toLocaleUpperCase('tr-TR')+' ADAYLARINI AÇIKLADI',325,225,'900 48px Impact,Arial','#111');
+ }
+ // Bölge ayraçları ve portre düzeni dışında orijinal PSD başlığına müdahale edilmez.
+ if(active==='combined'){
+   fill('İSKELE',32,465,'900 47px Impact,Arial','#151515');
+   rect(203,466,835,3,'#e6a311');
+   fill('GÜZELYURT',30,929,'900 43px Impact,Arial','#151515');
+   rect(302,931,300,3,'#e6a311');
+   fill('LEFKE',657,929,'900 43px Impact,Arial','#151515');
+   rect(802,931,239,3,'#e6a311');
+ }else if(active==='gir'||active==='mag'){
+   [652,954].forEach(y=>{rect(69,y,942,1,'rgba(75,77,83,.13)')});
+ }
+ layouts[active].forEach((a,i)=>drawPortrait(byId(chosen[active][i]),a));
+}
+function cropUI(){
+ const sel=$('cropPerson');if(!sel)return;
+ const ids=chosen[active].filter(Boolean);if(!ids.includes(cropSelected))cropSelected=ids[0]||null;
+ sel.textContent='';
+ let empty=document.createElement('option');empty.value='';empty.textContent='Aday seç...';sel.append(empty);
+ ids.forEach(id=>{let p=byId(id),op=document.createElement('option');op.value=id;op.textContent=p?p.name:id;sel.append(op)});
+ sel.value=cropSelected||'';
+ const z=$('cropZoom'),x=$('cropX'),y=$('cropY'),reset=$('cropReset');
+ for(let el of [z,x,y,reset])el.disabled=!cropSelected;
+ const v=cropSelected?adjustment(cropSelected):{zoom:1.4,x:0,y:0};
+ z.value=v.zoom;x.value=v.x;y.value=v.y;
+ $('cropZoomVal').textContent=Number(v.zoom).toFixed(2)+'×';
+ $('cropXVal').textContent=String(v.x);$('cropYVal').textContent=String(v.y);
+}
+function setCropSelected(id){cropSelected=id||null;cropUI();draw()}
+function cropChange(){
+ if(!cropSelected)return;
+ cropById[cropSelected]={zoom:Number($('cropZoom').value),x:Number($('cropX').value),y:Number($('cropY').value)};
+ try{localStorage.setItem('HK_UBP_CROP_V2',JSON.stringify(cropById))}catch(e){}
+ $('cropZoomVal').textContent=Number(cropById[cropSelected].zoom).toFixed(2)+'×';
+ $('cropXVal').textContent=String(cropById[cropSelected].x);
+ $('cropYVal').textContent=String(cropById[cropSelected].y);
+ draw();
 }
 function renderTabs(){$('tabs').innerHTML='';for(const k in defs){let b=document.createElement('button');b.className=k===active?'active':'';b.textContent=defs[k][0];let s=document.createElement('small');s.textContent=defs[k][1]+' aday';b.append(s);b.onclick=()=>{active=k;sub='isk';$('search').value='';$('bulk').value='';render()};$('tabs').append(b)}}
 function renderPool(){const d=active==='combined'?sub:active,used=new Set(chosen[active].filter(Boolean)),q=norm($('search').value);$('pool').innerHTML='';
@@ -114,8 +203,14 @@ let s=document.createElement('select'),op=document.createElement('option');op.va
 for(const v of people[a.d])if(!chosen[active].includes(v.id)||chosen[active][i]===v.id){let opt=document.createElement('option');opt.value=v.id;opt.textContent=v.name;s.append(opt)}
 s.value=chosen[active][i]||'';s.onchange=()=>set(i,s.value);el.append(n,pic,s);$('seats').append(el)
 })}
-function render(){renderTabs();$('poolTitle').textContent=active==='combined'?subNames[sub]:defs[active][0];$('subrow').style.display=active==='combined'?'block':'none';$('sub').value=sub;$('title').textContent='UBP '+defs[active][0]+' aday listesi';$('count').textContent=chosen[active].filter(Boolean).length+'/'+layouts[active].length;renderPool();renderSeats();draw()}
+function render(){renderTabs();$('poolTitle').textContent=active==='combined'?subNames[sub]:defs[active][0];$('subrow').style.display=active==='combined'?'block':'none';$('sub').value=sub;$('title').textContent='UBP '+defs[active][0]+' aday listesi';$('count').textContent=chosen[active].filter(Boolean).length+'/'+layouts[active].length;renderPool();renderSeats();cropUI();draw()}
 $('sub').onchange=()=>{sub=$('sub').value;render()};$('search').oninput=renderPool;
+$('cropPerson').onchange=e=>setCropSelected(e.target.value);
+for(const key of ['cropZoom','cropX','cropY'])$(key).oninput=cropChange;
+$('cropReset').onclick=()=>{if(!cropSelected)return;delete cropById[cropSelected];try{localStorage.setItem('HK_UBP_CROP_V2',JSON.stringify(cropById))}catch(e){}cropUI();draw()};
+canvas.onclick=e=>{const box=canvas.getBoundingClientRect(),mx=(e.clientX-box.left)*1080/box.width,my=(e.clientY-box.top)*1350/box.height;
+for(let i=0;i<layouts[active].length;i++){const a=layouts[active][i];if(Math.hypot(mx-a.cx,my-a.cy)<=a.r+2){const id=chosen[active][i];if(id)setCropSelected(id);return}}};
+
 $('reset').onclick=()=>{if(!confirm('Bu ilçe sıralaması temizlensin mi?'))return;chosen[active]=Array(layouts[active].length).fill(null);save();render()};
 $('addExtra').onclick=()=>{let d=active==='combined'?sub:active,name=$('extra').value.trim();if(!name)return;if(people[d].some(p=>norm(p.name)===norm(name))){alert('Bu kişi zaten listede.');return}
 const id=d+'_extra_'+Date.now();people[d].push({id,name});try{let ext=JSON.parse(localStorage.getItem('HK_UBP_EXTRA')||'{}');ext[d]??=[];ext[d].push({id,name});localStorage.setItem('HK_UBP_EXTRA',JSON.stringify(ext))}catch(e){}$('extra').value='';render()};
@@ -229,7 +324,7 @@ async function preloadBuiltInAssets(){
     photos[p.id]=tile.toDataURL('image/jpeg',.87);count++;
   }
   status.innerHTML='<span style="color:#80e6a2">✓ '+(count||73)+' UBP aday fotoğrafı ve 4 tasarım hazır.</span> Yeni fotoğraf seçmek isteğe bağlıdır.';
-  $('previewNote').textContent='Orijinal UBP Photoshop tasarımı esas alındı. Girne, Gazimağusa ve birleşik ilçelerin başlıkları aynı şablondan uyarlanır.';
+  $('previewNote').textContent='UBP şablonu ve TRT referansından esinlenen dairesel aday portreleri hazır. Fotoğraf kadrajlarını panelden düzenleyebilirsin.';
   render();
   // Tüm fotoğrafların çizime hazır olmasını bekle.
   await Promise.all(Object.values(photos).map(u=>new Promise(res=>{let x=img(u);if(x)return res();const t=images[u];if(!t)return res();t.addEventListener('load',res,{once:true});t.addEventListener('error',res,{once:true})})));
