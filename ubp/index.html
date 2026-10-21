@@ -59,6 +59,7 @@ const subNames={isk:'İSKELE',guz:'GÜZELYURT',lefke:'LEFKE'};
 const norm=s=>String(s||'').toLocaleLowerCase('tr-TR').replace(/ı/g,'i').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
 const slug=s=>norm(s), people={},chosen={},layouts={},photos={},templates={},images={};
 let active='lef',sub='isk',busy=false,cropSelected=null,cropById={};
+const psdTitleOverlays={};
 try{cropById=JSON.parse(localStorage.getItem('HK_UBP_CROP_V3')||'{}')||{}}catch(e){cropById={}}
 for(const d in names)people[d]=names[d].split('|').map((name,i)=>({id:d+'_'+i,name}));
 people.gir.push({id:'gir_kontenjan_unal',name:'Ünal Üstel'});
@@ -160,7 +161,7 @@ function drawPortrait(p,a){
 function draw(){
  rect(0,0,1080,1350,'#f3f0e9');
  const t=img(templates[active]);
- if(t)ctx.drawImage(t,0,0,1080,1350);
+ if(t){ctx.drawImage(t,0,0,1080,1350);if(psdTitleOverlays[active])ctx.drawImage(psdTitleOverlays[active],0,0);}
  else{
    rect(0,0,1080,1350,'#f5f3ed');rect(0,0,1080,65,'#272930');
    fill('HABER KIBRIS',540,34,'900 27px Arial','#ffce18','center');
@@ -304,7 +305,7 @@ $('photosUpload').onchange=async e=>{
 };
 $('templateUpload').onchange=async e=>{const f=e.target.files[0];if(!f)return;let u=URL.createObjectURL(f);if(templates[active])URL.revokeObjectURL(templates[active]);templates[active]=u;await store('template:'+active,f);e.target.value='';render()};
 $('download').onclick=()=>{
-if(!img(templates[active])){alert('Orijinal PSD arka planı henüz yüklenmedi. Biraz bekleyip tekrar dene.');return}
+if(!img(templates[active]) || (active!=='lef' && !psdTitleOverlays[active])){alert('Photoshop tasarımı henüz yüklenmedi. Biraz bekleyip tekrar dene.');return}
 const notReady=chosen[active].filter(id=>id&&photos[id]&&!img(photos[id])).length;
 if(notReady){alert(notReady+' fotoğraf halen yükleniyor. PNG almadan önce tamamlanmasını bekle.');return}
 let missing=chosen[active].filter(id=>!id||!photos[id]).length;if(missing&&!confirm(missing+' eksik sıra veya fotoğraf var. TASLAK indirilsin mi?'))return;draw();canvas.toBlob(b=>{if(!b){alert('PNG oluşturulamadı.');return}let url=URL.createObjectURL(b),a=document.createElement('a');a.href=url;a.download='HK_UBP_'+active+'_1080x1350'+(missing?'_TASLAK':'')+'.png';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000)},'image/png')};
@@ -321,20 +322,20 @@ async function preloadBuiltInAssets(){
   const cv=document.createElement('canvas');cv.width=1080;cv.height=1350;const g=cv.getContext('2d');
   const positions={lef:0,gir:1,mag:2,combined:3};
   for(const key of Object.keys(positions)){
-    if(templates[key])continue;
+    // Rebuild the PSD overlay independently; even a cached custom template receives the correct heading.
+    if(templates[key] && key==='lef')continue;
     g.clearRect(0,0,1080,1350);
     g.drawImage(sheet,0,positions[key]*1350,1080,1350,0,0,1080,1350);
     if(Object.prototype.hasOwnProperty.call(originalHeaderOrder,key)){
       const hdr=document.createElement('canvas');hdr.width=1080;hdr.height=440;
       const hg=hdr.getContext('2d');
       hg.drawImage(originalPsdHeaders,0,originalHeaderOrder[key]*440,1080,440,0,0,1080,440);
-      // Fade the last 35 px so the original PSD typography joins the existing background cleanly.
       hg.globalCompositeOperation='destination-in';
       const fade=hg.createLinearGradient(0,405,0,440);
       fade.addColorStop(0,'rgba(0,0,0,1)');fade.addColorStop(1,'rgba(0,0,0,0)');
       hg.fillStyle=fade;hg.fillRect(0,0,1080,440);
       hg.globalCompositeOperation='source-over';
-      g.drawImage(hdr,0,0);
+      psdTitleOverlays[key]=hdr;
     }
     templates[key]=cv.toDataURL('image/jpeg',.94);
   }
