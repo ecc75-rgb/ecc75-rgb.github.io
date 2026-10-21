@@ -32,7 +32,7 @@ h1{margin:7px 0;font-size:24px}h2{font-size:18px;margin:6px 0 11px}h3{font-size:
 <h3>Fotoğraf kadrajı</h3>
 <p>Dairesel portrelerin boyutunu ve konumunu ayarla. Önizlemedeki fotoğrafa dokunarak da aday seçebilirsin.</p>
 <label for="cropPerson">Düzenlenecek aday</label><select class="form" id="cropPerson"><option value="">Önce bir aday yerleştir</option></select>
-<div class="cropLabel"><label for="cropZoom">Yakınlaştır</label><span id="cropZoomVal" class="small">1.40×</span></div><input type="range" id="cropZoom" min="1" max="2.6" step=".05" value="1.4">
+<div class="cropLabel"><label for="cropZoom">Yakınlaştır</label><span id="cropZoomVal" class="small">1.06×</span></div><input type="range" id="cropZoom" min="1" max="2.6" step=".05" value="1.06">
 <div class="cropGrid"><div><div class="cropLabel"><label for="cropX">Sağ / sol</label><span id="cropXVal" class="small">0</span></div><input type="range" id="cropX" min="-45" max="45" step="1" value="0"></div>
 <div><div class="cropLabel"><label for="cropY">Yukarı / aşağı</label><span id="cropYVal" class="small">0</span></div><input type="range" id="cropY" min="-45" max="45" step="1" value="0"></div></div>
 <button type="button" class="secondary" style="width:100%;margin-top:12px" id="cropReset">Seçili adayın kadrajını sıfırla</button>
@@ -59,7 +59,7 @@ const subNames={isk:'İSKELE',guz:'GÜZELYURT',lefke:'LEFKE'};
 const norm=s=>String(s||'').toLocaleLowerCase('tr-TR').replace(/ı/g,'i').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
 const slug=s=>norm(s), people={},chosen={},layouts={},photos={},templates={},images={};
 let active='lef',sub='isk',busy=false,cropSelected=null,cropById={};
-try{cropById=JSON.parse(localStorage.getItem('HK_UBP_CROP_V2')||'{}')||{}}catch(e){cropById={}}
+try{cropById=JSON.parse(localStorage.getItem('HK_UBP_CROP_V3')||'{}')||{}}catch(e){cropById={}}
 for(const d in names)people[d]=names[d].split('|').map((name,i)=>({id:d+'_'+i,name}));
 people.gir.push({id:'gir_kontenjan_unal',name:'Ünal Üstel'});
 function layout(k){
@@ -89,7 +89,13 @@ function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x,y,w,h)}
 function fill(s,x,y,font,color,align='left'){ctx.textAlign=align;ctx.textBaseline='middle';ctx.font=font;ctx.fillStyle=color;ctx.fillText(s,x,y)}
 function fitted(s,w,max=23,min=12){let n=max;while(n>min){ctx.font='bold '+n+'px Arial';if(ctx.measureText(s).width<=w)break;n--}return n}
 // TRT haber örneğindeki açık, portre-odaklı editoryal düzen.
-function adjustment(id){return Object.assign({zoom:1.40,x:0,y:0},cropById[id]||{})}
+// Square portraits from the source atlas should fit inside the circle by default.
+// Special presets are applied only until the editor makes a per-person change.
+const DEFAULT_CROP={zoom:1.06,x:0,y:0};
+const CROP_PRESETS={
+ 'lef_21':{zoom:1.00,x:0,y:-7} // Olgun Amcaoğlu: preserve full head rather than aggressive zoom
+};
+function adjustment(id){return Object.assign({},DEFAULT_CROP,CROP_PRESETS[id]||{},cropById[id]||{})}
 function textLines(value,maxWidth,maxSize=24,minSize=17){
  const words=value.toLocaleUpperCase('tr-TR').split(/\s+/).filter(Boolean);
  let variants=[];
@@ -119,7 +125,7 @@ function drawPortrait(p,a){
    const scale=Math.max(2*inner/iw,2*inner/ih)*Math.max(1,v.zoom);
    const sw=2*inner/scale,sh=2*inner/scale;
    const px=Math.min(iw-sw/2,Math.max(sw/2,iw*(.5+v.x/100)));
-   const py=Math.min(ih-sh/2,Math.max(sh/2,ih*(.32+v.y/100)));
+   const py=Math.min(ih-sh/2,Math.max(sh/2,ih*(.40+v.y/100)));
    ctx.drawImage(im,px-sw/2,py-sh/2,sw,sh,x-inner,y-inner,2*inner,2*inner);
  }else{
    ctx.fillStyle='#b7bdc4';ctx.beginPath();ctx.arc(x,y-22,24,0,Math.PI*2);ctx.fill();
@@ -145,20 +151,10 @@ function draw(){
  else{
    rect(0,0,1080,1350,'#f5f3ed');rect(0,0,1080,65,'#272930');
    fill('HABER KIBRIS',540,34,'900 27px Arial','#ffce18','center');
-   fill('UBP',95,205,'900 85px Impact,Arial','#e87410');
-   fill(defs[active][0].toLocaleUpperCase('tr-TR')+' ADAYLARINI AÇIKLADI',325,225,'900 48px Impact,Arial','#111');
+   fill('ORİJİNAL PSD ŞABLONU YÜKLENİYOR',540,215,'bold 30px Arial','#26262b','center');
  }
- // Bölge ayraçları ve portre düzeni dışında orijinal PSD başlığına müdahale edilmez.
- if(active==='combined'){
-   fill('İSKELE',32,465,'900 47px Impact,Arial','#151515');
-   rect(203,466,835,3,'#e6a311');
-   fill('GÜZELYURT',30,929,'900 43px Impact,Arial','#151515');
-   rect(302,931,300,3,'#e6a311');
-   fill('LEFKE',657,929,'900 43px Impact,Arial','#151515');
-   rect(802,931,239,3,'#e6a311');
- }else if(active==='gir'||active==='mag'){
-   [652,954].forEach(y=>{rect(69,y,942,1,'rgba(75,77,83,.13)')});
- }
+ // İlçe isimleri, başlıklar ve çizgiler doğrudan PSD şablonundan gelir.
+ // Burada tekrar çizilmeleri orijinal tipografiyi bozuyordu.
  layouts[active].forEach((a,i)=>drawPortrait(byId(chosen[active][i]),a));
 }
 function cropUI(){
@@ -170,7 +166,7 @@ function cropUI(){
  sel.value=cropSelected||'';
  const z=$('cropZoom'),x=$('cropX'),y=$('cropY'),reset=$('cropReset');
  for(let el of [z,x,y,reset])el.disabled=!cropSelected;
- const v=cropSelected?adjustment(cropSelected):{zoom:1.4,x:0,y:0};
+ const v=cropSelected?adjustment(cropSelected):DEFAULT_CROP;
  z.value=v.zoom;x.value=v.x;y.value=v.y;
  $('cropZoomVal').textContent=Number(v.zoom).toFixed(2)+'×';
  $('cropXVal').textContent=String(v.x);$('cropYVal').textContent=String(v.y);
@@ -179,7 +175,7 @@ function setCropSelected(id){cropSelected=id||null;cropUI();draw()}
 function cropChange(){
  if(!cropSelected)return;
  cropById[cropSelected]={zoom:Number($('cropZoom').value),x:Number($('cropX').value),y:Number($('cropY').value)};
- try{localStorage.setItem('HK_UBP_CROP_V2',JSON.stringify(cropById))}catch(e){}
+ try{localStorage.setItem('HK_UBP_CROP_V3',JSON.stringify(cropById))}catch(e){}
  $('cropZoomVal').textContent=Number(cropById[cropSelected].zoom).toFixed(2)+'×';
  $('cropXVal').textContent=String(cropById[cropSelected].x);
  $('cropYVal').textContent=String(cropById[cropSelected].y);
@@ -207,7 +203,7 @@ function render(){renderTabs();$('poolTitle').textContent=active==='combined'?su
 $('sub').onchange=()=>{sub=$('sub').value;render()};$('search').oninput=renderPool;
 $('cropPerson').onchange=e=>setCropSelected(e.target.value);
 for(const key of ['cropZoom','cropX','cropY'])$(key).oninput=cropChange;
-$('cropReset').onclick=()=>{if(!cropSelected)return;delete cropById[cropSelected];try{localStorage.setItem('HK_UBP_CROP_V2',JSON.stringify(cropById))}catch(e){}cropUI();draw()};
+$('cropReset').onclick=()=>{if(!cropSelected)return;delete cropById[cropSelected];try{localStorage.setItem('HK_UBP_CROP_V3',JSON.stringify(cropById))}catch(e){}cropUI();draw()};
 canvas.onclick=e=>{const box=canvas.getBoundingClientRect(),mx=(e.clientX-box.left)*1080/box.width,my=(e.clientY-box.top)*1350/box.height;
 for(let i=0;i<layouts[active].length;i++){const a=layouts[active][i];if(Math.hypot(mx-a.cx,my-a.cy)<=a.r+2){const id=chosen[active][i];if(id)setCropSelected(id);return}}};
 
@@ -294,7 +290,11 @@ $('photosUpload').onchange=async e=>{
  finally{busy=false;e.target.value='';render()}
 };
 $('templateUpload').onchange=async e=>{const f=e.target.files[0];if(!f)return;let u=URL.createObjectURL(f);if(templates[active])URL.revokeObjectURL(templates[active]);templates[active]=u;await store('template:'+active,f);e.target.value='';render()};
-$('download').onclick=()=>{let missing=chosen[active].filter(id=>!id||!photos[id]).length;if(missing&&!confirm(missing+' eksik sıra veya fotoğraf var. TASLAK indirilsin mi?'))return;draw();canvas.toBlob(b=>{if(!b){alert('PNG oluşturulamadı.');return}let url=URL.createObjectURL(b),a=document.createElement('a');a.href=url;a.download='HK_UBP_'+active+'_1080x1350'+(missing?'_TASLAK':'')+'.png';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000)},'image/png')};
+$('download').onclick=()=>{
+if(!img(templates[active])){alert('Orijinal PSD arka planı henüz yüklenmedi. Biraz bekleyip tekrar dene.');return}
+const notReady=chosen[active].filter(id=>id&&photos[id]&&!img(photos[id])).length;
+if(notReady){alert(notReady+' fotoğraf halen yükleniyor. PNG almadan önce tamamlanmasını bekle.');return}
+let missing=chosen[active].filter(id=>!id||!photos[id]).length;if(missing&&!confirm(missing+' eksik sıra veya fotoğraf var. TASLAK indirilsin mi?'))return;draw();canvas.toBlob(b=>{if(!b){alert('PNG oluşturulamadı.');return}let url=URL.createObjectURL(b),a=document.createElement('a');a.href=url;a.download='HK_UBP_'+active+'_1080x1350'+(missing?'_TASLAK':'')+'.png';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000)},'image/png')};
 
 async function preloadBuiltInAssets(){
  const status=$('assetStatus');
