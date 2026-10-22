@@ -18,7 +18,7 @@ h1{margin:7px 0;font-size:24px}h2{font-size:18px;margin:6px 0 11px}h3{font-size:
 .district{padding:9px 0 3px;color:#FFC200;border-top:1px solid #4f5c70;font-weight:900}.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.small{font-size:11px;color:#b5c0cd}
 @media(max-width:1050px){.work{grid-template-columns:1fr}.canvasFrame{max-width:540px;margin:auto}}@media(max-width:780px){main{display:block}aside{border-right:0;border-bottom:1px solid #3b4759}section{padding:14px}}
 .cropPanel{border-color:#c1772c;background:#302c2b}.cropPanel input[type=range]{width:100%;accent-color:#ff9b28}.cropGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.cropLabel{display:flex;justify-content:space-between;margin:8px 0 2px}.cropHint{margin:8px 0 0}.canvasFrame canvas{cursor:crosshair}.noteHighlight{font-size:11px;color:#ffe6b2}
-</style></head>
+.seat.fixed{border-color:#a06f2a;background:#3b3227}.fixedLabel{font-size:10px;color:#ffcb78;font-weight:800;white-space:nowrap;margin-right:3px}</style></head>
 <body><header><strong>HK <span>UBP POST BUILDER</span></strong><nav><a class="active" href="./">ADAY KARTLARI</a><a href="oy-tablolari.html">OY TABLOLARI</a></nav><small>HABER KIBRIS · 1080×1350 PNG</small></header>
 <main><aside><div class="k">01 / TASARIM</div><h1>UBP aday sıralama</h1><p>Adayları sırala, postu PNG olarak indir.</p><div class="tabs" id="tabs"></div>
 <div class="box"><h3>Fotoğraflar ve Photoshop tasarımı</h3><p>Fotoğraf veya arka plan değiştirmek için dosya seç.</p><label class="upload" for="photosUpload">↑ Fotoğrafları değiştir (opsiyonel)</label><input type="file" id="photosUpload" accept="image/*,.zip" multiple>
@@ -78,13 +78,63 @@ function layout(k){
 }
 for(const k in defs){layouts[k]=layout(k);try{const s=JSON.parse(localStorage.getItem('HK_UBP_SEL_'+k)||'null');chosen[k]=Array.isArray(s)&&s.length===layouts[k].length?s:Array(layouts[k].length).fill(null)}catch(e){chosen[k]=Array(layouts[k].length).fill(null)}}
 try{let ext=JSON.parse(localStorage.getItem('HK_UBP_EXTRA')||'{}');for(const k in ext)if(people[k]&&Array.isArray(ext[k])){for(const x of ext[k])if(!people[k].some(p=>p.id===x.id))people[k].push(x)}}catch(e){}
+// UBP MYK's October 21 list as supplied by the user. Fixed seats are inside district capacity.
+const OFFICIAL_CONTINGENTS={
+  gir:[{rank:1,name:'Ünal Üstel'},{rank:3,name:'İlgen Bağcıer'},{rank:5,name:'Özcan Hüdaverdi'}],
+  lef:[{rank:3,name:'Hüseyin Ballı'},{rank:5,name:'Hasan Sapsızoğlu'},{rank:7,name:'Emre Dalgıç'}],
+  mag:[{rank:3,name:'Neriman Kaşif'},{rank:5,name:'Melih İlktuğ'},{rank:7,name:'Hamit Fırat Kalfaoğlu'}]
+};
+function personNameKey(str){return norm(String(str).replace(/^\s*(?:Dt\.?|Dr\.?|Av\.?)\s*/i,''))}
+const OFFICIAL_IDS={};
+for(const district of Object.keys(OFFICIAL_CONTINGENTS)){
+  const reserved=OFFICIAL_IDS[district]={};
+  for(const entry of OFFICIAL_CONTINGENTS[district]){
+    let p=people[district].find(p=>personNameKey(p.name)===personNameKey(entry.name));
+    if(!p){p={id:district+'_kont_'+norm(entry.name),name:entry.name,contingent:true};people[district].push(p)}
+    p.contingent=true;reserved[entry.rank-1]=p.id;
+  }
+}
+function isOfficialSeat(district,index){return Object.prototype.hasOwnProperty.call(OFFICIAL_IDS[district]||{},index)}
+function restoreOfficialSeats(district){
+  const fixed=OFFICIAL_IDS[district];if(!fixed)return;
+  const list=chosen[district],officialIds=new Set(Object.values(fixed)),original=JSON.stringify(list),displaced=[];
+  for(const raw of Object.keys(fixed)){
+    const idx=Number(raw),id=fixed[idx],previous=list[idx];
+    if(previous&&previous!==id&&!officialIds.has(previous))displaced.push(previous);
+    list[idx]=id;
+  }
+  for(let i=0;i<list.length;i++)if(!isOfficialSeat(district,i)&&officialIds.has(list[i]))list[i]=null;
+  for(const id of displaced){
+    if(list.includes(id))continue;
+    const empty=list.findIndex((v,i)=>!v&&!isOfficialSeat(district,i));
+    if(empty!==-1)list[empty]=id;
+  }
+  if(JSON.stringify(list)!==original){
+    try{
+      const backup='HK_UBP_BEFORE_KONTENJAN_20261022_'+district;
+      if(!localStorage.getItem(backup))localStorage.setItem(backup,original);
+      localStorage.setItem('HK_UBP_SEL_'+district,JSON.stringify(list));
+    }catch(e){}
+  }
+}
+for(const district of Object.keys(OFFICIAL_IDS))restoreOfficialSeats(district);
 function save(){try{localStorage.setItem('HK_UBP_SEL_'+active,JSON.stringify(chosen[active]))}catch(e){}}
 function getAll(){return active==='combined'?[...people.isk,...people.guz,...people.lefke]:people[active]}
 function byId(id){return getAll().find(p=>p.id===id)}
-function set(i,id){const seat=layouts[active][i],p=byId(id);if(id&&(!p||!p.id.startsWith(seat.d+'_'))){alert('Aday farklı bir ilçeye eklenemez.');return}
-const a=chosen[active],other=a.indexOf(id),old=a[i];if(id&&other>=0&&other!==i)a[other]=old||null;a[i]=id||null;save();render()}
-function swap(i,j){if(i===j)return;if(layouts[active][i].d!==layouts[active][j].d){alert('Farklı ilçelerin sırası değiştirilemez.');return}
-[chosen[active][i],chosen[active][j]]=[chosen[active][j],chosen[active][i]];save();render()}
+function set(i,id){
+  if(isOfficialSeat(active,i)){alert('Bu sıra açıklanan kontenjan adayına ayrılmıştır.');return}
+  if(id&&Object.values(OFFICIAL_IDS[active]||{}).includes(id)){alert('Kontenjan adayının sırası sabittir.');return}
+  const seat=layouts[active][i],p=byId(id);
+  if(id&&(!p||!p.id.startsWith(seat.d+'_'))){alert('Aday farklı bir ilçeye eklenemez.');return}
+  const a=chosen[active],other=a.indexOf(id),old=a[i];if(id&&other>=0&&other!==i)a[other]=old||null;
+  a[i]=id||null;save();render()
+}
+function swap(i,j){
+  if(i===j)return;
+  if(isOfficialSeat(active,i)||isOfficialSeat(active,j)){alert('Kontenjan adaylarının sırası sabittir.');return}
+  if(layouts[active][i].d!==layouts[active][j].d){alert('Farklı ilçelerin sırası değiştirilemez.');return}
+  [chosen[active][i],chosen[active][j]]=[chosen[active][j],chosen[active][i]];save();render()
+}
 const img=src=>{if(!src)return null;if(!images[src]){let i=new Image();i.onload=draw;i.onerror=draw;i.src=src;images[src]=i}return images[src].complete&&images[src].naturalWidth?images[src]:null};
 function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x,y,w,h)}
 function fill(s,x,y,font,color,align='left'){ctx.textAlign=align;ctx.textBaseline='middle';ctx.font=font;ctx.fillStyle=color;ctx.fillText(s,x,y)}
@@ -219,13 +269,19 @@ let add=document.createElement('button');add.textContent='+';add.disabled=used.h
 row.append(im,b,add);$('pool').append(row)}}
 function renderSeats(){$('seats').innerHTML='';let prev='';layouts[active].forEach((a,i)=>{
 if(active==='combined'&&prev!==a.d){let d=document.createElement('div');d.className='district';d.textContent=subNames[a.d];$('seats').append(d);prev=a.d}
-let el=document.createElement('div');el.className='seat';el.draggable=true;el.ondragstart=e=>e.dataTransfer.setData('text/plain',JSON.stringify({type:'seat',index:i}));
+let el=document.createElement('div');const isFixed=isOfficialSeat(active,i);
+el.className='seat'+(isFixed?' fixed':'');el.draggable=!isFixed;
+el.ondragstart=e=>{if(isFixed){e.preventDefault();return}e.dataTransfer.setData('text/plain',JSON.stringify({type:'seat',index:i}))};
 el.ondragover=e=>{e.preventDefault();el.classList.add('over')};el.ondragleave=()=>el.classList.remove('over');el.ondrop=e=>{e.preventDefault();el.classList.remove('over');try{let x=JSON.parse(e.dataTransfer.getData('text/plain'));if(x.type==='seat')swap(x.index,i);else set(i,x.id)}catch(err){}};
 let n=document.createElement('span');n.className='n';n.textContent=a.n;
 let pic=document.createElement('img');const p=byId(chosen[active][i]);if(p&&photos[p.id])pic.src=photos[p.id];
 let s=document.createElement('select'),op=document.createElement('option');op.value='';op.textContent='Aday seç...';s.append(op);
 for(const v of people[a.d])if(!chosen[active].includes(v.id)||chosen[active][i]===v.id){let opt=document.createElement('option');opt.value=v.id;opt.textContent=v.name;s.append(opt)}
-s.value=chosen[active][i]||'';s.onchange=()=>set(i,s.value);el.append(n,pic,s);$('seats').append(el)
+s.value=chosen[active][i]||'';s.disabled=isFixed;s.onchange=()=>set(i,s.value);
+if(isFixed)s.title='Sabit kontenjan sırası';
+el.append(n,pic,s);
+if(isFixed){const lock=document.createElement('span');lock.textContent='SABİT';lock.className='fixedLabel';el.append(lock)}
+$('seats').append(el)
 })}
 function render(){renderTabs();$('poolTitle').textContent=active==='combined'?subNames[sub]:defs[active][0];$('subrow').style.display=active==='combined'?'block':'none';$('sub').value=sub;$('title').textContent='UBP '+defs[active][0]+' aday listesi';$('count').textContent=chosen[active].filter(Boolean).length+'/'+layouts[active].length;renderPool();renderSeats();cropUI();draw()}
 $('sub').onchange=()=>{sub=$('sub').value;render()};$('search').oninput=renderPool;
@@ -235,14 +291,33 @@ $('cropReset').onclick=()=>{if(!cropSelected)return;delete cropById[cropSelected
 canvas.onclick=e=>{const box=canvas.getBoundingClientRect(),mx=(e.clientX-box.left)*1080/box.width,my=(e.clientY-box.top)*1350/box.height;
 for(let i=0;i<layouts[active].length;i++){const a=layouts[active][i];if(Math.hypot(mx-a.cx,my-a.cy)<=a.r+2){const id=chosen[active][i];if(id)setCropSelected(id);return}}};
 
-$('reset').onclick=()=>{if(!confirm('Bu ilçe sıralaması temizlensin mi?'))return;chosen[active]=Array(layouts[active].length).fill(null);save();render()};
+$('reset').onclick=()=>{if(!confirm('Kontenjan dışındaki aday sıralamaları temizlensin mi?'))return;chosen[active]=Array(layouts[active].length).fill(null);restoreOfficialSeats(active);save();render()};
 $('addExtra').onclick=()=>{let d=active==='combined'?sub:active,name=$('extra').value.trim();if(!name)return;if(people[d].some(p=>norm(p.name)===norm(name))){alert('Bu kişi zaten listede.');return}
 const id=d+'_extra_'+Date.now();people[d].push({id,name});try{let ext=JSON.parse(localStorage.getItem('HK_UBP_EXTRA')||'{}');ext[d]??=[];ext[d].push({id,name});localStorage.setItem('HK_UBP_EXTRA',JSON.stringify(ext))}catch(e){}$('extra').value='';render()};
-$('bulkApply').onclick=()=>{let d=active==='combined'?sub:active,lines=$('bulk').value.split(/[\n;]/).map(x=>x.replace(/^\s*(\d+[\s.)\-:]+|[•*-]\s+)/,'').trim()).filter(Boolean),found=[],bad=[];
-if(!lines.length)return;for(const line of lines){let m=people[d].filter(p=>norm(p.name)===norm(line));if(m.length!==1||found.includes(m[0].id))bad.push(line);else found.push(m[0].id)}
-if(bad.length){alert('Eşleşmeyen veya yinelenen adaylar:\n'+bad.join('\n'));return}
-let slots=layouts[active].map((a,i)=>a.d===d?i:-1).filter(i=>i>=0);if(found.length>slots.length){alert('Aday sayısı bu ilçe için fazla.');return}
-slots.forEach(i=>chosen[active][i]=null);found.forEach((v,j)=>chosen[active][slots[j]]=v);save();render()};
+$('bulkApply').onclick=()=>{
+ const district=active==='combined'?sub:active;
+ const lines=$('bulk').value.split(/[\n;]/).map(x=>x.replace(/^\s*(\d+[\s.)\-:]+|[•*-]\s+)/,'').trim()).filter(Boolean);
+ if(!lines.length)return;
+ const found=[],bad=[];
+ for(const line of lines){
+   const matches=people[district].filter(p=>personNameKey(p.name)===personNameKey(line));
+   if(matches.length!==1||found.includes(matches[0].id))bad.push(line);else found.push(matches[0].id);
+ }
+ if(bad.length){alert('Eşleşmeyen veya yinelenen adaylar:\n'+bad.join('\n'));return}
+ const slots=layouts[active].map((a,i)=>a.d===district?i:-1).filter(i=>i>=0);
+ if(found.length>slots.length){alert('Bu ilçenin aday kapasitesi aşıldı.');return}
+ const fixed=OFFICIAL_IDS[active]||{},fixedIds=new Set(Object.values(fixed));
+ if(found.length===slots.length){
+   for(const idx of slots)if(isOfficialSeat(active,idx)&&found[idx]!==fixed[idx]){
+     alert((idx+1)+'. sıra açıklanan kontenjan adayına ayrılmıştır. Tam listede bu isim aynı sırada bulunmalı.');return;
+   }
+ }
+ const ordered=found.filter(id=>!fixedIds.has(id)),open=slots.filter(i=>!isOfficialSeat(active,i));
+ if(ordered.length>open.length){alert('Kontenjan dışındaki sıralardan fazla aday var.');return}
+ open.forEach(i=>chosen[active][i]=null);
+ ordered.forEach((id,j)=>chosen[active][open[j]]=id);
+ restoreOfficialSeats(active);save();render()
+};
 function db(){return new Promise((resolve,reject)=>{const r=indexedDB.open('HK_UBP_ASSETS_V1',1);r.onupgradeneeded=()=>r.result.createObjectStore('files');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
 async function store(key,blob){try{let d=await db();await new Promise((res,rej)=>{let t=d.transaction('files','readwrite');t.objectStore('files').put(blob,key);t.oncomplete=res;t.onerror=()=>rej(t.error)});d.close()}catch(e){$('assetStatus').textContent='Tarayıcıda saklama hatası: '+e.message}}
 async function restore(){try{let d=await db(),keys=await new Promise((res,rej)=>{let q=d.transaction('files').objectStore('files').getAllKeys();q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)});for(const key of keys){let b=await new Promise((res,rej)=>{let q=d.transaction('files').objectStore('files').get(key);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)});if(b&&b instanceof Blob){let u=URL.createObjectURL(b);if(key.startsWith('portrait:')){photos[key.slice(9)]=u;replacedPhotos.add(key.slice(9));}else if(key.startsWith('template:'))templates[key.slice(9)]=u}}d.close();render()}catch(e){console.warn(e)}}
@@ -263,6 +338,9 @@ function identifyAsset(filename){
  if(folder==='gir' && base.includes('unalustel'))return people.gir.find(p=>p.id==='gir_kontenjan_unal');
  if(folder==='lef' && base.includes('ahmetsavas'))return people.lef[0];
  if(folder==='lef' && base.includes('veliesendag'))return people.lef[4];
+ // Prioritize exact candidate name in filename, never confuse Hüdaverdi candidates.
+ const fullMatches=Object.values(people).flat().filter(p=>base.includes(norm(p.name))&&norm(p.name).length>=6);
+ if(fullMatches.length===1)return fullMatches[0];
  const digit=leaf.match(/SIRA\s*NO\s*(\d+)/i);
  if(folder && digit && +digit[1]>=1 && +digit[1]<=names[folder].split('|').length) return people[folder][+digit[1]-1];
  let pool=folder?people[folder]:Object.values(people).flat();
@@ -367,7 +445,7 @@ async function preloadBuiltInAssets(){
     tg.clearRect(0,0,226,270);tg.drawImage(atlas,(index%9)*226,Math.floor(index/9)*270,226,270,0,0,226,270);
     photos[p.id]=tile.toDataURL('image/jpeg',.87);count++;
   }
-  status.innerHTML='<span style="color:#80e6a2">✓ Görseller yüklendi.</span>';
+  status.innerHTML='<span style="color:#80e6a2">✓ Arşiv fotoğrafları yüklendi.</span> <span class="small">7 kontenjan fotoğrafı eksik.</span>';
   // User-facing preview marketing copy intentionally removed.
   render();
   // Tüm fotoğrafların çizime hazır olmasını bekle.
