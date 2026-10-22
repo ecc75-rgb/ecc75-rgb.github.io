@@ -445,7 +445,29 @@ async function preloadBuiltInAssets(){
     tg.clearRect(0,0,226,270);tg.drawImage(atlas,(index%9)*226,Math.floor(index/9)*270,226,270,0,0,226,270);
     photos[p.id]=tile.toDataURL('image/jpeg',.87);count++;
   }
-  status.innerHTML='<span style="color:#80e6a2">✓ Arşiv fotoğrafları yüklendi.</span> <span class="small">7 kontenjan fotoğrafı eksik.</span>';
+  // Seven authenticated portrait assignments: four supplied originals and three reviewed crops.
+  // This supplementary atlas is part of the site, no manual ZIP upload is needed.
+  const contingentAtlas=await load('./assets/kontenjan_7.webp');
+  const contingentIds=[
+    'gir_kont_ilgenbagcier',
+    'gir_kont_ozcanhudaverdi',
+    'lef_kont_hasansapsizoglu',
+    'mag_kont_nerimankasif',
+    'lef_kont_emredalgic',
+    'mag_kont_melihilktug',
+    'mag_kont_hamitfiratkalfaoglu'
+  ];
+  const cc=document.createElement('canvas');cc.width=180;cc.height=185;const cctx=cc.getContext('2d');
+  let newCount=0;
+  for(let n=0;n<contingentIds.length;n++){
+    const id=contingentIds[n];
+    if(photos[id])continue; // preserve an editor's own manually replaced portrait
+    cctx.clearRect(0,0,180,185);
+    cctx.drawImage(contingentAtlas,n*180,0,180,185,0,0,180,185);
+    photos[id]=cc.toDataURL('image/jpeg',.92);
+    newCount++;
+  }
+  status.innerHTML='<span style="color:#80e6a2">✓ Arşiv ve kontenjan fotoğrafları yüklendi.</span> <span class="small">7 kontenjan fotoğrafı hazır.</span>';
   // User-facing preview marketing copy intentionally removed.
   render();
   // Tüm fotoğrafların çizime hazır olmasını bekle.
