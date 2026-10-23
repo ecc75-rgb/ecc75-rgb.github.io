@@ -461,12 +461,14 @@ async function preloadBuiltInAssets(){
   let newCount=0;
   for(let n=0;n<contingentIds.length;n++){
     const id=contingentIds[n];
+    if(id==='mag_kont_hamitfiratkalfaoglu')continue; // archived crop was mislabeled; load corrected official-reference photo below
     if(photos[id])continue; // preserve an editor's own manually replaced portrait
     cctx.clearRect(0,0,180,185);
     cctx.drawImage(contingentAtlas,n*180,0,180,185,0,0,180,185);
     photos[id]=cc.toDataURL('image/jpeg',.92);
     newCount++;
   }
+  if(!photos['mag_kont_hamitfiratkalfaoglu']) photos['mag_kont_hamitfiratkalfaoglu']='./assets/hamit_firat_kalfaoglu.webp?v=20261023';
   status.innerHTML='<span style="color:#80e6a2">✓ Arşiv ve kontenjan fotoğrafları yüklendi.</span> <span class="small">7 kontenjan fotoğrafı hazır.</span>';
   // User-facing preview marketing copy intentionally removed.
   render();
