@@ -217,8 +217,8 @@ textarea:focus,input[type=text]:focus,select:focus{border-color:var(--red)} .row
     sectionLabel('LEFKE', 572, 770);
     const h = 88, gap = 14;
     for (let i = 0; i < 5; i++) drawNameCard(c, 64, 418 + i * (h + gap), 430, h, i + 1, data[i], !!data[i]);
-    for (let i = 0; i < 3; i++) drawNameCard(c, 572, 418 + i * (h + gap), 444, h, i + 6, data[i + 5], !!data[i + 5]);
-    for (let i = 0; i < 2; i++) drawNameCard(c, 572, 812 + i * (h + gap), 444, h, i + 9, data[i + 8], !!data[i + 8]);
+    for (let i = 0; i < 3; i++) drawNameCard(c, 572, 418 + i * (h + gap), 444, h, i + 1, data[i + 5], !!data[i + 5]);
+    for (let i = 0; i < 2; i++) drawNameCard(c, 572, 812 + i * (h + gap), 444, h, i + 1, data[i + 8], !!data[i + 8]);
   }
 
   function drawRegular(c, data) {
