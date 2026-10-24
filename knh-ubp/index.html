@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KNH UBP Aday Listesi Aracı</title>
+<title>KNH UBP Aday Listesi Aracı · v4</title>
+<meta name="knh-build" content="20261024-v4-logo-title">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -211,13 +212,13 @@ textarea:focus,input[type=text]:focus,select:focus{border-color:var(--red)} .row
       c.font = '900 17px "Archivo Black", Arial Black, Arial';
       c.fillText(text, x + 12, y + 20);
     };
-    sectionLabel('İSKELE', 64, 384);
-    sectionLabel('GÜZELYURT', 572, 384);
-    sectionLabel('LEFKE', 572, 778);
+    sectionLabel('İSKELE', 64, 376);
+    sectionLabel('GÜZELYURT', 572, 376);
+    sectionLabel('LEFKE', 572, 770);
     const h = 88, gap = 14;
-    for (let i = 0; i < 5; i++) drawNameCard(c, 64, 426 + i * (h + gap), 430, h, i + 1, data[i], !!data[i]);
-    for (let i = 0; i < 3; i++) drawNameCard(c, 572, 426 + i * (h + gap), 444, h, i + 6, data[i + 5], !!data[i + 5]);
-    for (let i = 0; i < 2; i++) drawNameCard(c, 572, 820 + i * (h + gap), 444, h, i + 9, data[i + 8], !!data[i + 8]);
+    for (let i = 0; i < 5; i++) drawNameCard(c, 64, 418 + i * (h + gap), 430, h, i + 1, data[i], !!data[i]);
+    for (let i = 0; i < 3; i++) drawNameCard(c, 572, 418 + i * (h + gap), 444, h, i + 6, data[i + 5], !!data[i + 5]);
+    for (let i = 0; i < 2; i++) drawNameCard(c, 572, 812 + i * (h + gap), 444, h, i + 9, data[i + 8], !!data[i + 8]);
   }
 
   function drawRegular(c, data) {
@@ -225,7 +226,7 @@ textarea:focus,input[type=text]:focus,select:focus{border-color:var(--red)} .row
     const gapY = 14;
     const available = 840;
     const cardH = Math.min(100, Math.floor((available - gapY * (rows - 1)) / rows));
-    const x1 = 64, x2 = 572, y0 = 388;
+    const x1 = 64, x2 = 572, y0 = 368;
     for (let i = 0; i < data.length; i++) {
       const col = i < rows ? 0 : 1;
       const row = col === 0 ? i : i - rows;
@@ -245,34 +246,40 @@ textarea:focus,input[type=text]:focus,select:focus{border-color:var(--red)} .row
     c.fillStyle = '#c61b34';
     c.fillRect(64, 58, 66, 4);
 
+
     const lines = splitHeadline();
     if (knhLogo.complete && knhLogo.naturalWidth) {
-      const maxW = 250, maxH = 72;
-      const sc = Math.min(maxW / knhLogo.width, maxH / knhLogo.height);
-      const w = knhLogo.width * sc, h = knhLogo.height * sc;
-      c.drawImage(knhLogo, 64, 76, w, h);
+      const maxW = 177, maxH = 115;
+      const w = 177, h = 109;
+      c.save();
+      c.globalCompositeOperation = 'multiply';
+      c.drawImage(knhLogo, 282, 586, 1534, 934, 64, 28, w, h);
+      c.restore();
     }
-
-    c.fillStyle = '#191919';
-    fitText(c, lines[0], 64, 168, 760, district === COMBINED ? 34 : 40, 24, '900', '"Archivo Black", Arial Black, Arial', '#191919');
-    fitText(c, lines[1], 64, 222, 760, district === COMBINED ? 50 : 56, 28, '900', '"Archivo Black", Arial Black, Arial', '#c61b34');
-    fitText(c, lines[2], 64, 272, 760, district === COMBINED ? 40 : 44, 22, '900', '"Archivo Black", Arial Black, Arial', '#191919');
-
+    if (district === COMBINED) {
+      fitText(c, lines[0], 64, 195, 756, 49, 29, '900', '"Archivo Black", Arial Black, Arial', '#c61b34');
+      fitText(c, lines[1], 64, 253, 756, 55, 35, '900', '"Archivo Black", Arial Black, Arial', '#c61b34');
+      fitText(c, lines[2], 64, 310, 756, 43, 25, '900', '"Archivo Black", Arial Black, Arial', '#191919');
+    } else {
+      fitText(c, lines[0], 64, 199, 756, 61, 44, '900', '"Archivo Black", Arial Black, Arial', '#191919');
+      fitText(c, lines[1], 64, 258, 756, 56, 34, '900', '"Archivo Black", Arial Black, Arial', '#c61b34');
+      fitText(c, lines[2], 64, 315, 756, 59, 42, '900', '"Archivo Black", Arial Black, Arial', '#191919');
+    }
     if (ubpLogo.complete && ubpLogo.naturalWidth) c.drawImage(ubpLogo, 842, 56, 176, 176);
     c.fillStyle = '#d6d0c9';
-    c.fillRect(64, 306, 954, 2);
+    c.fillRect(64, 346, 954, 2);
 
     const data = STATES[district];
     if (district === COMBINED) drawCombined(c, data); else drawRegular(c, data);
 
-    c.fillStyle = '#d6d0c9';
-    c.fillRect(64, 1210, 954, 2);
+
+    c.fillStyle = '#19191c';
+    c.fillRect(14, 1205, 1066, 145);
     if (footerLogo.complete && footerLogo.naturalWidth) {
-      const maxW = 290, maxH = 46;
+      const maxW = 390, maxH = 76;
       const sc = Math.min(maxW / footerLogo.width, maxH / footerLogo.height);
       const w = footerLogo.width * sc, h = footerLogo.height * sc;
-      const x = (1080 - w) / 2;
-      c.drawImage(footerLogo, x, 1256, w, h);
+      c.drawImage(footerLogo, (1080 - w) / 2, 1246, w, h);
     }
   }
 
@@ -354,6 +361,7 @@ textarea:focus,input[type=text]:focus,select:focus{border-color:var(--red)} .row
 
   function renderAll() { renderAreas(); renderEntries(); draw(); }
   renderAll();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => draw());
 })();
 </script>
 </body>
