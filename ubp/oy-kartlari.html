@@ -92,14 +92,60 @@ function canvasBackground(type){
   b(901,82,150,155,"#f2f0ec");
   if(hkLogo){g.drawImage(hkLogo,913,91,129,129)}else fallbackHK(913,91,129);
 }
+// Başlık: gerçek yazı ölçüsüne göre, yazıdan yalnızca 11px taşan sarı vurgu.
+function headline(text,baseline,target,min,highlight,maxWidth=590){
+  const face=fontReady?'"HK-Tungsten",Impact,"Arial Narrow",Arial':'Impact,"Arial Narrow",Arial';
+  const scaleX=fontReady?1:.80;
+  const available=maxWidth-(highlight?24:0);
+  const x=310;
+  let size=target;
+  g.textAlign="left";
+  g.textBaseline="alphabetic";
+  while(size>min){
+    g.font="900 "+size+"px "+face;
+    if(g.measureText(text).width*scaleX<=available)break;
+    size--;
+  }
+  g.font="900 "+size+"px "+face;
+  const measured=Math.min(g.measureText(text).width*scaleX,available);
+  if(highlight){
+    b(x-11,baseline-size*.89-7,Math.ceil(measured+22),Math.ceil(size*1.05+13),"#ffcc00");
+  }
+  g.save();
+  g.translate(x,0);
+  g.scale(scaleX,1);
+  g.fillStyle="#111111";
+  g.fillText(text,0,baseline,available/scaleX);
+  g.restore();
+}
 function masthead(){
-  const isTop=active==="top", isComb=active==="combined";
-  const emphasis=isTop?"EN ÇOK OY ALAN":isComb?"İSKELE, GÜZELYURT":"ADAY ADAYLARININ";
-  const ending=isTop?"10 ADAY":isComb?"VE LEFKE":"OY SAYILARI";
-  txt("UBP ÖN SEÇİMİNDE",299,144,598,67,42,"#111111");
-  b(299,154,598,82,"#ffcc00");
-  txt(emphasis,311,218,573,62,30,"#111111");
-  txt(ending,299,315,598,67,42,"#111111");
+  if(active==="top"){
+    // Tüm ilçelerin ilk 10 adayı
+    headline("UBP",126,60,45,false);
+    headline("MİLLETVEKİLLİĞİ ADAY",190,60,45,true);
+    headline("SEÇİMİNDE",258,65,49,true);
+    headline("EN ÇOK OY ALAN 10 ADAY",322,58,44,false,700);
+  }else if(active==="combined"){
+    // İskele, Güzelyurt, Lefke: üç ilçenin kendi bölümleri korunur
+    headline("UBP",114,50,37,false);
+    headline("İSKELE, GÜZELYURT",161,51,34,true);
+    headline("VE LEFKE MİLLETVEKİLLİĞİ",213,52,34,true);
+    headline("ADAYLIĞI",264,55,44,true);
+    headline("SEÇİMİ OY SAYILARI",323,55,42,false,700);
+  }else if(active==="mag"){
+    // Uzun ilçe adı için daha dengeli beş satırlı düzen
+    headline("UBP",114,50,37,false);
+    headline("GAZİMAĞUSA",161,55,42,true);
+    headline("MİLLETVEKİLLİĞİ",213,52,38,true);
+    headline("ADAYLIĞI",264,55,44,true);
+    headline("SEÇİMİ OY SAYILARI",323,55,42,false,700);
+  }else{
+    // Lefkoşa ve Girne
+    headline("UBP",126,60,45,false);
+    headline(titles[active]+" MİLLETVEKİLLİĞİ",190,61,43,true);
+    headline("ADAYLIĞI",258,65,48,true);
+    headline("SEÇİMİ OY SAYILARI",322,58,42,false,700);
+  }
   b(38,337,1004,3,"#ffcc00");
 }
 function foot(){
