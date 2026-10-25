@@ -93,32 +93,74 @@ function canvasBackground(type){
   if(hkLogo){g.drawImage(hkLogo,913,91,129,129)}else fallbackHK(913,91,129);
 }
 function masthead(){
-  const a=active,title=titles[a],isTop=a==="top",isComb=a==="combined";
-  // Başlık satır aralıkları çok az açıldı; sağ üst logo için güvenli alan bırakıldı.
-  txt("UBP ÖN SEÇİMİNDE",299,142,598,67,42,"#252a31");
-  txt(isTop?"EN ÇOK OY ALAN":isComb?"İSKELE, GÜZELYURT":"ADAY ADAYLARININ",299,220,598,75,39,"#ffcc00");
-  txt(isTop?"10 ADAY":isComb?"VE LEFKE":"OY SAYILARI",299,292,598,79,47,"#1b2028");
-  if(!isTop&&!isComb){b(299,302,20,4,"#ffcc00");txt(title+" / "+records[a].length+" ADAY",333,310,566,23,17,"#30343a","left","Arial")}
+  const isTop=active==="top", isComb=active==="combined";
+  const emphasis=isTop?"EN ÇOK OY ALAN":isComb?"İSKELE, GÜZELYURT":"ADAY ADAYLARININ";
+  const ending=isTop?"10 ADAY":isComb?"VE LEFKE":"OY SAYILARI";
+  txt("UBP ÖN SEÇİMİNDE",299,144,598,67,42,"#111111");
+  b(299,154,598,82,"#ffcc00");
+  txt(emphasis,311,218,573,62,30,"#111111");
+  txt(ending,299,315,598,67,42,"#111111");
   b(38,337,1004,3,"#ffcc00");
 }
 function foot(){
-  // Sol alttaki fazladan Haber Kıbrıs yazısı kaldırıldı; tek bilgi bloğu sağ altta.
-  b(38,1310,1004,1,"#c2beb6");
-  g.textAlign="right";g.textBaseline="alphabetic";g.font="bold 16px Arial";g.fillStyle="#333943";
-  g.fillText("24 EKİM 2026  ·  KONTENJAN HARİÇ",1042,1337);
+  // Sağ alt tarih ve kontenjan ibaresi kaldırıldı.
+  b(38,1310,1004,1,"#d7d2c8");
 }
-
-function twoLines(str,x,y,w,maxSize,minSize,color){let parts=str.split(" ");let line=["",""],s=0;for(const word of parts){let test=line[s]?line[s]+" "+word:word;g.font="900 "+maxSize+"px Arial";if(line[s]&&g.measureText(test).width>w&&s===0){s=1;line[1]=word}else line[s]=test}
-let size=maxSize;while(size>=minSize){g.font="900 "+size+"px Arial";if(line.every(q=>g.measureText(q).width<=w))break;size--}g.fillStyle=color;g.textAlign="left";g.textBaseline="alphabetic";let yy=y-(line[1]?size*.55:0);g.font="900 "+Math.max(size,minSize)+"px Arial";line.forEach((t,i)=>{if(t)g.fillText(t,x,yy+i*(size+2))})}
-function card(p,n,x,y,w,h){b(x,y,w,h,"#ffffff");b(x,y,5,h,"#ffcc00");let r=Math.min(56,Math.max(39,h*.35)),cy=y+h*.42,cx=x+r+18;photo(p,cx,cy,r);let numW=n>=10?36:29;b(x,y,numW,31,"#ffcc00");txt(String(n),x+numW/2,y+24,numW-3,24,16,"#161a21","center",'Arial');
-let tx=x+2*r+30;let tw=w-(tx-x)-9;let font=h>180?26:20;twoLines(p.name.toLocaleUpperCase("tr-TR"),tx,y+h*.49,tw,font,13,"#1e2530");txt(money(p.votes)+" OY",tx,y+h-13,tw,h>180?35:29,19,"#a78100","left",'Arial');
+function drawName(str,x,y,w,h){
+  const words=String(str||"").toLocaleUpperCase("tr-TR").split(/\s+/).filter(Boolean);
+  if(!words.length)return;
+  const maxSize=h>180?27:h>140?23:20,minSize=12;
+  const candidates=[[words.join(" ")]];
+  for(let i=1;i<words.length;i++)candidates.push([words.slice(0,i).join(" "),words.slice(i).join(" ")]);
+  let lines=candidates[candidates.length-1],fontSize=minSize;
+  outer:for(let size=maxSize;size>=minSize;size--){
+    g.font="900 "+size+"px Arial";
+    const valid=candidates.filter(part=>part.every(t=>g.measureText(t).width<=w));
+    if(valid.length){
+      valid.sort((a,b)=>{
+        if(a.length!==b.length)return a.length-b.length;
+        return Math.abs(g.measureText(a[0]).width-g.measureText(a[1]).width)-Math.abs(g.measureText(b[0]).width-g.measureText(b[1]).width);
+      });
+      lines=valid[0];fontSize=size;break outer;
+    }
+  }
+  g.font="900 "+fontSize+"px Arial";
+  g.fillStyle="#111111";g.textAlign="left";g.textBaseline="alphabetic";
+  const lineHeight=fontSize+2,firstBaseline=y-(lines.length-1)*lineHeight*.5;
+  lines.forEach((line,i)=>g.fillText(line,x,firstBaseline+i*lineHeight,w));
+}
+function card(p,n,x,y,w,h){
+  b(x,y,w,h,"#ffffff");
+  b(x,y,5,h,"#ffcc00");
+  const r=Math.min(56,Math.max(39,h*.35)),cy=y+h*.42,cx=x+r+18;
+  photo(p,cx,cy,r);
+  const numW=n>=10?36:29;
+  b(x,y,numW,31,"#ffcc00");
+  txt(String(n),x+numW/2,y+24,numW-3,24,16,"#111111","center","Arial");
+  const tx=x+2*r+30,tw=w-(tx-x)-9;
+  drawName(p.name,tx,y+h*.49,tw,h);
+  txt(money(p.votes)+" OY",tx,y+h-13,tw,h>180?35:29,19,"#111111","left","Arial");
 }
 function districtGrid(list,columns,top,bottom){let gap=11,x0=38,width=1004,rows=Math.ceil(list.length/columns),w=(width-gap*(columns-1))/columns,h=(bottom-top-gap*(rows-1))/rows;list.forEach((p,i)=>card(p,i+1,x0+(i%columns)*(w+gap),top+Math.floor(i/columns)*(h+gap),w,h))}
 function combinedGrid(){let y=355;
 for(const def of [{d:"isk",t:"İSKELE",height:477,cols:4},{d:"guz",t:"GÜZELYURT",height:183,cols:4},{d:"lefke",t:"LEFKE",height:255,cols:5}]){
 txt(def.t,38,y+26,600,38,30,"#161e28");b(38,y+39,1004,2,"#ffcc00");let top=y+52,bot=y+def.height;districtGrid(records[def.d],def.cols,top,bot);y=bot+12
 }}
-function topGrid(){let x0=38,topY=351,gap=12,w=(1004-gap)/2,h=181;top.forEach((p,i)=>{let x=x0+(i%2)*(w+gap),y=topY+Math.floor(i/2)*(h+gap);b(x,y,w,h,"#fff");b(x,y,6,h,"#ffcc00");photo(p,x+98,y+82,72);b(x+174,y,w-174,48,"#222a31");txt(p.name.toLocaleUpperCase("tr-TR"),x+186,y+33,w-188,25,16,"#fff",'left','Arial');b(x+174,y+48,w-174,45,"#faf5df");txt(titles[p.d],x+186,y+80,w-188,27,18,"#7b6500",'left','Arial');txt(money(p.votes)+" OY",x+186,y+157,w-190,40,25,"#252930",'left','Arial');b(x,y,42,37,"#ffcc00");txt(String(i+1),x+21,y+29,40,26,20,"#161a21","center",'Arial')})}
+function topGrid(){
+  const x0=38,topY=351,gap=12,w=(1004-gap)/2,h=181;
+  top.forEach((p,i)=>{
+    const x=x0+(i%2)*(w+gap),y=topY+Math.floor(i/2)*(h+gap);
+    b(x,y,w,h,"#fff");b(x,y,6,h,"#ffcc00");
+    photo(p,x+98,y+82,72);
+    b(x+174,y,w-174,48,"#ffcc00");
+    txt(p.name.toLocaleUpperCase("tr-TR"),x+186,y+33,w-188,25,16,"#111111","left","Arial");
+    b(x+174,y+48,w-174,45,"#faf5df");
+    txt(titles[p.d],x+186,y+80,w-188,27,18,"#111111","left","Arial");
+    txt(money(p.votes)+" OY",x+186,y+157,w-190,40,25,"#111111","left","Arial");
+    b(x,y,42,37,"#ffcc00");
+    txt(String(i+1),x+21,y+29,40,26,20,"#111111","center","Arial");
+  });
+}
 function draw(){canvasBackground(active);masthead();if(active==="combined")combinedGrid();else if(active==="top")topGrid();else districtGrid(records[active],3,351,1291);foot()}
 function display(){let list=all();$("heading").textContent=active==="top"?"Tüm ilçelerde en çok oy alan 10 aday":active==="combined"?"İskele / Güzelyurt / Lefke adaylarının oy sayıları":titles[active]+" ön seçim oy sayıları";
 $("count").textContent=list.length+" aday • kontenjanlar hariç";$("tabs").innerHTML="";for(let [id,label] of opts){let btn=document.createElement("button");btn.className="tab"+(id===active?" active":"");let n=id==="top"?"En çok oy alan 10":id==="combined"?"Üç ilçe":titles[id];btn.textContent=n;let small=document.createElement("small");small.textContent=label;btn.append(small);btn.onclick=()=>{active=id;display()};$("tabs").append(btn)}
