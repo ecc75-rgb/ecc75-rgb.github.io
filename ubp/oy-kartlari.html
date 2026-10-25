@@ -17,6 +17,7 @@ main{display:grid;grid-template-columns:330px minmax(330px,1fr);min-height:90vh}
 <div class="eyebrow">HABER KIBRIS • UBP ÖN SEÇİMİ</div><h1>Fotoğraflı oy grafikleri</h1><p>Kontenjanlar hariç tüm aday adaylarının açıklanan oy sayıları. Orijinal Photoshop arka planları ve mevcut UBP fotoğraf arşivi kullanılır.</p>
 <div class="tabs" id="tabs"></div>
 <div class="panel"><h3>Görsel paketi</h3><div id="status" class="status">Orijinal fotoğraflar ve şablonlar yükleniyor...</div><p class="muted">Orijinal aday fotoğrafları bu sitenin <code>assets/atlas.jpg</code> dosyasından otomatik okunur; yeniden yüklemen gerekmez. Fotoğraf kadrajı önceki sayfayla aynı ayarlara bağlıdır.</p></div>
+<div class="panel"><h3>Orijinal Tungsten</h3><p class="muted">Font dosyası GitHub'a yüklenmez. Mac'inden seçtiğinde yalnızca bu tarayıcıda saklanır.</p><input type="file" id="fontUpload" accept=".ttf,.otf,font/ttf,font/otf" style="width:100%;font-size:12px"><div class="status" id="fontStatus">Başlıkta varsayılan font kullanılıyor.</div></div>
 <div class="panel"><h3>Oy sıralaması</h3><div id="count" class="summary"></div><div id="list" class="list"></div></div>
 <div class="panel"><h3>PNG dışa aktar</h3><p>Her ilçe için 1080 × 1350. İskele, Güzelyurt ve Lefke aynı görselde; ülke genelindeki ilk 10 ayrı görselde.</p><button class="btn" id="export1" disabled>PNG İndir</button></div>
 </aside><section>
@@ -42,7 +43,9 @@ const opts=[["lef","Lefkoşa · 21 kişi"],["gir","Girne · 18 kişi"],["mag","G
 const titles={lef:"LEFKOŞA",gir:"GİRNE",mag:"GAZİMAĞUSA",isk:"İSKELE",guz:"GÜZELYURT",lefke:"LEFKE",combined:"ÜÇ İLÇE",top:"EN ÇOK OY ALANLAR"};
 const fitPreset=[[1.05,3,3],[1.17,1,1],[1.11,-1,5],[1,0,5],[2.3,-2,2],[1.98,10,1],[1.05,2,9],[1,0,5],[1.03,1,12],[1.03,2,7],[1,0,2],[1,0,3],[1,0,5],[1.08,-4,6],[1,0,4],[1.24,0,8],[1.05,-1,4],[1,0,5],[1.37,13,3],[1.35,-1,3],[1.17,0,2],[1,0,4],[1.47,0,5],[1,0,10],[1.08,1,7],[1.42,-7,-10],[1,0,4],[1,0,3],[1.19,0,3],[1.1,2,3],[1.04,2,2],[1.24,2,-1],[1.34,0,5],[1.18,3,0],[1.4,-14,4],[1,0,12],[1.16,-1,0],[1.12,1,-2],[1.75,-1,-9],[1.17,2,5],[1.17,-3,2],[1.05,3,0],[1.7,2,-9],[1.55,0,-6],[1.16,-1,-1],[1.38,2,-4],[1,0,12],[1,0,7],[1.24,2,4],[1,0,5],[1.07,0,8],[1.07,-2,5],[1.14,2,6],[1.02,0,5],[1.57,0,-3],[1.25,0,9],[1.19,-1,3],[1.06,0,2],[1,0,2],[1.03,0,4],[1.12,0,-1],[1.01,0,2],[1.2,1,0],[1,0,2],[1.35,-1,-2],[1.43,0,7],[1.37,-3,-8],[1.03,1,9],[1,0,3],[1.03,0,6],[1.23,2,1],[1.08,-1,10]];
 function norm(s){return String(s||"").toLocaleLowerCase("tr-TR").replace(/ı/g,"i").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"")}
-let people=[],images={},background=null,atlas=null,cropOverrides={},active="lef",ready=false,photoOverrides={};
+let people=[],images={},background=null,atlas=null,ubpLogo=null,hkLogo=null,fontReady=false,cropOverrides={},active="lef",ready=false,photoOverrides={};
+const UBP_LOGO_URL="https://upload.wikimedia.org/wikipedia/en/a/ad/Northern_Cyprus_Unity_Party_logo.png";
+const HK_LOGO_URL="https://haberkibris.com/tplimages/hk.png";
 try{cropOverrides=JSON.parse(localStorage.getItem("HK_UBP_CROP_V4")||"{}")||{}}catch(e){}
 for(let d of Object.keys(names)){names[d].split("|").forEach((name,i)=>people.push({name,d,id:d+"_"+i,index:offsets[d]+i}))}
 let lookup=new Map(people.map(p=>[p.d+"|"+norm(p.name),p]));
@@ -51,46 +54,99 @@ const top=Object.values(records).flat().slice().sort((a,b)=>b.votes-a.votes).sli
 function all(){return active==="combined"?[...records.isk,...records.guz,...records.lefke]:active==="top"?top:records[active]}
 function money(n){return n.toLocaleString("tr-TR")}
 function b(x,y,w,h,color){g.fillStyle=color;g.fillRect(x,y,w,h)}
-function txt(t,x,y,w,font,min,color,align="left",family='Impact,"Arial Narrow",Arial'){g.textAlign=align;g.textBaseline="alphabetic";g.fillStyle=color;let z=font;do{g.font="900 "+z+"px "+family;if(g.measureText(t).width<=w||z<=min)break;z-=1}while(true);g.fillText(t,x,y)}
-function load(src){return new Promise((ok,err)=>{let im=new Image();im.onload=()=>ok(im);im.onerror=()=>err(Error(src+" yüklenemedi"));im.src=src})}
+function txt(t,x,y,w,font,min,color,align="left",family){g.textAlign=align;g.textBaseline="alphabetic";g.fillStyle=color;const face=family||(fontReady?'"HK-Tungsten",Impact,"Arial Narrow",Arial':'Impact,"Arial Narrow",Arial');let z=font;do{g.font="900 "+z+"px "+face;if(g.measureText(t).width<=w||z<=min)break;z-=1}while(true);g.fillText(t,x,y)}
+function load(src,anonymous=false){return new Promise((ok,err)=>{let im=new Image();if(anonymous)im.crossOrigin="anonymous";im.onload=()=>ok(im);im.onerror=()=>err(Error(src+" yüklenemedi"));im.src=src})}
 function cropInfo(p){let raw=fitPreset[p.index]||[1,0,0],override=cropOverrides[p.id]||{};return {zoom:Math.max(1,Number(override.zoom??raw[0])),x:Number(override.x??raw[1]),y:Number(override.y??raw[2])}}
 function photo(p,cx,cy,r){let inset=r-3;g.save();g.beginPath();g.arc(cx,cy,inset,0,Math.PI*2);g.clip();b(cx-r,cy-r,r*2,r*2,"#e0e1df");let im=images[p.id];if(im&&im.complete&&im.naturalWidth){var iw=im.naturalWidth,ih=im.naturalHeight,src=im;let c=cropInfo(p);let zoom=Math.max(1,c.zoom),sc=Math.max(2*inset/iw,2*inset/ih)*zoom,sw=2*inset/sc,sh=2*inset/sc,px=Math.min(iw-sw/2,Math.max(sw/2,iw*(.5+c.x/100))),py=Math.min(ih-sh/2,Math.max(sh/2,ih*(.40+c.y/100)));g.drawImage(src,px-sw/2,py-sh/2,sw,sh,cx-inset,cy-inset,inset*2,inset*2)}else if(atlas){let c=cropInfo(p),iw=226,ih=270,zoom=Math.max(1,c.zoom),sc=Math.max(2*inset/iw,2*inset/ih)*zoom,sw=2*inset/sc,sh=2*inset/sc,px=Math.min(iw-sw/2,Math.max(sw/2,iw*(.5+c.x/100))),py=Math.min(ih-sh/2,Math.max(sh/2,ih*(.40+c.y/100)));g.drawImage(atlas,(p.index%9)*226+px-sw/2,Math.floor(p.index/9)*270+py-sh/2,sw,sh,cx-inset,cy-inset,inset*2,inset*2)}g.restore();g.lineWidth=3;g.strokeStyle="#333d47";g.beginPath();g.arc(cx,cy,r,0,Math.PI*2);g.stroke();g.lineWidth=2;g.strokeStyle="#fff";g.beginPath();g.arc(cx,cy,r-4,0,Math.PI*2);g.stroke()}
-function canvasBackground(type){b(0,0,1080,1350,"#f2f0ec");if(!background)return;let slice={lef:0,gir:1,mag:2,combined:3,top:0}[type];let y=slice*1350;
-g.save();g.globalAlpha=.23;g.drawImage(background,0,y+980,1080,350,0,66,1080,1284);g.restore();
-// Preserve the unchanged topmost Haber Kıbrıs social strip from the original PSD background.
-g.drawImage(background,0,y,1080,66,0,0,1080,66);
-// Original PSD UBP emblem, cropped from the heading area. No invented logo.
-g.drawImage(background,35,y+85,245,242,33,89,238,232);
-g.fillStyle="#f2f0ec";g.fillRect(290,79,766,247);
-// Maintain the original orange highlight and charcoal typography.
+
+function fallbackUBP(x,y,s){
+  // Orijinal logo yüklenemezse geçici vektör temsil; internetten logo gelince kullanılmaz.
+  g.save();g.translate(x+s/2,y+s/2);
+  let grad=g.createRadialGradient(0,0,s*.05,0,0,s*.46);grad.addColorStop(0,"#f2a226");grad.addColorStop(1,"#e87c13");
+  g.fillStyle=grad;g.beginPath();
+  for(let j=0;j<64;j++){let a=-Math.PI/2+j*Math.PI/32;let radius=j%2===0?s*.47:s*.33;g.lineTo(Math.cos(a)*radius,Math.sin(a)*radius)}
+  g.closePath();g.fill();g.fillStyle="#fff";g.font="italic 900 "+Math.round(s*.31)+"px Arial Black,Arial";
+  g.textAlign="center";g.textBaseline="middle";g.fillText("UBP",0,2);g.restore();
 }
-function masthead(){let a=active,title=titles[a],isTop=a==="top",isComb=a==="combined";
-txt("UBP ÖN SEÇİMİNDE",300,142,725,69,43,"#252a31");txt(isTop?"EN ÇOK OY ALAN":isComb?"İSKELE, GÜZELYURT":"ADAY ADAYLARININ",300,216,730,76,40,"#ea891e");txt(isTop?"10 ADAY":isComb?"VE LEFKE":"OY SAYILARI",300,280,730,82,49,"#1b2028");
-if(!isTop&&!isComb){b(300,292,20,4,"#ea891e");txt(title+" / "+records[a].length+" ADAY",333,300,700,24,17,"#30343a",'left','Arial')}
-b(38,332,1004,3,"#e4a12f");
+function fallbackHK(x,y,s){
+  let gr=g.createLinearGradient(x,y,x+s,y+s);
+  gr.addColorStop(0,"#f3ae00");gr.addColorStop(.5,"#ffdf2e");gr.addColorStop(1,"#df8500");
+  g.fillStyle=gr;g.fillRect(x,y,s,s);
+  g.fillStyle="#fff";g.textAlign="center";g.textBaseline="alphabetic";
+  g.font="900 "+Math.floor(s*.23)+"px Arial Black,Arial";g.fillText("HABER",x+s/2,y+s*.49);
+  g.fillStyle="#b22b24";g.fillRect(x+s*.09,y+s*.53,s*.82,Math.max(2,s*.018));
+  g.fillStyle="#36393b";g.font=Math.floor(s*.24)+"px Georgia,serif";g.fillText("KIBRIS",x+s/2,y+s*.81);
 }
-function foot(){b(38,1311,1004,1,"#c2beb6");g.font="bold 17px Arial";g.textAlign="left";g.fillStyle="#393d44";g.fillText("HABER KIBRIS",38,1336);g.textAlign="right";g.font="14px Arial";g.fillText("24 EKİM 2026  ·  KONTENJAN HARİÇ",1042,1336)}
+function canvasBackground(type){
+  b(0,0,1080,1350,"#f2f0ec");
+  if(background){
+    let slice={lef:0,gir:1,mag:2,combined:3,top:0}[type],y=slice*1350;
+    g.save();g.globalAlpha=.23;g.drawImage(background,0,y+980,1080,350,0,66,1080,1284);g.restore();
+    // Photoshop'tan gelen orijinal, zorunlu Haber Kıbrıs sosyal medya üst bandı.
+    g.drawImage(background,0,y,1080,66,0,0,1080,66);
+  }
+  // Eski PSD'den kırpılan UBP logosu artık kullanılmıyor.
+  b(23,78,260,242,"#f2f0ec");
+  if(ubpLogo){g.drawImage(ubpLogo,55,98,200,200)}else fallbackUBP(58,96,198);
+  // Haber Kıbrıs logosu: sol alt kaldırıldı, sağ üstte bağımsız ve orijinal en-boy oranıyla.
+  b(901,82,150,155,"#f2f0ec");
+  if(hkLogo){g.drawImage(hkLogo,913,91,129,129)}else fallbackHK(913,91,129);
+}
+function masthead(){
+  const a=active,title=titles[a],isTop=a==="top",isComb=a==="combined";
+  // Başlık satır aralıkları çok az açıldı; sağ üst logo için güvenli alan bırakıldı.
+  txt("UBP ÖN SEÇİMİNDE",299,142,598,67,42,"#252a31");
+  txt(isTop?"EN ÇOK OY ALAN":isComb?"İSKELE, GÜZELYURT":"ADAY ADAYLARININ",299,220,598,75,39,"#ffcc00");
+  txt(isTop?"10 ADAY":isComb?"VE LEFKE":"OY SAYILARI",299,292,598,79,47,"#1b2028");
+  if(!isTop&&!isComb){b(299,302,20,4,"#ffcc00");txt(title+" / "+records[a].length+" ADAY",333,310,566,23,17,"#30343a","left","Arial")}
+  b(38,337,1004,3,"#ffcc00");
+}
+function foot(){
+  // Sol alttaki fazladan Haber Kıbrıs yazısı kaldırıldı; tek bilgi bloğu sağ altta.
+  b(38,1310,1004,1,"#c2beb6");
+  g.textAlign="right";g.textBaseline="alphabetic";g.font="bold 16px Arial";g.fillStyle="#333943";
+  g.fillText("24 EKİM 2026  ·  KONTENJAN HARİÇ",1042,1337);
+}
+
 function twoLines(str,x,y,w,maxSize,minSize,color){let parts=str.split(" ");let line=["",""],s=0;for(const word of parts){let test=line[s]?line[s]+" "+word:word;g.font="900 "+maxSize+"px Arial";if(line[s]&&g.measureText(test).width>w&&s===0){s=1;line[1]=word}else line[s]=test}
 let size=maxSize;while(size>=minSize){g.font="900 "+size+"px Arial";if(line.every(q=>g.measureText(q).width<=w))break;size--}g.fillStyle=color;g.textAlign="left";g.textBaseline="alphabetic";let yy=y-(line[1]?size*.55:0);g.font="900 "+Math.max(size,minSize)+"px Arial";line.forEach((t,i)=>{if(t)g.fillText(t,x,yy+i*(size+2))})}
-function card(p,n,x,y,w,h){b(x,y,w,h,"#ffffff");b(x,y,5,h,"#e78726");let r=Math.min(56,Math.max(39,h*.35)),cy=y+h*.42,cx=x+r+18;photo(p,cx,cy,r);let numW=n>=10?36:29;b(x,y,numW,31,"#e6801a");txt(String(n),x+numW/2,y+24,numW-3,24,16,"white","center",'Arial');
-let tx=x+2*r+30;let tw=w-(tx-x)-9;let font=h>180?26:20;twoLines(p.name.toLocaleUpperCase("tr-TR"),tx,y+h*.49,tw,font,13,"#1e2530");txt(money(p.votes)+" OY",tx,y+h-13,tw,h>180?35:29,19,"#d27410","left",'Arial');
+function card(p,n,x,y,w,h){b(x,y,w,h,"#ffffff");b(x,y,5,h,"#ffcc00");let r=Math.min(56,Math.max(39,h*.35)),cy=y+h*.42,cx=x+r+18;photo(p,cx,cy,r);let numW=n>=10?36:29;b(x,y,numW,31,"#ffcc00");txt(String(n),x+numW/2,y+24,numW-3,24,16,"#161a21","center",'Arial');
+let tx=x+2*r+30;let tw=w-(tx-x)-9;let font=h>180?26:20;twoLines(p.name.toLocaleUpperCase("tr-TR"),tx,y+h*.49,tw,font,13,"#1e2530");txt(money(p.votes)+" OY",tx,y+h-13,tw,h>180?35:29,19,"#a78100","left",'Arial');
 }
 function districtGrid(list,columns,top,bottom){let gap=11,x0=38,width=1004,rows=Math.ceil(list.length/columns),w=(width-gap*(columns-1))/columns,h=(bottom-top-gap*(rows-1))/rows;list.forEach((p,i)=>card(p,i+1,x0+(i%columns)*(w+gap),top+Math.floor(i/columns)*(h+gap),w,h))}
 function combinedGrid(){let y=355;
 for(const def of [{d:"isk",t:"İSKELE",height:477,cols:4},{d:"guz",t:"GÜZELYURT",height:183,cols:4},{d:"lefke",t:"LEFKE",height:255,cols:5}]){
-txt(def.t,38,y+26,600,38,30,"#161e28");b(38,y+39,1004,2,"#e48623");let top=y+52,bot=y+def.height;districtGrid(records[def.d],def.cols,top,bot);y=bot+12
+txt(def.t,38,y+26,600,38,30,"#161e28");b(38,y+39,1004,2,"#ffcc00");let top=y+52,bot=y+def.height;districtGrid(records[def.d],def.cols,top,bot);y=bot+12
 }}
-function topGrid(){let x0=38,topY=351,gap=12,w=(1004-gap)/2,h=181;top.forEach((p,i)=>{let x=x0+(i%2)*(w+gap),y=topY+Math.floor(i/2)*(h+gap);b(x,y,w,h,"#fff");b(x,y,6,h,"#e78120");photo(p,x+98,y+82,72);b(x+174,y,w-174,48,"#222a31");txt(p.name.toLocaleUpperCase("tr-TR"),x+186,y+33,w-188,25,16,"#fff",'left','Arial');b(x+174,y+48,w-174,45,"#f1e7d8");txt(titles[p.d],x+186,y+80,w-188,27,18,"#ae5310",'left','Arial');txt(money(p.votes)+" OY",x+186,y+157,w-190,40,25,"#252930",'left','Arial');b(x,y,42,37,"#e57b14");txt(String(i+1),x+21,y+29,40,26,20,"#fff","center",'Arial')})}
+function topGrid(){let x0=38,topY=351,gap=12,w=(1004-gap)/2,h=181;top.forEach((p,i)=>{let x=x0+(i%2)*(w+gap),y=topY+Math.floor(i/2)*(h+gap);b(x,y,w,h,"#fff");b(x,y,6,h,"#ffcc00");photo(p,x+98,y+82,72);b(x+174,y,w-174,48,"#222a31");txt(p.name.toLocaleUpperCase("tr-TR"),x+186,y+33,w-188,25,16,"#fff",'left','Arial');b(x+174,y+48,w-174,45,"#faf5df");txt(titles[p.d],x+186,y+80,w-188,27,18,"#7b6500",'left','Arial');txt(money(p.votes)+" OY",x+186,y+157,w-190,40,25,"#252930",'left','Arial');b(x,y,42,37,"#ffcc00");txt(String(i+1),x+21,y+29,40,26,20,"#161a21","center",'Arial')})}
 function draw(){canvasBackground(active);masthead();if(active==="combined")combinedGrid();else if(active==="top")topGrid();else districtGrid(records[active],3,351,1291);foot()}
 function display(){let list=all();$("heading").textContent=active==="top"?"Tüm ilçelerde en çok oy alan 10 aday":active==="combined"?"İskele / Güzelyurt / Lefke adaylarının oy sayıları":titles[active]+" ön seçim oy sayıları";
 $("count").textContent=list.length+" aday • kontenjanlar hariç";$("tabs").innerHTML="";for(let [id,label] of opts){let btn=document.createElement("button");btn.className="tab"+(id===active?" active":"");let n=id==="top"?"En çok oy alan 10":id==="combined"?"Üç ilçe":titles[id];btn.textContent=n;let small=document.createElement("small");small.textContent=label;btn.append(small);btn.onclick=()=>{active=id;display()};$("tabs").append(btn)}
 $("list").innerHTML="";for(let p of list){let row=document.createElement("div");row.className="person";let num=document.createElement("div");num.className="num";num.textContent=active==="top"?list.indexOf(p)+1:p.order;let name=document.createElement("b");name.textContent=p.name+(active==="top"?" • "+titles[p.d]:"");let votes=document.createElement("span");votes.className="votes";votes.textContent=money(p.votes)+" oy";row.append(num,name,votes);$("list").append(row)}draw()
 }
+async function applyLocalFont(blob,persist){
+  try{
+    if(typeof FontFace==="undefined")throw Error("Bu tarayıcı özel font desteklemiyor");
+    const buf=await blob.arrayBuffer();
+    const face=new FontFace("HK-Tungsten",buf,{weight:"900",style:"normal"});
+    await face.load();document.fonts.add(face);fontReady=true;
+    document.getElementById("fontStatus").textContent="✓ Orijinal Tungsten yüklendi. Yalnızca bu tarayıcıda kullanılıyor.";
+    if(persist){
+      const db=await openDB();
+      await new Promise((ok,no)=>{let tx=db.transaction("files","readwrite");tx.objectStore("files").put(blob,"font:local-tungsten");tx.oncomplete=ok;tx.onerror=()=>no(tx.error)});db.close();
+    }
+    display();
+  }catch(e){document.getElementById("fontStatus").textContent="Font yüklenemedi: "+e.message}
+}
+async function restoreLocalFont(){
+  try{const db=await openDB();const blob=await new Promise((ok,no)=>{let r=db.transaction("files","readonly").objectStore("files").get("font:local-tungsten");r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});db.close();if(blob instanceof Blob)await applyLocalFont(blob,false)}catch(e){console.warn(e)}
+}
 function save(){if(!ready){alert("Arşiv fotoğrafları henüz hazır değil");return}draw();cv.toBlob(blob=>{if(!blob){alert("PNG oluşturulamadı");return}let url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="HK_UBP_OY_"+active.toUpperCase()+"_1080x1350.png";a.click();setTimeout(()=>URL.revokeObjectURL(url),10000)},"image/png")}
 $("export1").onclick=save;$("export2").onclick=save;
+$("fontUpload").onchange=e=>{if(e.target.files[0])applyLocalFont(e.target.files[0],true)};
 function openDB(){return new Promise((ok,no)=>{let r=indexedDB.open("HK_UBP_ASSETS_V1",1);r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error);r.onupgradeneeded=()=>r.result.createObjectStore("files")})}
 async function overrides(){try{let db=await openDB(),keys=await new Promise((ok,no)=>{let r=db.transaction("files","readonly").objectStore("files").getAllKeys();r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});for(let k of keys){if(!k.startsWith("portrait:"))continue;let res=await new Promise(ok=>{let r=db.transaction("files","readonly").objectStore("files").get(k);r.onsuccess=()=>ok(r.result);r.onerror=()=>ok(null)});if(res instanceof Blob){let url=URL.createObjectURL(res);try{images[k.slice(9)]=await load(url)}catch(e){console.warn(e)} }}db.close()}catch(e){console.warn(e)}}
-async function init(){try{[background,atlas]=await Promise.all([load(sheetSource),load(atlasSource)]);await overrides();ready=true;$("status").textContent="✓ Orijinal UBP fotoğraf arşivi (73 portre) ve Photoshop arka planları yüklendi.";$("export1").disabled=false;$("export2").disabled=false;$("hint").textContent="Fotoğraflar UBP sitesinin kendi orijinal arşivinden alınır. Aynı Safari'deki kişisel kadraj ve fotoğraf değişiklikleri de uygulanır.";display()}catch(e){$("status").textContent="HATA: "+e.message+" • Orijinal arşiv olmadan dışa aktarma yapılmaz.";$("hint").textContent="Arşiv yüklenemedi: "+e.message;console.error(e)}}
-display();init();
+async function init(){try{[background,atlas]=await Promise.all([load(sheetSource),load(atlasSource)]);[ubpLogo,hkLogo]=await Promise.all([load(UBP_LOGO_URL,true).catch(e=>null),load(HK_LOGO_URL,true).catch(e=>null)]);await overrides();ready=true;$("status").textContent="✓ Orijinal UBP fotoğraf arşivi (73 portre) ve Photoshop arka planları yüklendi.";$("export1").disabled=false;$("export2").disabled=false;$("hint").textContent="Fotoğraflar UBP sitesinin kendi orijinal arşivinden alınır. Aynı Safari'deki kişisel kadraj ve fotoğraf değişiklikleri de uygulanır.";display()}catch(e){$("status").textContent="HATA: "+e.message+" • Orijinal arşiv olmadan dışa aktarma yapılmaz.";$("hint").textContent="Arşiv yüklenemedi: "+e.message;console.error(e)}}
+display();init();restoreLocalFont();
 })();
 </script></body></html>
