@@ -118,33 +118,50 @@ function headline(text,baseline,target,min,highlight,maxWidth=590){
   g.fillText(text,0,baseline,available/scaleX);
   g.restore();
 }
+function headlineRow(parts,baseline,targetSize,maxRight){
+  const x=269, maxWidth=maxRight-x;
+  const family=fontReady?'"HK-Tungsten",Impact,"Arial Narrow",Arial':'Impact,"Arial Narrow",Arial';
+  let fontSize=targetSize, widths=[],total=0;
+  const measure=()=>{
+    g.font="italic 900 "+fontSize+"px "+family;
+    widths=parts.map(p=>g.measureText(p.text).width+(p.highlight?16:0));
+    total=widths.reduce((a,b)=>a+b,0);
+  };
+  measure();
+  while(total>maxWidth&&fontSize>39){fontSize--;measure()}
+  const scale=Math.min(1,maxWidth/total);
+  // Sarı alan metin sonunda yalnızca 8 px boşlukla sonlanır.
+  const probe=g.measureText("MİLLETVEKİLLİĞİ");
+  const ascent=probe.actualBoundingBoxAscent||fontSize*.73;
+  const descent=probe.actualBoundingBoxDescent||fontSize*.07;
+  const boxY=baseline-ascent-5,boxH=ascent+descent+11;
+  g.save();g.translate(x,0);g.scale(scale,1);
+  let cursor=0;
+  parts.forEach((part,i)=>{
+    if(part.highlight)b(cursor,boxY,widths[i],boxH,"#ffcc00");
+    g.fillStyle="#111111";g.textAlign="left";g.textBaseline="alphabetic";
+    g.font="italic 900 "+fontSize+"px "+family;
+    g.fillText(part.text,cursor+(part.highlight?8:0),baseline);
+    cursor+=widths[i];
+  });
+  g.restore();
+}
 function masthead(){
+  const black=(text)=>({text,highlight:false});
+  const yellow=(text)=>({text,highlight:true});
   if(active==="top"){
-    // Tüm ilçelerin ilk 10 adayı
-    headline("UBP",126,60,45,false);
-    headline("MİLLETVEKİLLİĞİ ADAY",190,60,45,true);
-    headline("SEÇİMİNDE",258,65,49,true);
-    headline("EN ÇOK OY ALAN 10 ADAY",322,58,44,false,700);
+    headlineRow([black("UBP "),yellow("MİLLETVEKİLLİĞİ")],148,71,900);
+    headlineRow([yellow("ADAY SEÇİMİNDE")],227,72,900);
+    headlineRow([black("EN ÇOK OY ALAN 10 ADAY")],316,73,1042);
   }else if(active==="combined"){
-    // İskele, Güzelyurt, Lefke: üç ilçenin kendi bölümleri korunur
-    headline("UBP",114,50,37,false);
-    headline("İSKELE, GÜZELYURT",161,51,34,true);
-    headline("VE LEFKE MİLLETVEKİLLİĞİ",213,52,34,true);
-    headline("ADAYLIĞI",264,55,44,true);
-    headline("SEÇİMİ OY SAYILARI",323,55,42,false,700);
-  }else if(active==="mag"){
-    // Uzun ilçe adı için daha dengeli beş satırlı düzen
-    headline("UBP",114,50,37,false);
-    headline("GAZİMAĞUSA",161,55,42,true);
-    headline("MİLLETVEKİLLİĞİ",213,52,38,true);
-    headline("ADAYLIĞI",264,55,44,true);
-    headline("SEÇİMİ OY SAYILARI",323,55,42,false,700);
+    headlineRow([black("UBP "),yellow("İSKELE, GÜZELYURT")],119,54,900);
+    headlineRow([yellow("VE LEFKE")],183,56,900);
+    headlineRow([yellow("MİLLETVEKİLLİĞİ ADAYLIĞI")],247,57,1042);
+    headlineRow([black("SEÇİMİ OY SAYILARI")],316,66,1042);
   }else{
-    // Lefkoşa ve Girne
-    headline("UBP",126,60,45,false);
-    headline(titles[active]+" MİLLETVEKİLLİĞİ",190,61,43,true);
-    headline("ADAYLIĞI",258,65,48,true);
-    headline("SEÇİMİ OY SAYILARI",322,58,42,false,700);
+    headlineRow([black("UBP "),yellow(titles[active])],148,75,900);
+    headlineRow([yellow("MİLLETVEKİLLİĞİ")],231,78,900);
+    headlineRow([yellow("ADAYLIĞI"),black(" SEÇİMİ OY SAYILARI")],316,74,1042);
   }
   b(38,337,1004,3,"#ffcc00");
 }
