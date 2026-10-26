@@ -2,218 +2,135 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#121925">
-<title>Haber Kıbrıs | DP Milletvekili Adayları</title>
+<title>Haber Kıbrıs | DP Milletvekili Aday Kartları</title>
 <style>
-:root{color-scheme:dark}*{box-sizing:border-box}
-body{margin:0;background:#101722;color:#edf2f7;font:14px Arial,Helvetica,sans-serif}
-button{font:inherit;cursor:pointer}
-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;background:#182231;border-bottom:1px solid #324155;padding:17px 23px}
-header strong{font-size:19px;letter-spacing:.2px}header strong span{color:#ffcd38}header small{font-size:11px;color:#9fb0c4}
-main{display:grid;grid-template-columns:330px minmax(310px,1fr);min-height:calc(100vh - 67px)}
-aside{padding:22px 20px;background:#1a2534;border-right:1px solid #37475a}
-.tag{font-size:10px;color:#ffd041;letter-spacing:1.8px;font-weight:900}
-h1{font-size:24px;margin:9px 0 7px;line-height:1.13}p{color:#b2c0d1;font-size:12px;line-height:1.55}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:22px 0}
-.tab{color:#f1f3f9;background:#27364a;border:1px solid #43556c;border-radius:9px;text-align:left;padding:14px 11px;font-weight:800;min-height:68px}
-.tab.active{background:#46371b;border-color:#ffca2c;color:#ffe39a}
-.tab small{display:block;color:#a9b9cb;margin-top:6px;font-size:11px;font-weight:500}
-.tab.active small{color:#e8d5a4}
-.panel{background:#202e40;border:1px solid #3e5064;border-radius:11px;padding:15px;margin-bottom:15px}
-.panel h3{font-size:14px;margin:0 0 12px}
-.persons{display:grid;gap:8px;max-height:330px;overflow:auto}
-.person{display:flex;gap:11px;align-items:center;font-size:12px;font-weight:700}
-.person b{color:#ffcb2d;font-size:17px;width:27px;flex:0 0 27px;font-family:Impact,"Arial Narrow",sans-serif}
-.person.group{margin-top:9px;color:#ffd13b;text-transform:uppercase;letter-spacing:1px;font-size:11px}
-.btn{width:100%;border:0;border-radius:9px;background:#ffc92b;color:#111923;font-weight:900;padding:15px}
-.btn:hover{background:#ffdb5c}
-.hint{font-size:11px;color:#a7b6c9;margin-top:12px;line-height:1.65}
-section{padding:22px;min-width:0}
-.workhead{max-width:650px;margin:0 auto 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.workhead h2{font-size:18px;margin:5px 0}
-#fontState{font-size:11px;color:#aebed0}
-.frame{max-width:670px;margin:auto;background:#2a3544;border-radius:12px;border:1px solid #526078;padding:10px}
-canvas{display:block;width:100%;height:auto;aspect-ratio:4/5;background:#0b0b0b}
-footer{font-size:11px;color:#8c9caf;text-align:center;margin:13px}
-@media(max-width:920px){main{display:block}aside{border:0;border-bottom:1px solid #36465a}.tabs{grid-template-columns:repeat(2,minmax(0,1fr))}section{padding:16px}.frame{max-width:650px}}
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#101722;color:#f4f6fa;font:14px Arial,Helvetica,sans-serif}button{font:inherit;cursor:pointer}
+header{background:#182231;border-bottom:1px solid #334157;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;padding:17px 22px}header strong{font-size:19px;letter-spacing:.2px}header strong span{color:#ffcc32}header small{font-size:11px;color:#a9b7c8}
+main{display:grid;grid-template-columns:330px minmax(0,1fr);min-height:calc(100vh - 70px)}aside{background:#1b2534;padding:22px 20px;border-right:1px solid #3a4a5c}
+.tag{font-size:10px;color:#ffcc38;letter-spacing:1.8px;font-weight:900}h1{font-size:25px;line-height:1.12;margin:10px 0 7px}p{color:#b5c1d0;font-size:12px;line-height:1.6}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:23px 0}.tab{text-align:left;background:#283649;border:1px solid #4a5970;border-radius:9px;color:#fff;padding:13px 10px;font-weight:800;min-height:69px}.tab.active{color:#ffe29c;border-color:#ffcd31;background:#493a1f}.tab small{display:block;font-weight:500;color:#b2c0d1;margin-top:7px;font-size:11px}
+.panel{background:#233144;border:1px solid #3c5065;border-radius:11px;padding:15px;margin-bottom:15px}.panel h3{font-size:14px;margin:0 0 13px}.persons{max-height:365px;overflow:auto;display:grid;gap:8px}.person{display:flex;align-items:baseline;gap:10px;font-weight:700;font-size:12px}.person b{color:#ffcd35;flex:0 0 26px;font-size:14px}.group{font-size:11px;letter-spacing:1px;color:#ffce39;margin-top:8px;font-weight:900}
+.btn{width:100%;background:#ffcc2e;border:0;border-radius:8px;color:#0d1420;font-weight:900;padding:15px}.btn:disabled{opacity:.5;cursor:not-allowed}.hint{margin-top:12px;font-size:11px;color:#aebccf;line-height:1.5}section{padding:22px;min-width:0}.workhead{max-width:650px;margin:0 auto 15px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.workhead h2{font-size:18px;margin:5px 0}.status{font-size:11px;color:#aabbd0}.frame{max-width:670px;margin:auto;padding:9px;background:#2a3646;border:1px solid #586b81;border-radius:11px}canvas{width:100%;height:auto;display:block;background:#050505;aspect-ratio:4/5}.foot{font-size:11px;color:#9baabd;text-align:center;margin:13px}
+@media(max-width:900px){main{display:block}aside{border:0;border-bottom:1px solid #3c4a5b}section{padding:15px}.frame{max-width:650px}}
 </style>
 </head>
 <body>
 <header><strong>HK <span>DP ADAY KARTLARI</span></strong><small>HABER KIBRIS · SOSYAL MEDYA GRAFİKLERİ</small></header>
-<main>
-<aside>
-<div class="tag">DEMOKRAT PARTİ · ADAY LİSTELERİ</div>
-<h1>Milletvekili adayları</h1>
-<p>Altı ilçede toplam 50 aday. İlçe kartını seç, 1080 × 1350 görseli önizle ve PNG indir. İsimler ile sıraları verilen listeyle aynıdır.</p>
+<main><aside>
+<div class="tag">DEMOKRAT PARTİ · ADAY LİSTELERİ</div><h1>Milletvekili adayları</h1><p>İlçeyi seç, 1080 × 1350 görseli kontrol et ve PNG indir. Fotoğraf veya oy sayısı eklenmez.</p>
 <div class="tabs" id="tabs"></div>
 <div class="panel"><h3 id="listTitle">Adaylar</h3><div class="persons" id="persons"></div></div>
-<div class="panel">
-<button class="btn" id="download">1080 × 1350 PNG İNDİR</button>
-<div class="hint">Dört ayrı post: Lefkoşa, Girne, Gazimağusa ve İskele + Güzelyurt + Lefke. Fotoğraf veya oy sayısı içermez.</div>
-</div>
-</aside>
-<section>
-<div class="workhead"><div><div class="tag">CANLI ÖNİZLEME</div><h2 id="previewTitle">Lefkoşa aday listesi</h2><div id="fontState">Tasarım yükleniyor...</div></div></div>
-<div class="frame"><canvas width="1080" height="1350" id="poster" aria-label="Demokrat Parti aday listesi görseli"></canvas></div>
-<footer>Haber Kıbrıs · DP aday listeleri için ayrı görsel oluşturucu</footer>
-</section>
-</main>
+<div class="panel"><button id="download" class="btn" disabled>1080 × 1350 PNG İNDİR</button><div class="hint">4 kart · Toplam 50 aday · Kaynak listedeki isimler ve sıralama korunur.</div></div>
+</aside><section><div class="workhead"><div><div class="tag">CANLI ÖNİZLEME</div><h2 id="previewTitle">Lefkoşa aday listesi</h2><div class="status" id="status">Görsel şablonu yükleniyor...</div></div></div>
+<div class="frame"><canvas id="poster" width="1080" height="1350" aria-label="DP aday isimleri kartı"></canvas></div><div class="foot">Haber Kıbrıs · Demokrat Parti milletvekili aday listeleri</div>
+</section></main>
 <script>
 (function(){"use strict";
 const data={
- lef:{title:"LEFKOŞA",label:"Lefkoşa",names:["Hasan Tosunoğlu","Dt. Halil Bakkaloğlu","Serhan Aktunç","Dt. Aslı Parlak","Özlem Dinçoğlu","Ferdi Tenekeci","Pınar Bıçaklı","Dt. Esra Topal Boral","Cengiz Demir","İrem Erdal","İlter Ömeroğlu","Prof. Dr. Halil İbrahim Seçer","Emre Egemen","Emine Karpuz","Erkan Dönmez","Dr. Remzi Gardiyanoğlu"]},
- gir:{title:"GİRNE",label:"Girne",names:["Serhat Akpınar","Harun Demir","Nazan Ulukök","Dr. Özgür Türk","Erhan Donatmış","Mustafa Serhat Özçelik","Barbaros Özkaptan","Efe Karahan Şahin","Murat Göçer","Dr. Nazima İbrahimova Kaya","Beşire Bacı","Kurtuluş Çamlıbelli"]},
- mag:{title:"GAZİMAĞUSA",label:"Gazimağusa",names:["Fikri Ataoğlu","Şansel Fırtınar","İlker Edip","Ayşe Güler Akın","Oğuz Akansay","Ali Koruk","Özge Bertuğ Saygıner","Aysel Uzun","Fatma Hamzalar","Sinem Özdemir","Zülfikar Karataş","Caner Kaya"]},
- combined:{title:"İSKELE · GÜZELYURT · LEFKE",label:"Üç ilçe",groups:[
-  {label:"İSKELE",names:["Mustafa Erbilen","Korhan Ekcan","Mehmet Uğur Gözükeleş","Mazlum Kortaş","Sert Ağca"]},
-  {label:"GÜZELYURT",names:["Dr. Pembe Gökdağ","Halit Kızılkanat","Gül Çakır"]},
-  {label:"LEFKE",names:["Nadir Tahsildaroğulları","Mehmet Ali Kozan"]}
+ lef:{title:"LEFKOŞA:",label:"Lefkoşa",names:["Hasan Tosunoğlu","Dt. Halil Bakkaloğlu","Serhan Aktunç","Dt. Aslı Parlak","Özlem Dinçoğlu","Ferdi Tenekeci","Pınar Bıçaklı","Dt. Esra Topal Boral","Cengiz Demir","İrem Erdal","İlter Ömeroğlu","Prof. Dr. Halil İbrahim Seçer","Emre Egemen","Emine Karpuz","Erkan Dönmez","Dr. Remzi Gardiyanoğlu"]},
+ gir:{title:"GİRNE:",label:"Girne",names:["Serhat Akpınar","Harun Demir","Nazan Ulukök","Dr. Özgür Türk","Erhan Donatmış","Mustafa Serhat Özçelik","Barbaros Özkaptan","Efe Karahan Şahin","Murat Göçer","Dr. Nazima İbrahimova Kaya","Beşire Bacı","Kurtuluş Çamlıbelli"]},
+ mag:{title:"GAZİMAĞUSA:",label:"Gazimağusa",names:["Fikri Ataoğlu","Şansel Fırtınar","İlker Edip","Ayşe Güler Akın","Oğuz Akansay","Ali Koruk","Özge Bertuğ Saygıner","Aysel Uzun","Fatma Hamzalar","Sinem Özdemir","Zülfikar Karataş","Caner Kaya"]},
+ combined:{title:"İSKELE-GÜZELYURT-LEFKE",label:"İskele · Güzelyurt · Lefke",groups:[
+ {label:"İSKELE",names:["Mustafa Erbilen","Korhan Ekcan","Mehmet Uğur Gözükeleş","Mazlum Kortaş","Sert Ağca"]},
+ {label:"GÜZELYURT",names:["Dr. Pembe Gökdağ","Halit Kızılkanat","Gül Çakır"]},
+ {label:"LEFKE",names:["Nadir Tahsildaroğulları","Mehmet Ali Kozan"]}
  ]}
 };
-const $=id=>document.getElementById(id),canvas=$("poster"),c=canvas.getContext("2d",{alpha:false});
-let active="lef",logo=null,fontsReady=false;
-function rect(x,y,w,h,color){c.fillStyle=color;c.fillRect(x,y,w,h)}
-function text(t,x,y,size,color,face,weight="700",maxWidth){c.font=weight+" "+size+"px "+face;c.fillStyle=color;c.textAlign="left";c.textBaseline="alphabetic";if(maxWidth)c.fillText(t,x,y,maxWidth);else c.fillText(t,x,y)}
-function fitted(t,x,y,maxWidth,target,min,color,face,weight="700"){
- let z=target;while(z>min){c.font=weight+" "+z+"px "+face;if(c.measureText(t).width<=maxWidth)break;z--}
- text(t,x,y,z,color,face,weight);
+const $=id=>document.getElementById(id),canvas=$("poster"),ctx=canvas.getContext("2d",{alpha:false});
+const condensed='"Tungsten",Impact,"Arial Narrow",sans-serif', body='"MadeTommyMedium",Arial,sans-serif';
+let active="lef",bg=null,fontsLoaded=false;
+function font(face,size,weight){ctx.font=`${weight} ${size}px ${face}`;}
+function fit(text,x,y,maxWidth,startSize,minSize,color,face=body,weight=500){
+ let size=startSize;ctx.textAlign="left";ctx.textBaseline="alphabetic";
+ for(;size>minSize;size--){font(face,size,weight);if(ctx.measureText(text).width<=maxWidth)break;}
+ font(face,size,weight);ctx.fillStyle=color;
+ // Max width also protects against unusual local font substitutions.
+ ctx.fillText(text,x,y,maxWidth);
 }
-const condensed='"Tungsten",Impact,"Arial Narrow",sans-serif',bodyFace='"MadeTommyMedium",Arial,sans-serif';
-function noise(){
- let s=74621;const rand=()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296};
- for(let i=0;i<16000;i++){let x=rand()*1080,y=66+rand()*1284,a=rand()*.095;c.fillStyle=rand()>.5?"rgba(255,220,180,"+a+")":"rgba(0,0,0,"+a+")";c.fillRect(x,y,rand()*2.4+0.5,rand()*2.4+0.5)}
+function districtLabel(){
+ const label=data[active].title,desired=active==="combined"?53:58,min=38;
+ let fs=desired;ctx.textBaseline="alphabetic";
+ for(;fs>min;fs--){font(condensed,fs,700);if(ctx.measureText(label).width<=905)break;}
+ font(condensed,fs,700);const width=Math.max(202,Math.ceil(ctx.measureText(label).width+51));
+ ctx.fillStyle="#ffcc00";ctx.fillRect(0,578,Math.min(width,1040),68);
+ fit(label,35,632,Math.min(width-45,990),fs,min,"#050505",condensed,700);
 }
-function posterBackground(){
- const base=c.createLinearGradient(0,66,0,1350);
- base.addColorStop(0,"#ae0d05");base.addColorStop(.18,"#660804");base.addColorStop(.38,"#160606");base.addColorStop(.5,"#090909");base.addColorStop(1,"#050607");
- rect(0,0,1080,1350,base);
- let bloom=c.createRadialGradient(210,205,20,300,190,590);
- bloom.addColorStop(0,"rgba(239,31,6,.46)");bloom.addColorStop(1,"rgba(239,31,6,0)");
- rect(0,66,1080,570,bloom);
- // Loş, soyut kırmızı arşiv dokusu. İsimlerin arkasını temiz bırak.
- c.save();c.globalAlpha=.10;c.fillStyle="#100402";
- c.beginPath();c.moveTo(0,135);c.bezierCurveTo(140,155,310,30,530,141);c.lineTo(470,330);c.bezierCurveTo(250,230,130,360,0,345);c.fill();
- c.beginPath();c.moveTo(725,75);c.bezierCurveTo(840,240,980,110,1080,280);c.lineTo(1080,510);c.bezierCurveTo(850,370,780,385,660,330);c.fill();
- c.restore();
- const shade=c.createLinearGradient(0,330,0,730);shade.addColorStop(0,"rgba(0,0,0,0)");shade.addColorStop(.87,"rgba(0,0,0,.9)");shade.addColorStop(1,"rgba(0,0,0,0)");rect(0,330,1080,400,shade);
- noise();
- // 66 px Haber Kıbrıs sosyal medya üst bandı
- rect(0,0,1080,66,"#292a2d");
- const social=[
-  {x:22,color:"#387ab8",symbol:"f",label:"haber kıbrıs",font:24},
-  {x:282,color:"#b3274e",symbol:"▶",label:"haber kıbrıs",font:20},
-  {x:548,color:"#ad376d",symbol:"◎",label:"haberkibrishk",font:24},
-  {x:832,color:"#151515",symbol:"𝕏",label:"haber kıbrıs",font:28}
- ];
- social.forEach(o=>{
-  c.fillStyle=o.color;c.strokeStyle="#73777c";c.lineWidth=2;
-  c.beginPath();c.roundRect(o.x,10,42,43,10);c.fill();c.stroke();
-  c.font="bold "+o.font+"px Arial";c.textBaseline="middle";c.textAlign="center";c.fillStyle="white";c.fillText(o.symbol,o.x+21,31);
-  fitted(o.label,o.x+55,43,o.x===548?218:195,31,21,"#ffd139",condensed);
+function candidate(name,number,x,y,right=false,combined=false){
+ const numberX=x, nameX=x+66, nameWidth=right?390:416;
+ fit(String(number).padStart(2,"0"),numberX,y,54,43,37,"#ffcc36",condensed,700);
+ fit(name,nameX,y-2,nameWidth,combined?35:36,27,"#f8f8f8",body,500);
+}
+function regular(){
+ const names=data[active].names,split=names.length/2;
+ const first=names.length===16?700:711,gap=names.length===16?66:89;
+ names.forEach((name,i)=>{
+  const right=i>=split,row=right?i-split:i;
+  candidate(name,i+1,right?580:49,first+row*gap,right);
  });
 }
-function fallbackLogo(){
- c.save();c.beginPath();c.arc(454,219,148,0,Math.PI*2);c.fillStyle="#f5f5f3";c.fill();
- // Stilize meşale ve yapraklar; resmi logo yüklenince bunun yerini alır.
- c.strokeStyle="#116b36";c.lineWidth=5;
- [-1,1].forEach(side=>{
-  c.beginPath();c.moveTo(454+side*78,307);c.quadraticCurveTo(454+side*145,236,454+side*82,120);c.stroke();
-  for(let i=0;i<8;i++){
-   let a=-1.1+i*.31,x=454+side*(94+39*Math.cos(a)),y=218-103*Math.sin(a);
-   c.save();c.translate(x,y);c.rotate(side*(-.68+i*.08));c.fillStyle="#0c793a";c.beginPath();c.ellipse(0,0,14,7,0,0,Math.PI*2);c.fill();c.restore();
-  }
- });
- text("DP",388,319,107,"#d72b27","Arial Black,Arial,sans-serif","900");
- text("1992",437,345,15,"#b52621","Arial,sans-serif","700");c.restore();
+function group(label,names,x,labelY,firstY,gap,right){
+ fit(label,x,labelY,395,49,39,"#ffd13c",condensed,700);
+ names.forEach((name,i)=>candidate(name,i+1,x,firstY+i*gap,right,true));
 }
-function logoAndHeadline(){
- if(logo){c.drawImage(logo,309,75,291,291)}else fallbackLogo();
- text("DEMOKRAT",625,219,46,"#fff",bodyFace,"700");
- text("PARTİ",625,264,46,"#fff",bodyFace,"700");
- c.textAlign="center";
- function centered(t,y,size){
-  let z=size;c.font="700 "+z+"px "+condensed;while(c.measureText(t).width>991&&z>58){z--;c.font="700 "+z+"px "+condensed}
-  c.fillStyle="#fff";c.textBaseline="alphabetic";c.fillText(t,540,y);
- }
- centered("DEMOKRAT PARTİ MİLLETVEKİLİ",463,103);
- centered("ADAYLARINI BELİRLEDİ",563,104);
- c.textAlign="left";
- const district=data[active].title+":";
- let sz=57;while(sz>32){c.font="700 "+sz+"px "+condensed;if(c.measureText(district).width<1010)break;sz--}
- let w=Math.ceil(c.measureText(district).width+44);
- rect(0,578,w,68,"#ffcc21");
- text(district,37,630,sz,"#080808",condensed);
+function combined(){
+ const groups=data.combined.groups;
+ group("İSKELE",groups[0].names,49,711,763,80,false);
+ group("GÜZELYURT",groups[1].names,579,711,763,81,true);
+ group("LEFKE",groups[2].names,579,1039,1092,65,true);
 }
-function line(name,no,x,y,available,size){
- text(String(no).padStart(2,"0"),x,y,43,"#ffce32",condensed);
- fitted(name,x+63,y-2,available-70,size,24,"#f5f5f5",bodyFace,"700");
+function draw(){
+ ctx.clearRect(0,0,1080,1350);
+ if(!bg){ctx.fillStyle="#090909";ctx.fillRect(0,0,1080,1350);return;}
+ ctx.drawImage(bg,0,0,1080,1350);
+ districtLabel();
+ if(active==="combined")combined();else regular();
 }
-function regularNames(){
- let arr=data[active].names,split=Math.ceil(arr.length/2),start=739;
- let gap=arr.length>14?74:91;
- arr.forEach((name,i)=>{
-  let col=i<split?0:1,row=col?i-split:i;
-  line(name,row+1+col*split,col?579:50,start+gap*row,448,arr.length>14?35:36);
- });
-}
-function combinedNames(){
- function section(label,names,x,y,startNo){
-  text(label,x,y,51,"#ffce32",condensed);
-  names.forEach((v,i)=>line(v,startNo+i,x,y+66+(i*82),445,35));
- }
- section("İSKELE",data.combined.groups[0].names,50,723,1);
- section("GÜZELYURT",data.combined.groups[1].names,578,723,1);
- section("LEFKE",data.combined.groups[2].names,578,1110,1);
-}
-function draw(){posterBackground();logoAndHeadline();if(active==="combined")combinedNames();else regularNames()}
-function list(){
- const item=data[active],combined=active==="combined";
- $("previewTitle").textContent=item.label+" aday listesi";
- $("listTitle").textContent=combined?"İlçelere göre adaylar":item.label+" · "+item.names.length+" aday";
- const box=$("persons");box.replaceChildren();
- const groups=combined?item.groups:[{label:"",names:item.names}];
+function showList(){
+ const selected=data[active],isCombined=active==="combined";
+ $("previewTitle").textContent=selected.label+" aday listesi";
+ $("listTitle").textContent=isCombined?"Üç ilçenin adayları":selected.label+" · "+selected.names.length+" aday";
+ const container=$("persons");container.replaceChildren();
+ const groups=isCombined?selected.groups:[{label:null,names:selected.names}];
  groups.forEach(group=>{
-  if(group.label){let h=document.createElement("div");h.className="person group";h.textContent=group.label;box.append(h)}
-  group.names.forEach((name,i)=>{
-   const p=document.createElement("div");p.className="person";const b=document.createElement("b");b.textContent=i+1;const t=document.createElement("span");t.textContent=name;p.append(b,t);box.append(p);
+  if(group.label){const h=document.createElement("div");h.className="group";h.textContent=group.label;container.append(h)}
+  group.names.forEach((name,i)=>{const div=document.createElement("div");div.className="person";
+   const num=document.createElement("b");num.textContent=String(i+1).padStart(2,"0");
+   const text=document.createElement("span");text.textContent=name;
+   div.append(num,text);container.append(div);
   });
  });
 }
-const configs=[["lef","LEFKOŞA","16 aday"],["gir","GİRNE","12 aday"],["mag","GAZİMAĞUSA","12 aday"],["combined","ÜÇ İLÇE","10 aday"]];
+const choices=[["lef","LEFKOŞA","16 aday"],["gir","GİRNE","12 aday"],["mag","GAZİMAĞUSA","12 aday"],["combined","ÜÇ İLÇE","10 aday"]];
 function tabs(){
- const host=$("tabs");host.replaceChildren();
- configs.forEach(entry=>{
-  const b=document.createElement("button");b.type="button";b.className="tab"+(entry[0]===active?" active":"");b.textContent=entry[1];
-  const s=document.createElement("small");s.textContent=entry[2];b.append(s);
-  b.onclick=()=>{active=entry[0];tabs();list();draw()};host.append(b)
- })
+ const area=$("tabs");area.replaceChildren();
+ choices.forEach(([key,title,detail])=>{
+  const el=document.createElement("button");el.className="tab"+(active===key?" active":"");el.textContent=title;
+  const sm=document.createElement("small");sm.textContent=detail;el.append(sm);
+  el.onclick=()=>{active=key;tabs();showList();draw();};area.append(el);
+ });
 }
 $("download").onclick=()=>{
- draw();const a=document.createElement("a");a.download="HK_DP_"+active.toUpperCase()+"_ADAYLAR_1080x1350.png";a.href=canvas.toDataURL("image/png");a.click();
+ if(!bg)return;draw();const link=document.createElement("a");link.download=`HK_DP_${active.toUpperCase()}_ADAYLAR_1080x1350.png`;
+ link.href=canvas.toDataURL("image/png");link.click();
 };
-async function restoreFonts(){
+async function loadFonts(){
  try{
-  // Aynı repodaki mevcut Tungsten ve Made Tommy dosyalarını okur; yeni font dosyası eklenmez.
-  const res=await fetch("../index.html",{cache:"force-cache"});if(!res.ok)throw Error("font kaynağı alınamadı");
-  const html=await res.text(),rules=html.match(/@font-face\s*\{[^}]*\}/g)||[];
-  if(!rules.length)throw Error("gömülü font bulunamadı");
-  const style=document.createElement("style");style.textContent=rules.join("\n");document.head.append(style);
-  await Promise.all([document.fonts.load("700 96px Tungsten"),document.fonts.load("500 35px MadeTommyMedium")]);
-  fontsReady=true;$("fontState").textContent="Tungsten + Made Tommy yüklendi";draw();
- }catch(e){$("fontState").textContent="Yedek font kullanılıyor";draw()}
+  // Reuse the original embedded font faces in the main Haber Kıbrıs builder.
+  const res=await fetch("../index.html",{cache:"force-cache"});if(!res.ok)throw Error("Font kaynağı açılamadı");
+  const raw=await res.text(),faces=raw.match(/@font-face\s*\{[^}]*\}/g)||[];
+  if(faces.length<2)throw Error("Fontlar bulunamadı");
+  const css=document.createElement("style");css.textContent=faces.join("\n");document.head.append(css);
+  await Promise.all([document.fonts.load("700 58px Tungsten"),document.fonts.load("500 36px MadeTommyMedium")]);
+  fontsLoaded=true;$("status").textContent="Tungsten ve Made Tommy hazır";draw();
+ }catch(e){$("status").textContent="Yedek fontla önizleme";draw();}
 }
-async function loadLogo(){
- const sources=["https://images.weserv.nl/?url=www.demokratparti.org%2Fassets%2Flogo.png","https://www.demokratparti.org/assets/logo.png"];
- for(const url of sources){
-  try{
-   let im=await new Promise((ok,fail)=>{
-    const obj=new Image();obj.crossOrigin="anonymous";obj.onload=()=>ok(obj);obj.onerror=fail;obj.src=url;
-   });logo=im;draw();return;
-  }catch(e){}
- }
+function loadBackground(){
+ const im=new Image();im.onload=()=>{bg=im;$("download").disabled=false;$("status").textContent="Şablon hazır";draw();};
+ im.onerror=()=>{$("status").textContent="Arka plan yüklenemedi, PNG hazırlanamadı";};
+ im.src="./editorial-base.webp";
 }
-tabs();list();draw();restoreFonts();loadLogo();
+tabs();showList();loadBackground();loadFonts();
 })();
 </script>
 </body></html>
