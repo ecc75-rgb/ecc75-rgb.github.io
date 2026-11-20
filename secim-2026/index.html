@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111319">
+  <title>Haber Kıbrıs · Seçim Özel Kontrol</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">HK<span>.</span></div><div><strong>SEÇİM ÖZEL</strong><small>2026 · GRAFİK KONTROL</small></div></div>
+    <div class="sidebar-label">SEÇİM TÜRÜ</div>
+    <div class="segmented"><button id="tab-party" class="active" type="button">Milletvekilliği</button><button id="tab-municipal" type="button">Belediye</button></div>
+    <div class="sidebar-label" id="race-list-label">SEÇİM ÇEVRELERİ</div>
+    <nav id="race-list" class="race-list" aria-label="Seçim yeri seçimi"></nav>
+    <div class="sidebar-foot"><span class="dot"></span> Bilgiler bu tarayıcıda kaydedilir.<br><span class="small-note">Tarayıcıya özel kayıt · Otomatik resmî veri bağlantısı yoktur.</span></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div class="top-title"><span class="eyebrow">HABER KIBRIS / 6 ARALIK 2026</span><h1>Sonuç görseli editörü</h1><p>Oy oranlarını gir, sıralamayı kontrol et, 1080 × 1350 PNG oluştur.</p></div><div class="top-actions"><button class="btn secondary" id="export-json">Verileri yedekle</button><label class="btn secondary upload-label">Yedek yükle<input id="import-json" type="file" accept=".json,application/json" hidden></label><button class="btn primary" id="export-png"><span>↓</span> PNG indir</button></div></header>
+    <div class="work-area">
+      <section class="editor-panel">
+        <div class="section-head"><div><span class="eyebrow">SEÇİLİ YARIŞ</span><h2 id="race-heading">Lefkoşa</h2><p id="race-subheading"></p></div><span class="chip" id="entry-count"></span></div>
+        <div class="notice warning" id="draft-alert">Taslak çalışma. Veriler girilip “Yayına hazır” seçilene kadar PNG üzerinde <b>ÖRNEK VERİ</b> uyarısı bulunur.</div>
+        <div class="section-block"><h3>Yayın bilgileri</h3><div class="form-grid"><label>Açılan sandık<input id="opened" type="number" min="0" step="1" placeholder="Örn. 88"></label><label>Toplam sandık<input id="total" type="number" min="0" step="1" placeholder="Örn. 131"></label><label>Son güncelleme saati<input id="time" type="time"></label><label>Tarih<input id="date" type="date"></label></div><div class="inline-row"><span id="sandik-note" class="mini-note"></span><label class="switch-label"><input id="ready" type="checkbox"><span>Yayına hazır (örnek uyarısını kaldır)</span></label></div></div>
+        <div class="section-block" id="party-colors-block"><div class="block-heading"><h3>Parti renkleri</h3><button class="text-button" type="button" id="toggle-colors">Düzenle</button></div><div id="party-color-fields" hidden></div></div>
+        <div class="section-block"><div class="block-heading"><div><h3 id="entries-title">Partilerin oy oranları</h3><p class="mini-note" id="entries-hint">Yüzdeler girildikçe sıralama kendiliğinden güncellenir.</p></div><button class="text-button" id="load-demo" type="button">Örnek veri yükle</button></div><div id="entries"></div><div class="editor-footer"><span id="sum-note"></span><button id="clear-data" type="button" class="text-button danger">Bu yarışın oylarını sıfırla</button></div></div>
+        <div class="section-block"><h3>Harita görseli</h3><div class="inline-row"><p class="mini-note" id="map-note">Bölge haritası.</p><label class="btn secondary btn-small">Harita PNG yükle<input id="map-upload" type="file" accept="image/png,image/jpeg,image/webp" hidden></label></div></div>
+      </section>
+      <section class="preview-panel"><div class="preview-header"><div><span class="eyebrow">CANLI ÖNİZLEME</span><h2>Instagram · 4:5</h2></div><span class="chip">1080 × 1350</span></div><div class="preview-shell"><canvas id="poster" width="1080" height="1350" aria-label="Seçim sonuçları tasarım önizlemesi"></canvas></div><div class="preview-footer"><span>Tek birleşik bar toplam %100 ölçeğini gösterir; sıralama en yüksek sonuçtan başlar.</span><button class="btn secondary" id="export-png-bottom">PNG indir</button></div></section>
+    </div>
+  </main>
+</div>
+<dialog id="library-dialog" class="library-dialog"><div class="dialog-top"><div><span class="eyebrow">FOTOĞRAF HAVUZU</span><h2>Fotoğraf seç</h2><p id="library-for"></p></div><button class="icon-btn" id="library-close" aria-label="Kapat">✕</button></div><div class="library-tools"><input id="library-search" type="search" placeholder="İsim veya dosya ara..."><select id="library-filter"><option value="all">Tüm görseller</option><option value="municipal">Belediye başkanları</option><option value="ubp">UBP arşivi (eşleştirme kontrolü gerekli)</option><option value="ctp">CTP aday adayı arşivi (doğrulama gerekli)</option></select><label class="btn primary upload-label">Yeni fotoğraf ekle<input id="photo-upload" type="file" accept="image/png,image/jpeg,image/webp" hidden></label></div><p class="mini-note">Arşivdeki fotoğraflar doğru adayla eşleştirilmeden otomatik atanmaz. Eklediğin yeni fotoğraflar bu tarayıcıda saklanır.</p><div id="library-grid" class="library-grid"></div></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="data.js"></script><script src="app.js"></script>
+</body></html>
