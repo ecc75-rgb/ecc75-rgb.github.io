@@ -19,7 +19,7 @@ if(state.parties.DP?.color==='#6b429d')state.parties.DP.color='#526c81';
 if(state.parties.TDP?.color==='#2aa366')state.parties.TDP.color='#2aa366';
 for(const race of state.races){for(const e of race.entries){if(race.id==='bb-lefkosa'&&e.id==='mehmet-aktunc'&&Number(e.focusY)===20)e.focusY=28;}}
 
-for(const r of state.races){r.opened ??= null; r.total ??=null; r.time ??='';r.date ??='2026-12-06';r.ready ??=false;r.mapOverride ??=null;}
+for(const r of state.races){r.opened ??= null; r.total ??=null; r.time ??='';r.date ??='2026-12-06';r.mapOverride ??=null;}
 let kind='party', currentId='mv-lefkosa', selectedPhotoEntry=null, expandedCrop=null;
 const canvas=$('poster'),ctx=canvas.getContext('2d',{alpha:false});
 const imageCache=new Map(),customUrls=new Map();
@@ -57,10 +57,8 @@ function renderHeader(){
  $('entries-title').textContent=r.kind==='party'?'Parti oy oranları':'Belediye başkan adayları';
  $('entries-hint').textContent=r.kind==='party'?'Oy yüzdesini gir. Ortak %100 dağılım çubuğu ve parti sıralaması otomatik güncellenir.':'Oy adedini gir. Sıralama ve ortak %100 dağılım çubuğu otomatik hesaplanır.';
  $('party-colors-block').hidden=false;
- $('opened').value=r.opened??'';$('total').value=r.total??'';$('time').value=r.time||'';$('date').value=r.date||'2026-12-06';$('ready').checked=!!r.ready;
- const warn=$('draft-alert');warn.className='notice '+(r.ready?'success':'warning');warn.innerHTML=r.ready?'<b>Yayına hazır modu.</b> PNG çıktısında taslak filigranı olmayacak. Rakamları yayımlamadan önce kontrol et.':'<b>Taslak modu.</b> Kontrol amaçlı PNG çıktısında “ÖRNEK VERİ” uyarısı bulunacak.';
+ $('opened').value=r.opened??'';$('total').value=r.total??'';$('time').value=r.time||'';$('date').value=r.date||'2026-12-06';
  $('sandik-note').textContent=Number(r.total)>0?`Sandık açılma oranı: ${fmtPct(pct(Number(r.opened)||0,Number(r.total)))}`:'Sandık oranı sayılardan hesaplanır.';
- $('map-note').textContent=({lefkosa:'Lefkoşa referans görseli',girne:'Girne referans görseli',tatlisu:'Tatlısu özel referans görseli',base:'İlgili sınır haritası henüz yüklenmedi. Şimdilik gri KKTC tabanı gösteriliyor.'})[r.map]||'Özel harita';
 }
 function renderColors(){const box=$('party-color-fields');box.innerHTML=`<div class="color-grid">${Object.values(state.parties).map(p=>`<label class="color-entry"><input type="color" data-color="${p.code}" value="${p.color}"/>${escapeHtml(p.code==='BAGIMSIZ'?'Bağımsız':p.code)}</label>`).join('')}</div><p class="mini-note">Buradaki renkler editoryal palettir; resmi parti renkleri olarak doğrulanmamıştır.</p>`;}
 function renderEntries(){
@@ -69,7 +67,7 @@ function renderEntries(){
   const p=partyFor(e.party),src=getAssetUrl(e.photo);
   if(r.kind==='party'){
    const logo=getAssetUrl(p.logo);
-   html+=`<div class="entry-row"><img src="${escapeHtml(logo||'')}" alt="" onerror="this.style.visibility='hidden'"><div><div class="code" style="color:${escapeHtml(p.color)}">${escapeHtml(p.code)}</div><div class="sub">${escapeHtml(p.name)}</div></div><input data-pct="${e.id}" type="number" min="0" max="100" step="0.1" placeholder="%" value="${e.pct??''}" aria-label="${escapeHtml(p.code)} oy yüzdesi"></div>`;
+   html+=`<div class="entry-row"><img src="${escapeHtml(logo||'')}" alt="" style="background:${p.code==='UBP'?'#ffffff':'#f1f2f5'}" onerror="this.style.visibility='hidden'"><div><div class="code" style="color:${escapeHtml(p.color)}">${escapeHtml(p.code)}</div><div class="sub">${escapeHtml(p.name)}</div></div><input data-pct="${e.id}" type="number" min="0" max="100" step="0.1" placeholder="%" value="${e.pct??''}" aria-label="${escapeHtml(p.code)} oy yüzdesi"></div>`;
   }else{
    const img=src?`<img src="${escapeHtml(src)}" alt="${escapeHtml(e.name)}" style="object-position:${e.focusX??50}% ${e.focusY??50}%;border:2px solid ${p.color}">`:`<div class="photoless" style="width:43px;height:43px;border:2px solid ${p.color}">◯</div>`;
    html+=`<div class="entry-row candidate"><button type="button" title="Fotoğraf seç" class="photo-click" data-photo="${e.id}">${img}</button><div><div class="code">${escapeHtml(e.name)}</div><div class="sub"><span style="color:${p.color}">${escapeHtml(p.code==='BAGIMSIZ'?'BAĞIMSIZ':p.code)}</span><button type="button" class="photo-edit" data-crop="${e.id}">Kadraj</button></div></div><div><input data-votes="${e.id}" type="number" min="0" step="1" placeholder="Oy" value="${e.votes??''}" aria-label="${escapeHtml(e.name)} oy sayısı"><small class="custom-label">${fmtPct(e.calcPct)}</small></div></div>`;
@@ -95,7 +93,7 @@ function line(x1,y1,x2,y2,color,width=1){ctx.beginPath();ctx.strokeStyle=color;c
 function txt(s,x,y,size=22,color='#141619',weight='600',align='left',family='HKManrope,Manrope,Arial,sans-serif'){ctx.fillStyle=color;ctx.textAlign=align;ctx.textBaseline='alphabetic';ctx.font=`${weight} ${size}px ${family}`;ctx.fillText(String(s),x,y);}
 function condensed(s,x,y,sz,maxWidth,color='#111317'){ctx.save();ctx.font=`700 ${sz}px HKTungsten,'Tungsten Bold','Tungsten','Teko','Arial Narrow',sans-serif`;const width=Math.max(1,ctx.measureText(s).width);let scale=Math.min(1,maxWidth/width);ctx.translate(x,y);ctx.scale(scale,1);ctx.fillStyle=color;ctx.textBaseline='alphabetic';ctx.fillText(s,0,0);ctx.restore();}
 function donut(cx,cy,r,value){ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,Math.PI*1.5);ctx.strokeStyle='#e2e5eb';ctx.lineWidth=9;ctx.stroke();if(Number(value)>0){ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,(-Math.PI/2)+(2*Math.PI*(Number(value)||0)/100));ctx.strokeStyle='#111318';ctx.lineCap='round';ctx.lineWidth=9;ctx.stroke();ctx.lineCap='butt';}}
-function drawMap(r){let path=r.mapOverride||`assets/map/${r.map}.png`,img=getImage(path);if(!img)img=getImage('assets/map/base.png');if(img)ctx.drawImage(img,575,5,490,235);}
+function drawMap(r){let path=`assets/map/${r.map}.png`,img=getImage(path);if(!img)img=getImage('assets/map/base.png');if(img)ctx.drawImage(img,575,5,490,235);}
 function drawLogo(){const im=getImage('assets/hk-logo.png');if(im)ctx.drawImage(im,940,1258,76,76);else{rr(940,1258,76,76,0,'#f9c100');txt('HK',978,1307,28,'#111','900','center');}}
 function fitTitle(s,maxWidth,sz){ctx.font=`700 ${sz}px HKManrope,Manrope,Arial,sans-serif`;return ctx.measureText(s).width<=maxWidth;}
 function drawHeader(r){
@@ -189,9 +187,9 @@ function drawParties(r){
   if(i%2===1){ctx.fillStyle='#f4f5f7';ctx.fillRect(40,y,1000,rowH);}
   if(i>0)line(40,y,1040,y,'#dfe3e9',1);
   const cy=y+rowH/2,logo=getImage(p.logo);
-  const bg=p.code==='HP'?'#ffffff':p.code==='TAM'?'#51b0e4':p.color;
+  const bg=(p.code==='HP'||p.code==='UBP')?'#ffffff':p.code==='TAM'?'#51b0e4':p.color;
   rr(65,cy-29,58,58,29,bg);ctx.save();ctx.beginPath();ctx.arc(94,cy,28,0,Math.PI*2);ctx.clip();
-  if(logo)insideImage(logo,67,cy-27,54,54);else txt(p.code,94,cy+5,18,p.code==='HP'?'#214d78':'#fff','700','center');ctx.restore();
+  if(logo)insideImage(logo,67,cy-27,54,54);else txt(p.code,94,cy+5,18,p.code==='HP'?'#214d78':p.code==='UBP'?'#f18a00':'#fff','700','center');ctx.restore();
   txt(p.code,149,cy-3,29,'#101216','700');
   txt(p.name,149,cy+21,18,'#63738b','500');
   ctx.fillStyle=p.color;ctx.fillRect(838,cy-20,5,40);
@@ -224,11 +222,7 @@ function drawFooter(r){
  ctx.fillStyle='#ffcd00';ctx.fillRect(0,1270,510,68);
  condensed('HABER KIBRIS',40,1331,62,470,'#101216');
  condensed('SEÇİM ÖZEL',528,1331,65,396,'#101216');drawLogo();
- if(!r.ready){
-  // Örneklerin haber sonucu gibi yayınlanmasını engelleyen belirgin uyarı.
-  ctx.save();ctx.translate(540,1050);ctx.rotate(-.22);rr(-310,-37,620,75,8,'#fff6ddee');
-  txt('TASLAK · ÖRNEK VERİ',0,17,36,'#ae7520','900','center');ctx.restore();
- }
+
 }
 function drawPsdData(r){
  // PSD'nin orijinal kompoziti üst başlık, sarı bant, ilgili belediye haritası ve dip bandını korur.
@@ -241,8 +235,7 @@ function drawPsdData(r){
  txt(`${r.opened??'—'} / ${r.total??'—'}`,172,434,18,'#66758b','700');
  condensed(r.time||'--.--',642,411,39,190);
  txt(r.date?new Date(`${r.date}T12:00:00`).toLocaleDateString('tr-TR',{day:'numeric',month:'long'}).toLocaleUpperCase('tr-TR'):'6 ARALIK',642,435,18,'#66758b','700');
- // Özel olarak yüklenen güncel harita, statik PSD haritasının yerine geçebilir.
- if(r.mapOverride){const map=getImage(r.mapOverride);if(map){ctx.fillStyle='#eef0f3';ctx.fillRect(580,5,490,225);ctx.drawImage(map,575,5,490,235);}}
+
 }
 function drawWatermark(){
  ctx.save();ctx.globalAlpha=.043;ctx.fillStyle='#15171a';ctx.textAlign='center';
@@ -257,7 +250,7 @@ function paint(){
  if(r.kind==='party')drawParties(r);else drawCandidates(r);
  drawWatermark();
  if(!template)drawFooter(r);
- else if(!r.ready){ctx.save();ctx.translate(540,1050);ctx.rotate(-.22);rr(-310,-37,620,75,8,'#fff6ddee');txt('TASLAK · ÖRNEK VERİ',0,17,36,'#ae7520','900','center');ctx.restore();}
+
 }
 function editEntry(id,field,value){const r=current(),e=r.entries.find(x=>x.id===id);if(!e)return;e[field]=value;save();refreshTotals();requestPaint();}
 function refreshTotals(){const r=current();const sum=r.kind==='party'?r.entries.reduce((acc,e)=>acc+(Number(e.pct)||0),0):r.entries.reduce((acc,e)=>acc+(Number(e.votes)||0),0);$('sum-note').textContent=r.kind==='party'?`Girilen yüzdeler toplamı: ${fmtPct(sum)} (toplam %100 olmalıdır)`:`Girilen aday oyları toplamı: ${formatNum(sum)}`;}
@@ -281,31 +274,20 @@ async function uploadCustom(file){if(!file || !file.type.startsWith('image/'))re
 }
 function assignPhoto(path){const e=current().entries.find(x=>x.id===selectedPhotoEntry);if(!e)return;e.photo=path;e.focusX=50;e.focusY=35;e.zoom=1.25;const meta=SOURCE.manifest.find(x=>x.path===path);if(meta?.focus){e.focusX=Math.round(meta.focus[0]*100);e.focusY=Math.round(meta.focus[1]*100);}expandedCrop=e.id;save();render();$('library-dialog').close();toast('Fotoğraf yerleştirildi; kadrajını kontrol et.');}
 function exportPng(){
- requestPaint();paint();const r=current();canvas.toBlob(blob=>{if(!blob){toast('PNG oluşturulamadı');return;}const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`HK_SECIM_2026_${r.id.toUpperCase()}${r.ready?'':'_TASLAK'}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),15000);toast('1080 × 1350 PNG hazır.');},'image/png');
+ requestPaint();paint();const r=current();canvas.toBlob(blob=>{if(!blob){toast('PNG oluşturulamadı');return;}const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`HK_SECIM_2026_${r.id.toUpperCase()}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),15000);toast('1080 × 1350 PNG hazır.');},'image/png');
 }
-function loadDemo(){const r=current();r.ready=false;r.opened=88;r.total=131;r.time='22:10';r.date='2026-12-06';
+function loadDemo(){const r=current();r.opened=88;r.total=131;r.time='22:10';r.date='2026-12-06';
  if(r.kind==='party'){
   const nums=[31.2,29.5,11.4,7.9,6.6,5.8,4.5,3.1];r.entries.forEach((e,i)=>e.pct=nums[i]);
  }else{
   const nums=[1320,1140,360,120,100,60];r.entries.forEach((e,i)=>{e.votes=nums[i]||40;e.manualPct=null;});
  }save();render();toast('Örnek veri yüklendi. Yayın verisi değildir.');
 }
-function clearVotes(){const r=current();if(r.kind==='party')r.entries.forEach(e=>e.pct=null);else r.entries.forEach(e=>{e.votes=null;e.manualPct=null});r.opened=null;r.total=null;r.ready=false;save();render();}
+function clearVotes(){const r=current();if(r.kind==='party')r.entries.forEach(e=>e.pct=null);else r.entries.forEach(e=>{e.votes=null;e.manualPct=null});r.opened=null;r.total=null;save();render();}
 // Events
 $('tab-party').addEventListener('click',()=>{kind='party';setRace('mv-lefkosa')});$('tab-municipal').addEventListener('click',()=>{kind='municipal';setRace('bb-lefkosa')});
 $('race-list').addEventListener('click',e=>{const b=e.target.closest('[data-race]');if(b)setRace(b.dataset.race);});
 for(const key of ['opened','total','time','date']){$(key).addEventListener('input',e=>{const r=current();r[key]=key==='opened'||key==='total'?(e.target.value===''?null:Math.max(0,Math.trunc(Number(e.target.value)))):e.target.value;save();$('sandik-note').textContent=Number(r.total)>0?`Sandık açılma oranı: ${fmtPct(pct(Number(r.opened)||0,Number(r.total)))}`:'Sandık oranı sayılardan hesaplanır.';requestPaint();});}
-$('ready').addEventListener('change',e=>{
- const r=current();if(e.target.checked){
-   if(r.opened===null||r.total===null||Number(r.total)<1||Number(r.opened)>Number(r.total)||!r.time||!r.date){e.target.checked=false;toast('Önce sandık, tarih ve saat bilgilerini eksiksiz gir.');return;}
-   const missing=r.entries.some(x=>r.kind==='party'?x.pct===null||x.pct==='':x.votes===null||x.votes==='');
-   if(missing){e.target.checked=false;toast('Yayına almak için tüm parti veya adayların oylarını gir (sıfır dahil).');return;}
-   if(r.entries.reduce((a,x)=>a+(Number(r.kind==='party'?x.pct:x.votes)||0),0)<=0){e.target.checked=false;toast('Yayına almak için sıfırdan büyük en az bir oy sonucu gerekli.');return;}
-   if(r.kind==='party' && r.entries.reduce((a,x)=>a+(Number(x.pct)||0),0)>100.11){e.target.checked=false;toast('Parti yüzdeleri toplamı %100’ü geçiyor.');return;}
-   if(!r.mapOverride&&!getImage(`assets/templates/${r.id}.webp`)&&!getImage(`assets/map/${r.map}.png`)){e.target.checked=false;toast('Bu yer için doğru harita yüklenmeden yayına alma.');return;}
- }
- r.ready=e.target.checked;save();renderHeader();requestPaint();
-});
 $('toggle-colors').addEventListener('click',()=>{$('party-color-fields').hidden=!$('party-color-fields').hidden});
 $('party-color-fields').addEventListener('input',e=>{if(e.target.matches('[data-color]')){state.parties[e.target.dataset.color].color=e.target.value;save();requestPaint();}});
 $('entries').addEventListener('input',e=>{const t=e.target;
@@ -323,7 +305,6 @@ $('library-close').addEventListener('click',()=>$('library-dialog').close());
 $('library-search').addEventListener('input',renderLibrary);$('library-filter').addEventListener('change',renderLibrary);
 $('library-grid').addEventListener('click',e=>{const t=e.target.closest('[data-asset]');if(t)assignPhoto(t.dataset.asset)});
 $('photo-upload').addEventListener('change',async e=>{try{await uploadCustom(e.target.files?.[0]);e.target.value='';}catch(err){console.error(err);toast('Fotoğraf yüklenemedi.')}});
-$('map-upload').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{selectedPhotoEntry=null;const r=current();const dataUrl=await new Promise((ok,bad)=>{let f=new FileReader();f.onload=()=>ok(f.result);f.onerror=bad;f.readAsDataURL(file);});const im=await new Promise(ok=>{const a=new Image();a.onload=()=>ok(a);a.src=dataUrl;});const c=document.createElement('canvas');c.width=600;c.height=300;c.getContext('2d').drawImage(im,0,0,600,300);const blob=await new Promise(ok=>c.toBlob(ok,'image/png'));const id=`custom:map-${r.id}`;await writeBlob(id,blob);customUrls.set(id,URL.createObjectURL(blob));r.mapOverride=id;save();requestPaint();toast('Bu yarışa özel harita eklendi.');}catch(err){console.error(err);toast('Harita yüklenemedi.')};e.target.value='';});
 for(const id of ['export-png','export-png-bottom'])$(id).addEventListener('click',exportPng);
 $('export-json').addEventListener('click',async()=>{
  try{
