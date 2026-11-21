@@ -106,14 +106,15 @@ function drawHeader(r){
  const title=r.displayTitle.toLocaleUpperCase('tr-TR');
  // Uzun belediye adları iki satır; üst alan daraltılmadan okunaklı kalır.
  const maxTitleWidth=title.length>13?610:title.length<=5?325:title.length<=8?450:550;
- if(title.length>16 && title.includes('-')){
+ if(r.id==='bb-gonyeli-alaykoy'){condensed(title,48,219,142,520);}
+ else if(title.length>16 && title.includes('-')){
   const words=title.split('-');let a=words[0],b=words.slice(1).join('-');
   if(words.length===3){a=words.slice(0,2).join('-');b=words[2];}
   condensed(a,48,151,87,maxTitleWidth);
   condensed(b,48,226,87,maxTitleWidth);
  }else{condensed(title,48,225,157,maxTitleWidth);}
  const sub=r.kind==='party'?'MİLLETVEKİLLİĞİ OY ORANLARI':'BELEDİYE BAŞKANLIĞI OY ORANLARI';
- rr(47,237,640,87,0,'#ffd000');condensed(sub,65,303,57,608);
+ rr(47,237,640,73,0,'#ffd000');condensed(sub,65,303,57,608);
  // üst ölçümler
  rr(64,344,464,104,16,'#fff');rr(551,344,465,104,16,'#fff');
  donut(118,396,34,pct(Number(r.opened)||0,Number(r.total)||0));
@@ -250,7 +251,7 @@ function drawWatermark(){
 }
 function paint(){
  const r=current();ctx.clearRect(0,0,1080,1350);
- const template=getImage(`assets/templates/${r.id}.webp`);
+ const template=getImage(`assets/templates/${r.id}.webp?v=header-20261121`);
  if(template){ctx.drawImage(template,0,0,1080,1350);drawPsdData(r);}
  else drawHeader(r);
  if(r.kind==='party')drawParties(r);else drawCandidates(r);
