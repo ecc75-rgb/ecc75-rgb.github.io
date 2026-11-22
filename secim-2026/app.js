@@ -14,6 +14,9 @@ let state;
 try {const saved=JSON.parse(localStorage.getItem(STORAGE)||'null'); state=saved?.version===SOURCE.version&&Array.isArray(saved.races)&&saved.races.length===23?saved:null;}catch(e){}
 if(!state) state={version:SOURCE.version,races:cloned(SOURCE.races),parties:cloned(SOURCE.parties),meta:{},customAssets:[]};
 state.meta ||= {}; state.customAssets ||= [];
+function migrateMunicipalPortraits(){state.meta ||= {};if(state.meta.municipalPortraitVersion===8)return;for(const r of state.races){if(r.kind!=="municipal")continue;for(const e of r.entries){const p=window.HK_MUNICIPAL_V8?.[e.id];if(!p)continue;if(!e.photo || e.photo===p.old){Object.assign(e,{photo:p.photo,focusX:50,focusY:50,zoom:1});}}}state.meta.municipalPortraitVersion=8;}
+migrateMunicipalPortraits();
+
 // Only migrate old defaults, keeping any custom colors the editor deliberately entered.
 if(state.parties.DP?.color==='#6b429d')state.parties.DP.color='#526c81';
 if(state.parties.TDP?.color==='#2aa366')state.parties.TDP.color='#2aa366';
@@ -272,7 +275,7 @@ async function uploadCustom(file){if(!file || !file.type.startsWith('image/'))re
  const blob=await new Promise(ok=>c.toBlob(ok,'image/jpeg',.9));const id=`custom:${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
  await writeBlob(id,blob);customUrls.set(id,URL.createObjectURL(blob));state.customAssets.push({kind:'custom',path:id,name:file.name});if(selectedPhotoEntry)assignPhoto(id);else{save();renderLibrary();}toast('Fotoğraf havuza eklendi.');
 }
-function assignPhoto(path){const e=current().entries.find(x=>x.id===selectedPhotoEntry);if(!e)return;e.photo=path;e.focusX=50;e.focusY=35;e.zoom=1.25;const meta=SOURCE.manifest.find(x=>x.path===path);if(meta?.focus){e.focusX=Math.round(meta.focus[0]*100);e.focusY=Math.round(meta.focus[1]*100);}expandedCrop=e.id;save();render();$('library-dialog').close();toast('Fotoğraf yerleştirildi; kadrajını kontrol et.');}
+function assignPhoto(path){const e=current().entries.find(x=>x.id===selectedPhotoEntry);if(!e)return;e.photo=path;e.focusX=50;e.focusY=35;e.zoom=1.25;const meta=SOURCE.manifest.find(x=>x.path===path);if(meta?.zoom)e.zoom=meta.zoom;if(meta?.focus){e.focusX=Math.round(meta.focus[0]*100);e.focusY=Math.round(meta.focus[1]*100);}expandedCrop=e.id;save();render();$('library-dialog').close();toast('Fotoğraf yerleştirildi; kadrajını kontrol et.');}
 function exportPng(){
  requestPaint();paint();const r=current();canvas.toBlob(blob=>{if(!blob){toast('PNG oluşturulamadı');return;}const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`HK_SECIM_2026_${r.id.toUpperCase()}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),15000);toast('1080 × 1350 PNG hazır.');},'image/png');
 }
@@ -319,7 +322,7 @@ $('import-json').addEventListener('change',async e=>{
  try{
   const obj=JSON.parse(await f.text());if(obj.version!==SOURCE.version||!Array.isArray(obj.races)||obj.races.length!==23)throw new Error('Geçersiz şema');
   for(const [ref,data] of Object.entries(obj.customFileData||{})){if(!ref.startsWith('custom:')||!data.startsWith('data:image/'))continue;const blob=await(await fetch(data)).blob();await writeBlob(ref,blob);}
-  delete obj.customFileData;state=obj;state.customAssets ||= [];save();render();await initCustom();toast('Veriler ve fotoğraflar geri yüklendi.');
+  delete obj.customFileData;state=obj;state.customAssets ||= [];migrateMunicipalPortraits();save();render();await initCustom();toast('Veriler ve fotoğraflar geri yüklendi.');
  }catch(err){console.error(err);toast('Yedek yüklenemedi. Dosya yapısı uyumsuz.');}e.target.value='';
 });
 // Programatik test ve denetim için yalnız okuma API'si.
